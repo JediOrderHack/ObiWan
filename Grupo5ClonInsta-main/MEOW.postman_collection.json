@@ -1,0 +1,526 @@
+{
+	"info": {
+		"_postman_id": "aa64feff-5b80-4400-9162-7316517ba501",
+		"name": "MEOW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28993648",
+		"_collection_link": "https://interstellar-flare-101241.postman.co/workspace/My-Workspace~e58f5dd9-88d7-41a2-8412-5ea94a9b116f/collection/28993648-aa64feff-5b80-4400-9162-7316517ba501?action=share&source=collection_link&creator=28993648"
+	},
+	"item": [
+		{
+			"name": "entries",
+			"item": [
+				{
+					"name": "Crear Entrada",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3Mjk4MTksImV4cCI6MTY5NjMzNDYxOX0.oMuM63Sunq23yYjBrgpu7AMk4RMt0J-suycEQ4RsGlo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Esta es la puta desccripcion prueba1",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"description": "ea",
+									"type": "file",
+									"src": "/home/pcm23/Descargas/WhatsApp Image 2023-07-10 at 09.21.49.jpeg"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/home/pcm23/Descargas/WhatsApp Image 2023-07-08 at 14.09.36.jpeg"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/entries/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Entry",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3MjM5MTMsImV4cCI6MTY5NjMyODcxM30.IJsBnxaZJB4Vg4pvGazFDYb34ra13x0iYL26TJfI7w8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/entries/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Entry/1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3MjM5MTMsImV4cCI6MTY5NjMyODcxM30.IJsBnxaZJB4Vg4pvGazFDYb34ra13x0iYL26TJfI7w8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/entries/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Entry 1",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3MjM5MTMsImV4cCI6MTY5NjMyODcxM30.IJsBnxaZJB4Vg4pvGazFDYb34ra13x0iYL26TJfI7w8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "otra puta descripcion 3",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"description": "ea",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/entries/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Entry 2",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3MjM5MTMsImV4cCI6MTY5NjMyODcxM30.IJsBnxaZJB4Vg4pvGazFDYb34ra13x0iYL26TJfI7w8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "otra puta descripcion 2",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/home/pcm23/Descargas/vegeta-2020_3840x2160_xtrafondos.com.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/entries/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Photo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3Mjk4MTksImV4cCI6MTY5NjMzNDYxOX0.oMuM63Sunq23yYjBrgpu7AMk4RMt0J-suycEQ4RsGlo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "otra puta description con foto",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "photo",
+									"description": "eaaaaa",
+									"type": "file",
+									"src": "/home/pcm23/Descargas/WhatsApp Image 2023-07-10 at 09.21.49.jpeg"
+								},
+								{
+									"key": "photo ",
+									"description": "eaaa",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "photo",
+									"description": "eaaa",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/entries/1/photos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								"1",
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete photo",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3MjM5MTMsImV4cCI6MTY5NjMyODcxM30.IJsBnxaZJB4Vg4pvGazFDYb34ra13x0iYL26TJfI7w8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/entries/1/photos/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"entries",
+								"1",
+								"photos",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Creacion usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"pedroczmo23@gmail.com\",\n    \"username\":\"petercross\",\n    \"password\": \"12312312\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/validate/8c535421-3a15-4850-840d-d7757326e21c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"validate",
+								"8c535421-3a15-4850-840d-d7757326e21c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Token",
+								"value": "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInJvbGUiOiJub3JtYWwiLCJ1c2VybmFtZSI6InBldGVyY3Jvc3MiLCJlbWFpbCI6InBldGVyY3Jvc3NpYmVyQGdtYWlsLmNvbSIsImF2YXRhciI6bnVsbCwiaWF0IjoxNjk1Mjg2NDQyLCJleHAiOjE2OTU4OTEyNDJ9.mXd_KPZEEyMDfWzzpvLEtUJEL4PvRHuBCR1DqzZbK58\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"pedroczmo23@gmail.com\",\n    \"password\":\"12312312\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/1",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3Mjk4MTksImV4cCI6MTY5NjMzNDYxOX0.oMuM63Sunq23yYjBrgpu7AMk4RMt0J-suycEQ4RsGlo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Avatar",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU3Mjk4MTksImV4cCI6MTY5NjMzNDYxOX0.oMuM63Sunq23yYjBrgpu7AMk4RMt0J-suycEQ4RsGlo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/pcm23/Descargas/WhatsApp Image 2023-07-10 at 09.21.49.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/avatar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recuperar pass",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTU1NTQ2NTEsImV4cCI6MTY5NjE1OTQ1MX0.ZcHB4C6I6ljLzYl0ria3F8W30xwd2vUoKP3GDcGzo2s",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"pedroczmo23@gmail.com\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/recover-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"recover-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Pass",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsInVzZXJuYW1lIjoicGV0ZXJjcm9zcyIsImVtYWlsIjoicGVkcm9jem1vMjNAZ21haWwuY29tIiwiYXZhdGFyIjpudWxsLCJpYXQiOjE2OTUzMTQ4MzMsImV4cCI6MTY5NTkxOTYzM30.ihE9vlngz7GJ7KApHD8I4F3zq66iXnAPs03JnYNfTk8",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"recoveryPassCode\": \"440850252\",\n  \"newPass\": \"23232323\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
