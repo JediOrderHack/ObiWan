@@ -152,7 +152,6 @@ async function updateEntry({ id, userId, description }) {
   }
 }
 
-
 async function getAllEntries() {
   try {
     const connection = await getPool();
@@ -161,6 +160,7 @@ async function getAllEntries() {
         e.id AS id,
         e.description AS description,
         e.createdAt AS createdAt,
+        e.userId AS userId,  -- Agregado para mostrar el userId
         u.username AS owner,
         GROUP_CONCAT(p.photoName) AS photos,
         NULL AS video,
@@ -176,13 +176,27 @@ async function getAllEntries() {
         GROUP BY entryId
       ) c ON e.id = c.entryId
       GROUP BY e.id
-    `);
+   `);
     connection.release();
     return entries;
   } catch (error) {
     throw error;
   }
-} 
+}
+const getAllPhotos = async () => {
+  const connection = await getPool();
+
+  try {
+    // Realiza la consulta SQL para obtener todas las fotos
+    const [rows] = await connection.query("SELECT * FROM photos");
+    return rows;
+    console.log(rows)
+  } catch (error) {
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
 
 async function insertPhoto({ photoName, entryId }) {
   let connection;
@@ -588,6 +602,7 @@ export {
   insertVideo,
   checkVideoLimit,
   destroyVideo,
-  getVideoById
+  getVideoById,
+  getAllPhotos
 };
 

@@ -17,6 +17,7 @@ import UpdatePassword from './components/UpdatePassword.jsx';
 import NewEntryForm from './forms/NewEntryForm/NewEntryForm.jsx';
 import AvatarForm from './forms/AvatarForm/AvatarForm.jsx';
 import ValidateForm from './forms/ValidateForm/ValidateForm.jsx';
+import EntryList from './components/EntryList.jsx';
 
 
 
@@ -34,7 +35,7 @@ function App() {
       <NavLink to='/avatar'>Avatar</NavLink>{' | '}
 
     <Routes>
-      <Route path='/home' element={<Home />}/>
+      <Route path='/home' element={<EntryList />}/>
       <Route path='/login' element={<LoginForm />}/>
       <Route path='/register' element={<RegisterForm />}/>
       <Route path='/forgot-password' element={<RecoverPassword />}/>

@@ -1,63 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import UserAvatar from "./UserAvatar";
 
-const API_URL = 'http://localhost:3000/entries'; // Reemplaza con la URL correcta
+// Rutas de las imágenes y los videos en tu servidor Express
+const IMAGES_URL = "http://localhost:3000/images";
 
 function EntryList() {
   const [entries, setEntries] = useState([]);
 
   useEffect(() => {
-    // Realiza la solicitud GET para obtener las entradas
-    axios.get(API_URL)
+    // Realiza una solicitud GET al servidor para obtener las entradas
+    axios
+      .get("http://localhost:3000/entries")
       .then((response) => {
-        if (response.status === 200) {
+        // Verifica que response.entries sea un array antes de establecer el estado
+        if (Array.isArray(response.data.entries)) {
           setEntries(response.data.entries);
         } else {
-          console.error('Error al obtener las entradas:', response.data);
+          console.error(
+            "La respuesta del servidor no contiene un array de entradas:",
+            response.data
+          );
         }
       })
       .catch((error) => {
-        console.error('Error al obtener las entradas:', error);
+        console.error("Error al obtener las entradas:", error);
       });
   }, []);
 
-  return (
-    <div>
-      <h2>Lista de Entradas</h2>
-      {entries.map((entry) => (
-        <div key={entry.id} className="entry">
-          <div className="user-info">
-            <p>Creado por: {entry.owner}</p>
-          </div>
-          <div className="photos">
-            <div className="photo-scroll">
-              {entry.photos.split(',').map((photo, index) => (
-                <img
-                  key={index}
-                  src={C:\Users\isivi\Desktop\PROYECTO FINAL\Grupo5ClonInsta\BackInsta\images} 
-                  alt={`Foto ${index}`}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="likes-comments">
-            <p>Likes: {entry.likesCount}</p>
-            {entry.comments ? (
-              <div className="comments">
-                {entry.comments.map((comment) => (
-                  <div key={comment.id} className="comment">
-                    <p>{comment.user}: {comment.text}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p>Sin comentarios</p>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+   return (
+     <div>
+       {entries.map((entry) => (
+        
+         <div key={entry.id}>
+           {/* Muestra la foto de avatar */}
+          
+            <UserAvatar userId={entry.userId} />
+            
+           {/* Muestra el nombre de usuario */}
+           <div>Nombre de Usuario: {entry.owner}</div>
+
+           {/* Muestra las fotos subidas */}
+           <div>
+             Fotos Subidas:
+             {entry.photos &&
+               entry.photos
+                 .split(",")
+                 .map((photoName) => (
+                   <img
+                     key={photoName}
+                     src={`${IMAGES_URL}/${photoName}`}
+                     alt={`Foto: ${photoName}`}
+                   />
+                 ))}
+           </div>
+
+           {/* Muestra el número de likes */}
+           <div>Número de Likes: {entry.likesCount}</div>
+
+           {/* Botón para dar/quitar like */}
+           <button>Dar/Quitar Like</button>
+
+           {/* Muestra la descripción */}
+           <div>Descripción: {entry.description}</div>
+
+           {/* Muestra los comentarios */}
+           <div>Comentarios: {entry.comments}</div>
+         </div>
+       ))}
+     </div>
+   );
 }
 
 export default EntryList;

@@ -25,21 +25,29 @@ const upload = multer({ storage: storage });
 
 // Routes
 
+// Obtener todas las fotos
+// GET /entries/photos
+router.get('/photos', entryController.getAllPhotosController);
+
+// Rutas para dar y eliminar likes
+router.post('/:entryId/likes/add', authUser, userExists, entryController.addLikeController);
+router.post('/:entryId/likes/remove', authUser, userExists, entryController.removeLikeController);
+
 // Crear una entrada
 // POST /entries/
 router.post('/', authUser, userExists, entryController.createEntry);
 
 // Nueva ruta para obtener entradas por descripción
 // GET /entries/description?description=<descripción>
-router.get('/description', authUserOptional, userExists, entryController.searchEntriesByDescription);
+router.get('/description', entryController.searchEntriesByDescription);
 
 // Obtener todas las entradas
 // GET /entries/
-router.get('/', authUserOptional, userExists, entryController.listEntries);
+router.get('/', entryController.listEntries);
 
 // Obtener una sola entrada
 // GET /entries/1
-router.get('/:id', authUserOptional, userExists, entryController.getEntry);
+router.get('/:id', entryController.getEntry);
 
 // PUT /entries/1
 router.put('/:id', authUser, userExists, entryController.editEntry);
@@ -53,10 +61,6 @@ router.post('/:id/photos', authUser, userExists, entryController.addPhoto);
 // DELETE /entries/4/photos/9
 router.delete('/:id/photos/:photoId', authUser, userExists, entryController.deleteEntryPhoto);
 
-// Rutas para dar y eliminar likes
-router.post('/:entryId/likes/add', authUser, userExists, entryController.addLikeController);
-router.post('/:entryId/likes/remove', authUser, userExists, entryController.removeLikeController);
-
 // Agregar comentario a una entrada
 // POST /entries/1/comments
 router.post('/:id/comments', authUser, userExists, entryController.addComment);
@@ -67,7 +71,7 @@ router.delete('/:id/comments/:commentId', authUser, userExists, entryController.
 
 // Ruta para la subida de videos
 // POST /entries/1/videos
-router.post("/:id/videos", authUser,userExists,entryController.addVideo)
+router.post("/:id/videos", authUser, userExists, entryController.addVideo);
 
 // Ruta para borrar videos
 // DELETE /entries/4/videos/1
@@ -77,6 +81,5 @@ router.delete("/:id/videos/:videoId", authUser, userExists, (req, res, next) => 
   console.log("Video ID:", req.params.videoId);
   entryController.deleteEntryVideo(req, res, next); // Llama a tu controlador
 });
-
 
 export default router

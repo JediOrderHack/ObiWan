@@ -21,8 +21,7 @@ const {
   SENDER_EMAIL,
   API_TOKEN,
   VIDEO_DIR,
-  TEMP_DIR,
-  CLIENT
+  TEMP_DIR
 } = process.env;
 
 export{
@@ -42,6 +41,5 @@ export{
     API_TOKEN,
     UPLOADS_DIR,
     VIDEO_DIR,
-    TEMP_DIR,
-    CLIENT
+    TEMP_DIR
 }

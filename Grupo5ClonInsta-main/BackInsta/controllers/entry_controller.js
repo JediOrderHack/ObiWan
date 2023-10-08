@@ -19,7 +19,8 @@ import {
   checkVideoLimit,
   getVideoById,
   destroyVideo,
-  getAllEntries
+  getAllEntries,
+  getAllPhotos
 } from "../db/queries/entries_queries.js"
 
 import ffmpeg from 'fluent-ffmpeg'
@@ -45,7 +46,6 @@ import EntryNotFound from "../errors/not-found-entry.js";
 
 async function createEntry(req, res, next) {
   try {
-    
     const { description } = req.body;
     const { id: userId } = req.user;
 
@@ -53,8 +53,10 @@ async function createEntry(req, res, next) {
     const schema = Joi.object({
       description: Joi.string().required(),
     });
+
     // Valida los datos de entrada con Joi
     const { error } = schema.validate({ description });
+
     if (error) {
       throw new Error(error.details[0].message);
     }
@@ -63,14 +65,17 @@ async function createEntry(req, res, next) {
     console.log("Imágenes en req.files:", req.files);
 
     // Insertar entry en db
-    const entry = await newEntry({ description, userId, photo: "" });
+    const entry = await newEntry({ description, userId, photo: "", video: "" });
+
     if (entry instanceof Error) throw entry;
 
     const photos = [];
+
     if (req.files) {
       const reqPhotos = Array.isArray(req.files.photo)
         ? req.files.photo
-        : [req.files.photo]; // Convierte a un array si no lo es.
+        : [req.files.photo];
+
       for (const photo of reqPhotos) {
         try {
           if (!photo || !photo.data) {
@@ -85,7 +90,7 @@ async function createEntry(req, res, next) {
             images: [photo], // Envía la imagen como parte de un array
             width: maxImageSize,
           });
-          
+
           // Insertamos la foto y obtenemos los datos de la misma.
           const newPhoto = await insertPhoto({
             photoName,
@@ -107,19 +112,52 @@ async function createEntry(req, res, next) {
       }
     }
 
+    // Lógica para manejar videos
+    const videos = [];
+    if (req.files) {
+      const reqVideos = Array.isArray(req.files.video)
+        ? req.files.video
+        : [req.files.video];
+
+      for (const video of reqVideos) {
+        try {
+          if (!video || !video.data) {
+            console.error("Datos de video faltantes o inválidos");
+            continue;
+          }
+
+          // Guarda el video en el disco utilizando la función saveVideo
+          const videoName = await saveVideo(video, video.name);
+          if (videoName instanceof Error) throw videoName;
+
+          // Inserta el video y obtén los datos del mismo
+          const newVideo = await insertVideo({ videoName, entryId: entry.id });
+          if (newVideo instanceof Error) throw newVideo;
+
+          // Agrega el video al array de videos
+          videos.push(newVideo);
+        } catch (error) {
+          // Agrega un console.error para registrar errores relacionados con los videos
+          console.error("Error al procesar video:", error);
+        }
+      }
+    }
+
     res.send({
       status: "ok",
       data: {
         entry: {
           ...entry,
           photos,
+          videos,
         },
       },
     });
   } catch (error) {
-    console.error("Error al procesar imagen:", error);
+    console.error("Error al procesar imagen o video:", error);
   }
 }
+
 // async function createEntry (req, res, next) {
 //   try {
 //     const { title, place, description } = req.body
@@ -214,6 +252,7 @@ async function listEntries(req, res, next) {
   try {
     const entries = await getAllEntries();
     res.json({ entries });
+    console.log(entries)
   } catch (err) {
     next(err);
   }
@@ -238,6 +277,17 @@ async function listEntries(req, res, next) {
 //     next(err)
 //   }
 // }
+
+const getAllPhotosController = async (req, res) => {
+  try {
+    const photos = await getAllPhotos(); // Llama a la función para obtener todas las fotos
+    res.json(photos);
+  } catch (error) {
+    console.error("Error al obtener las fotos:", error);
+    res.status(500).json({ error: "Error al obtener las fotos" });
+  }
+};
+
 
 // Controlador para obtener una sola entrada
 const getEntry = async (req, res) => {
@@ -943,5 +993,6 @@ export {
   addComment,
   deleteComment,
   addVideo,
-  deleteEntryVideo
+  deleteEntryVideo,
+  getAllPhotosController
 };

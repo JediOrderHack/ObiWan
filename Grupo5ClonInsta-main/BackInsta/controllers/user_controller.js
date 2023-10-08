@@ -1,7 +1,7 @@
-import crypto from 'node:crypto'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import Joi from 'joi'
+import crypto from "node:crypto";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import Joi from "joi";
 import {
   getUserBy,
   newUser,
@@ -14,24 +14,24 @@ import {
 } from "../db/queries/users_queries.js";
 
 // Helpers
-import encryptPassword from '../helpers/encrypt_password.js'
-import randomDigits from '../helpers/random_digits.js'
+import encryptPassword from "../helpers/encrypt_password.js";
+import randomDigits from "../helpers/random_digits.js";
 
 // SendMail
-import sendMail from '../services/send_mail.js'
-import recoveryPassword from '../mails/recovery_password.js'
-import validationCode from '../mails/validation_code.js'
+import sendMail from "../services/send_mail.js";
+import recoveryPassword from "../mails/recovery_password.js";
+import validationCode from "../mails/validation_code.js";
 
 // Config
-import { SECRET } from '../config.js'
+import { SECRET } from "../config.js";
 
 // Services
-import { deletePhoto, savePhoto } from '../services/photos.js'
+import { deletePhoto, savePhoto } from "../services/photos.js";
 
 // Errors
-import AuthError from '../errors/auth_error.js'
-import AccessError from '../errors/access_error.js'
-import ValidationError from '../errors/validation_error.js'
+import AuthError from "../errors/auth_error.js";
+import AccessError from "../errors/access_error.js";
+import ValidationError from "../errors/validation_error.js";
 
 async function createUser(req, res, next) {
   try {
@@ -41,10 +41,13 @@ async function createUser(req, res, next) {
     const schema = Joi.object({
       email: Joi.string().email().required(),
       username: Joi.string().required(),
-      password: Joi.string().min(8).pattern(new RegExp('^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>/?]+$')).required(),
+      password: Joi.string()
+        .min(8)
+        .pattern(
+          new RegExp("^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};:'\",.<>/?]+$")
+        )
+        .required(),
     });
-
-
 
     // Validamos los datos de la solicitud.
     const { error } = schema.validate({ email, username, password }); // Validamos los datos que hemos obtenido.
@@ -60,7 +63,7 @@ async function createUser(req, res, next) {
     const registrationCode = crypto.randomUUID();
 
     // Encriptamos la contraseña.
-    const hashedPass = await encryptPassword({password});
+    const hashedPass = await encryptPassword({ password });
 
     // Insertamos al usuario en la base de datos.
     const user = await newUser({
@@ -85,7 +88,6 @@ async function createUser(req, res, next) {
     next(err);
   }
 }
-
 
 // async function createUser (req, res, next) {
 //   try {
@@ -186,11 +188,16 @@ async function loginUser(req, res, next) {
     if (user instanceof Error) throw user;
 
     // Revisamos si el usuario está activado.
-    if (!user.active) throw new AccessError({ message: 'Primero debes activar tu usuario' });
+    if (!user.active)
+      throw new AccessError({ message: "Primero debes activar tu usuario" });
 
     // Comprobamos si las contraseñas coinciden.
     const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass) throw new AuthError({ message: 'Usuario o contraseña incorrectos', status: 401 });
+    if (!validPass)
+      throw new AuthError({
+        message: "Usuario o contraseña incorrectos",
+        status: 401,
+      });
 
     // Objeto con información que queremos agregar al token.
     const tokenInfo = {
@@ -198,9 +205,9 @@ async function loginUser(req, res, next) {
       role: user.role,
     };
 
-    const token = jwt.sign(tokenInfo, SECRET, { expiresIn: '7d' });
+    const token = jwt.sign(tokenInfo, SECRET, { expiresIn: "7d" });
     res.json({
-      status: 'ok',
+      status: "ok",
       data: {
         token,
       },
@@ -209,7 +216,6 @@ async function loginUser(req, res, next) {
     next(error);
   }
 }
-
 
 // async function loginUser (req, res, next) {
 //   const { email, password } = req.body
@@ -271,6 +277,7 @@ async function getUser(req, res, next) {
 
     // Construimos el objeto de retorno con todas las relaciones
     const returnUser = {
+      id:user.id,
       username: user.username,
       avatar: user.avatar,
       entries: user.entries.map((entry) => {
@@ -292,20 +299,11 @@ async function getUser(req, res, next) {
         };
         return entryWithPhotos;
       }),
-      email: user.email,
-      createdAt: user.createdAt,
+      
     };
 
     // Agregamos el email y createdAt si es el propio usuario
-    if (user.id === req.user.id) {
-      returnUser.email = user.email;
-      returnUser.createdAt = user.createdAt;
-    } else {
-      // Si el usuario solicitado no es el mismo que el usuario actual, elimina estas propiedades
-      delete returnUser.email;
-      delete returnUser.createdAt;
-    }
-
+    
     res.json({ user: returnUser });
   } catch (err) {
     next(err);
@@ -402,8 +400,6 @@ async function editUserAvatar(req, res, next) {
     next(err);
   }
 }
-
-
 
 // async function editUserAvatar (req, res, next) {
 //   try {
@@ -621,5 +617,5 @@ export {
   editUserAvatar,
   sendRecoverPass,
   editUserPass,
-  allUsers
-}
+  allUsers,
+};

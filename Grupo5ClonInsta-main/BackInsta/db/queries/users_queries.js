@@ -1,8 +1,8 @@
-import getPool from '../pool.js'
+import getPool from "../pool.js";
 
 // Errors
-import AuthError from '../../errors/auth_error.js'
-import ValidationError from '../../errors/validation_error.js'
+import AuthError from "../../errors/auth_error.js";
+import ValidationError from "../../errors/validation_error.js";
 
 async function getUserWithAll(obj) {
   const queryStr = Object.entries(obj)
@@ -31,8 +31,8 @@ async function getUserWithAll(obj) {
       `SELECT * FROM photos WHERE entryId IN (SELECT id FROM entries WHERE userId = ${userId})`
     );
     const [videos] = await connection.query(
-      `SELECT * FROM videos WHERE entryId IN (SELECT id FROM entries WHERE userId = ${userId})` 
-    )
+      `SELECT * FROM videos WHERE entryId IN (SELECT id FROM entries WHERE userId = ${userId})`
+    );
     const [likes] = await connection.query(
       `SELECT * FROM likes WHERE user_id = ${userId}`
     );
@@ -75,64 +75,70 @@ async function getUserBy(obj) {
   }
 }
 
-async function newUser ({ email, username, password, registrationCode }) {
-  let connection
+async function newUser({ email, username, password, registrationCode }) {
+  let connection;
 
   try {
-    connection = await getPool()
+    connection = await getPool();
 
     // Comprobamos si el email está repetido.
-    let user = await getUserBy({ email })
-    if (user instanceof Error) throw user
+    let user = await getUserBy({ email });
+    if (user instanceof Error) throw user;
 
     // Si el array de usuarios tiene más de 0 usuarios quiere decir que el email está repetido.
-    if (user) throw new AuthError({ message: 'Ya existe un usuario con ese email' })
+    if (user)
+      throw new AuthError({ message: "Ya existe un usuario con ese email" });
 
     // Comprobamos si el nombre de usuario está repetido.
-    user = await getUserBy({ username })
-    if (user instanceof Error) throw user
+    user = await getUserBy({ username });
+    if (user instanceof Error) throw user;
 
     // Si el array de usuarios tiene más de 0 usuarios quiere decir que el nombre de usuario está repetido.
-    if (user) throw new AuthError({ message: 'Nombre de usuario no disponible' })
+    if (user)
+      throw new AuthError({ message: "Nombre de usuario no disponible" });
 
     // Insertamos el usuario en la base de datos.
     const [result] = await connection.query(
-      'INSERT INTO users (email, username, password, registrationCode, createdAt) VALUES(?, ?, ?, ?, ?)',
+      "INSERT INTO users (email, username, password, registrationCode, createdAt) VALUES(?, ?, ?, ?, ?)",
       [email, username, password, registrationCode, new Date()]
-    )
-    user = await getUserBy({ id: result.insertId })
-    if (user instanceof Error) throw user
+    );
+    user = await getUserBy({ id: result.insertId });
+    if (user instanceof Error) throw user;
 
-    return user
+    return user;
   } catch (error) {
-    return error
+    return error;
   } finally {
-    if (connection) connection.release()
+    if (connection) connection.release();
   }
 }
 
-async function updateUserRegCode ({ registrationCode }) {
-  let connection
+async function updateUserRegCode({ registrationCode }) {
+  let connection;
 
   try {
-    connection = await getPool()
+    connection = await getPool();
 
     // Intentamos localizar a un usuario con el código de registro que nos llegue.
-    const user = await getUserBy({ registrationCode })
-    if (user instanceof Error) throw user
+    const user = await getUserBy({ registrationCode });
+    if (user instanceof Error) throw user;
 
     // Si no hay usuarios con ese código de registro lanzamos un error.
-    if (!user) throw new ValidationError({ message: 'Código no encontrado', status: 404 })
+    if (!user)
+      throw new ValidationError({
+        message: "Código no encontrado",
+        status: 404,
+      });
 
     // Si existe el usuario, lo actualizamos.
     await connection.query(
-      'UPDATE users SET active = true, registrationCode = null, modifiedAt = ? WHERE id = ?',
+      "UPDATE users SET active = true, registrationCode = null, modifiedAt = ? WHERE id = ?",
       [new Date(), user.id]
-    )
+    );
   } catch (error) {
-    return error
+    return error;
   } finally {
-    if (connection) connection.release()
+    if (connection) connection.release();
   }
 }
 
@@ -155,46 +161,50 @@ async function updateUserAvatar({ avatar, userId }) {
   }
 }
 
-async function updateUserRecoverPass ({ id, recoverPassCode }) {
-  let connection
+async function updateUserRecoverPass({ id, recoverPassCode }) {
+  let connection;
 
   try {
-    connection = await getPool()
+    connection = await getPool();
 
     // Insertamos el recoveryPassCode en el usuario
     await connection.query(
-      'UPDATE users SET recoveryPassCode = ?, modifiedAt = ? WHERE id = ?',
+      "UPDATE users SET recoveryPassCode = ?, modifiedAt = ? WHERE id = ?",
       [recoverPassCode, new Date(), id]
-    )
+    );
   } catch (error) {
-    return error
+    return error;
   } finally {
-    if (connection) connection.release()
+    if (connection) connection.release();
   }
 }
 
-async function updateUserPass ({ recoveryPassCode, newPass }) {
-  let connection
+async function updateUserPass({ recoveryPassCode, newPass }) {
+  let connection;
 
   try {
-    connection = await getPool()
+    connection = await getPool();
 
     // Comprobamos si existe algún usuario con ese código de recuperación.
-    const user = await getUserBy({ recoveryPassCode })
-    if (user instanceof Error) throw user
+    const user = await getUserBy({ recoveryPassCode });
+    if (user instanceof Error) throw user;
 
     // Si no hay ningún usuario con ese código de recuperación lanzamos un error.
-    if (!user) throw new ValidationError({ message: 'Código de recuperación incorrecto', status: 404 })
+    if (!user)
+      throw new ValidationError({
+        message: "Código de recuperación incorrecto",
+        status: 404,
+      });
 
     // Actualizamos el usuario.
     await connection.query(
-      'UPDATE users SET password = ?, recoveryPassCode = null, modifiedAt = ? WHERE id = ?',
+      "UPDATE users SET password = ?, recoveryPassCode = null, modifiedAt = ? WHERE id = ?",
       [newPass, new Date(), user.id]
-    )
+    );
   } catch (error) {
-    return error
+    return error;
   } finally {
-    if (connection) connection.release()
+    if (connection) connection.release();
   }
 }
 
@@ -211,8 +221,6 @@ async function getAllUser() {
   }
 }
 
-
-
 export {
   getUserBy,
   newUser,
@@ -221,5 +229,5 @@ export {
   updateUserRecoverPass,
   updateUserPass,
   getUserWithAll,
-  getAllUser
+  getAllUser,
 };
