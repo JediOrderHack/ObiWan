@@ -160,20 +160,22 @@ async function getAllEntries() {
         e.id AS id,
         e.description AS description,
         e.createdAt AS createdAt,
-        e.userId AS userId,  -- Agregado para mostrar el userId
+        e.userId AS userId,
         u.username AS owner,
-        GROUP_CONCAT(p.photoName) AS photos,
+        (
+          SELECT CONCAT('[', GROUP_CONCAT('"', p.photoName, '"'), ']')
+          FROM photos p
+          WHERE p.entryId = e.id
+        ) AS photos,
         NULL AS video,
         COUNT(DISTINCT l.id) AS likesCount,
-        GROUP_CONCAT(DISTINCT c.commentText) AS comments
+        GROUP_CONCAT(DISTINCT CONCAT(u.username, ': ', c.commentText)) AS comments
       FROM entries e
       LEFT JOIN users u ON e.userId = u.id
-      LEFT JOIN photos p ON e.id = p.entryId
       LEFT JOIN likes l ON e.id = l.post_id
       LEFT JOIN (
-        SELECT entryId, GROUP_CONCAT(commentText) AS commentText
+        SELECT entryId, commentText
         FROM comments
-        GROUP BY entryId
       ) c ON e.id = c.entryId
       GROUP BY e.id
    `);
@@ -183,6 +185,7 @@ async function getAllEntries() {
     throw error;
   }
 }
+
 const getAllPhotos = async () => {
   const connection = await getPool();
 
@@ -308,6 +311,9 @@ async function removeLike({ entryId, userId }) {
     if (connection) connection.release();
   }
 }
+
+
+
 
 
 
@@ -603,6 +609,6 @@ export {
   checkVideoLimit,
   destroyVideo,
   getVideoById,
-  getAllPhotos
+  getAllPhotos,
 };
 

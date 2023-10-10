@@ -20,7 +20,7 @@ import {
   getVideoById,
   destroyVideo,
   getAllEntries,
-  getAllPhotos
+  getAllPhotos,
 } from "../db/queries/entries_queries.js"
 
 import ffmpeg from 'fluent-ffmpeg'
@@ -246,6 +246,40 @@ async function createEntry(req, res, next) {
 //     next(error)
 //   }
 // }
+
+// Controlador para verificar si un usuario ha dado "like" en una entrada específica
+
+async function hasLikedEntryController(req, res, next) {
+  try {
+    // Obtener el id de la entrada (entryId) de los parámetros de la solicitud
+    const { entryId } = req.params;
+    // Obtener el id del usuario (userId) de la solicitud actual
+    const userId = req.user.id;
+
+    // Realizar la consulta SQL para verificar si el usuario ha dado "me gusta"
+    const connection = await getPool();
+    const [result] = await connection.query(
+      `
+      SELECT EXISTS(
+        SELECT 1
+        FROM likes
+        WHERE user_id = ? AND post_id = ?
+      ) AS hasLiked;
+      `,
+      [userId, entryId]
+    );
+
+    // El resultado será un objeto con una propiedad "hasLiked" que será 1 si ha dado "me gusta" o 0 si no ha dado "me gusta"
+    const hasLiked = result[0].hasLiked === 1;
+
+    res.json({
+      status: "ok",
+      hasLiked: hasLiked,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // Controlador para listar todas las entradas
 async function listEntries(req, res, next) {
@@ -703,24 +737,7 @@ async function addLikeController(req, res, next) {
   }
 }
 
-// import { addLike, removeLike } from '../db/queries/entries_queries.js';
 
-// // Controlador para dar un like a una entrada.
-// async function addLikeController(req, res, next) {
-//   try {
-//     const { entryId, userId } = req.body;
-
-//     // Llama a la función para dar like.
-//     const result = await addLike({ entryId, userId });
-
-//     res.json({
-//       status: 'ok',
-//       message: result,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
 
 async function removeLikeController(req, res, next) {
   try {
@@ -738,6 +755,9 @@ async function removeLikeController(req, res, next) {
     next(error);
   }
 }
+
+
+
 // // Controlador para eliminar un like de una entrada.
 // async function removeLikeController(req, res, next) {
 //   try {
@@ -994,5 +1014,6 @@ export {
   deleteComment,
   addVideo,
   deleteEntryVideo,
-  getAllPhotosController
+  getAllPhotosController,
+  hasLikedEntryController
 };

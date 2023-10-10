@@ -21,9 +21,9 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
 
 // Routes
+
 
 // Obtener todas las fotos
 // GET /entries/photos
@@ -32,6 +32,7 @@ router.get('/photos', entryController.getAllPhotosController);
 // Rutas para dar y eliminar likes
 router.post('/:entryId/likes/add', authUser, userExists, entryController.addLikeController);
 router.post('/:entryId/likes/remove', authUser, userExists, entryController.removeLikeController);
+
 
 // Crear una entrada
 // POST /entries/
@@ -48,6 +49,9 @@ router.get('/', entryController.listEntries);
 // Obtener una sola entrada
 // GET /entries/1
 router.get('/:id', entryController.getEntry);
+
+// Ruta para verificar si un usuario ha dado "like" en una entrada
+router.get('/:entryId/likes/check', authUser, userExists, entryController.hasLikedEntryController);
 
 // PUT /entries/1
 router.put('/:id', authUser, userExists, entryController.editEntry);
