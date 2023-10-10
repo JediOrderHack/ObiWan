@@ -37,27 +37,24 @@ function LoginForm() {
   
     return (
        
-    <div class="flex items-center justify-center h-screen w-screen bg-gray-900">
-    <form class="bg-white shadow-md rounded px-8 py-8 pt-8" onSubmit={handleSubmit}>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="" type="text" placeholder="John" type="text"
-              value={email}
+    
+<div className="flex items-center justify-center h-full">
+  <form className="max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700" onSubmit={handleSubmit}>   
+    <div className="mb-4">
+      <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-400">Email</label>
+      <input type="text" className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" value={email}
               onChange={(e) => setEmail(e.target.value)}/>
-        </div>
-        <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"    type="password"
+    </div>
+    <div className="mb-4">
+      <label for="password" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-400">Password</label>
+      <input className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+              type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} placeholder="********"/>
-        </div>
-        <div class="flex flex-col items-center justify-center">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" onSubmit={handleSubmit}>
-                Sign In
-            </button>
-            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="/forgot-password">Forgot Password?</a>
-        </div>
-    </form>
+              onChange={(e) => setPassword(e.target.value)} placeholder="********" required=""/>
+    </div>
+    <button type="submit" className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-700" onSubmit={handleSubmit}>Registrarse</button>
+       <a href="https://www.github.com" title="example button" className="py-2 px-8 rounded hover:bg-gray-800 hover:text-white text-white bg-gradient-to-r from-teal-600 to-blue-500">Example Button</a>
+  </form>
 </div>
     );
   }

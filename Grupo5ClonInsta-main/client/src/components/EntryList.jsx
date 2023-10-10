@@ -11,7 +11,7 @@ function EntryList() {
   useEffect(() => {
     // Realiza una solicitud GET al servidor para obtener las entradas
     axios
-      .get("http://localhost:3000/entries")
+      .get("http://localhost:4000/entries")
       .then((response) => {
         // Verifica que response.entries sea un array antes de establecer el estado
         if (Array.isArray(response.data.entries)) {

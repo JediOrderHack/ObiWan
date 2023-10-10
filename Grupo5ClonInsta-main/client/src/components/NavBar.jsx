@@ -1,23 +1,26 @@
 import { Link } from "react-router-dom";
-
+import './NavBar.css'
 const NavBar = () => {
   return (
-    <nav className="bg-blue-500 p-4">
+    <nav className="flex items-center justify-between bg-gray-900 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <Link to="/" className="text-white text-2xl font-bold">
-            Tu Empresa
+          <Link to="/home" className="text-white text-2xl font-bold">
+            Tu Empresa {' | '}
           </Link>
         </div>
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/home" className="text-white hover:text-gray-200">
-            Home
+          <Link to="/NewEntry" className="text-white hover:text-gray-200">
+            Nueva entrada {' | '}
           </Link>
-          <Link to="/search" className="text-white hover:text-gray-200">
-            Search
+          <Link to="/login" className="text-white hover:text-gray-200">
+            Login {' | '}
           </Link>
-          <Link to="/add-entry" className="text-white hover:text-gray-200">
-            Add Entry
+          <Link to="/Register" className="text-white hover:text-gray-200">
+            Register {' | '}
+          </Link>
+          <Link to="/avatar" className="text-white hover:text-gray-200">
+            Avatar{' | '}
           </Link>
         </div>
         <div className="flex md:hidden">
@@ -35,6 +38,7 @@ const NavBar = () => {
         </div>
       </div>
     </nav>
+    
   );
 };
 

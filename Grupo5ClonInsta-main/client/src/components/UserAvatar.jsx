@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const IMAGES_URL = "http://localhost:3000/images";
+const IMAGES_URL = "http://localhost:4000/images";
 
 function UserAvatar({ userId }) {
   const [user, setUser] = useState(null);
@@ -10,7 +10,7 @@ function UserAvatar({ userId }) {
     // Realiza una solicitud GET al servidor para obtener la información del usuario por su ID
     console.log(userId)
     axios
-      .get(`http://localhost:3000/users/${userId}`)
+      .get(`http://localhost:4000/users/${userId}`)
       .then((response) => {
        
         // Verifica si la respuesta contiene información del usuario

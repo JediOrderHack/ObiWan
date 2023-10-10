@@ -19,7 +19,7 @@ import AvatarForm from './forms/AvatarForm/AvatarForm.jsx';
 import ValidateForm from './forms/ValidateForm/ValidateForm.jsx';
 import EntryList from './components/EntryList.jsx';
 
-
+import NavBar from './components/NavBar.jsx'
 
 
 
@@ -28,11 +28,8 @@ function App() {
 
   return (
   <>
-      <NavLink to='/home'>Home</NavLink> {' | '}
-      <NavLink to='/NewEntry'>Nueva entrada</NavLink>{' | '}
-      <NavLink to='/login'>Login</NavLink>{' | '}
-      <NavLink to='/Register'>Register</NavLink>{' | '}
-      <NavLink to='/avatar'>Avatar</NavLink>{' | '}
+  <NavBar/>
+
 
     <Routes>
       <Route path='/home' element={<EntryList />}/>
