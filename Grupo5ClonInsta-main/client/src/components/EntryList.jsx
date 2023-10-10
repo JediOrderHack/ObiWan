@@ -3,7 +3,7 @@ import axios from "axios";
 import UserAvatar from "./UserAvatar";
 
 // Rutas de las imágenes y los videos en tu servidor Express
-const IMAGES_URL = "http://localhost:3000/images";
+const IMAGES_URL = "http://localhost:4000/images";
 
 function EntryList() {
   const [entries, setEntries] = useState([]);
@@ -28,48 +28,39 @@ function EntryList() {
       });
   }, []);
 
-   return (
-     <div>
-       {entries.map((entry) => (
-        
-         <div key={entry.id}>
-           {/* Muestra la foto de avatar */}
-          
-            <UserAvatar userId={entry.userId} />
-            
-           {/* Muestra el nombre de usuario */}
-           <div>Nombre de Usuario: {entry.owner}</div>
+  return (
+    <div>
+      {entries.map((entry) => (
+        <div key={entry.id}>
+          {/* Muestra la foto de avatar */}
+          <img src={`${IMAGES_URL}/${entry.owner}.jpg`} alt={`${entry.owner}'s Avatar`} />
 
-           {/* Muestra las fotos subidas */}
-           <div>
-             Fotos Subidas:
-             {entry.photos &&
-               entry.photos
-                 .split(",")
-                 .map((photoName) => (
-                   <img
-                     key={photoName}
-                     src={`${IMAGES_URL}/${photoName}`}
-                     alt={`Foto: ${photoName}`}
-                   />
-                 ))}
-           </div>
+          {/* Muestra el nombre de usuario */}
+          <div>Nombre de Usuario: {entry.owner}</div>
 
-           {/* Muestra el número de likes */}
-           <div>Número de Likes: {entry.likesCount}</div>
+          {/* Muestra las fotos subidas */}
+          <div>
+            Fotos Subidas:
+            {entry.photos.split(',').map((photoName) => (
+              <img key={photoName} src={`${IMAGES_URL}/${photoName}`} alt={`Foto: ${photoName}`} />
+            ))}
+          </div>
 
-           {/* Botón para dar/quitar like */}
-           <button>Dar/Quitar Like</button>
+          {/* Muestra el número de likes */}
+          <div>Número de Likes: {entry.likesCount}</div>
 
-           {/* Muestra la descripción */}
-           <div>Descripción: {entry.description}</div>
+          {/* Botón para dar/quitar like */}
+          <button>Dar/Quitar Like</button>
 
-           {/* Muestra los comentarios */}
-           <div>Comentarios: {entry.comments}</div>
-         </div>
-       ))}
-     </div>
-   );
+          {/* Muestra la descripción */}
+          <div>Descripción: {entry.description}</div>
+
+          {/* Muestra los comentarios */}
+          <div>Comentarios: {entry.comments}</div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default EntryList;
