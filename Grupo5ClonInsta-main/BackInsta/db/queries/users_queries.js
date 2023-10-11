@@ -271,7 +271,7 @@ async function getAllUser() {
   try {
     const connection = await getPool();
     const [users] = await connection.query(
-      "SELECT id, username, avatar FROM users"
+      "SELECT username, avatar FROM users"
     );
     connection.release();
     return users;

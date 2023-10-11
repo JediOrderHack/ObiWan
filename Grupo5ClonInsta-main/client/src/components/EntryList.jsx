@@ -33,45 +33,9 @@ function EntryList({ entriesProp }) {
       }
     };
 
-<<<<<<< HEAD
-    fetchEntries();
-=======
     fetchData(); // Llama a fetchData() cuando se monta el componente
->>>>>>> ae8c2c5777a562afc21e728b4dd27489415f6945
   }, []);
-console.log(entries)
-  return (
-    <div>
-      {entries.map((entry) => (
-        <div key={entry.id}>
-          <UserAvatar userId={entry.userId} />
-          <div>Nombre de Usuario: {entry.owner}</div>
-          <div>
-            Fotos Subidas:
-            {entry.photos &&
-              entry.photos
-                .split(",")
-                .map((photoName) => (
-                  <img
-                    key={photoName}
-                    src={`${IMAGES_URL}/${photoName}`}
-                    alt={`Foto: ${photoName}`}
-                  />
-                ))}
-          </div>
-          <div>Número de Likes: {entry.likesCount}</div>
-          {/* Botón para dar/quitar like */}
-          <button>Dar/Quitar Like</button>
 
-<<<<<<< HEAD
-          {/* Botón para editar entrada */}
-          
-            <EditButton entryId={entry.id} />
-          
-
-          <div>Descripción: {entry.description}</div>
-          <div>Comentarios: {entry.comments}</div>
-=======
   const handleCommentAdded = (entryId) => {
     // Puedes agregar aquí la lógica que deseas después de que se agrega un comentario
     // Por ejemplo, puedes actualizar la lista de comentarios o hacer cualquier otra acción necesaria.
@@ -102,17 +66,12 @@ console.log(entries)
             entryId={entry.id}
             onCommentAdded={() => handleCommentAdded(entry.id)}
           />
->>>>>>> ae8c2c5777a562afc21e728b4dd27489415f6945
         </div>
       ))}
     </div>
   );
 }
 
-<<<<<<< HEAD
-export default EntryList
-=======
 export default EntryList;
 
 
->>>>>>> ae8c2c5777a562afc21e728b4dd27489415f6945
