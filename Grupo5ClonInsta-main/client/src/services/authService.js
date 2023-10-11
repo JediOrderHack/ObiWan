@@ -45,10 +45,27 @@ export const signInService = async (email, password) => {
 export const getPrivateProfile = async () => {
     const token = getToken();
 
-    const res = await fetch(`${baseURL}/users/`, {
+    const res = await fetch(`${baseURL}/users`, {
         headers: {
             Authorization: token,
         },
+    });
+
+    const body = await res.json();
+
+    return body;
+};
+
+// Login de usuario.
+export const updateAvatarService = async (formData) => {
+    const token = getToken();
+
+    const res = await fetch(`${baseURL}/users/avatar`, {
+        method: 'put',
+        headers: {
+            Authorization: token,
+        },
+        body: formData
     });
 
     const body = await res.json();

@@ -62,12 +62,12 @@ const init = async () => {
     await connection.query(`
       CREATE TABLE IF NOT EXISTS likes(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        user_id INT UNSIGNED NOT NULL,
-        post_id INT UNSIGNED,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (post_id) REFERENCES entries(id)
+        userId INT UNSIGNED NOT NULL,
+        postId INT UNSIGNED,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        modifiedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (userId) REFERENCES users(id),
+        FOREIGN KEY (postId) REFERENCES entries(id)
       )
     `);
     console.log("- Tabla Likes creada\n");

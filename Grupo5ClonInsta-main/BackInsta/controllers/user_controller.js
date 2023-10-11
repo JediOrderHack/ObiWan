@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
 import {
-  getUserBy,
+  selectUserByIdQuery,
   newUser,
   updateUserRegCode,
   updateUserAvatar,
@@ -26,7 +26,7 @@ import validationCode from "../mails/validation_code.js";
 import { SECRET } from "../config.js";
 
 // Services
-import { deletePhoto, savePhoto } from "../services/photos.js";
+import { saveImage, deletePhoto } from "../services/photos.js";
 
 // Errors
 import AuthError from "../errors/auth_error.js";
@@ -184,7 +184,7 @@ async function loginUser(req, res, next) {
       });
     }
 
-    const user = await getUserBy({ email });
+    const user = await selectEntryByIdQuery({ email });
     if (user instanceof Error) throw user;
 
     // Revisamos si el usuario está activado.
@@ -217,44 +217,6 @@ async function loginUser(req, res, next) {
   }
 }
 
-// async function loginUser (req, res, next) {
-//   const { email, password } = req.body
-
-//   try {
-//     if (!email) throw new ValidationError({ message: 'El campo email es obligatorio', field: 'email' })
-//     if (!password) throw new ValidationError({ message: 'El campo password es obligatorio', field: 'password' })
-
-//     const user = await getUserBy({ email })
-//     if (user instanceof Error) throw user
-
-//     // Revisamos si el usuario esta activado.
-//     if (!user.active) throw new AccessError({ message: 'Primero debes activar tu usuario' })
-
-//     // Comprobamos si las contraseñas coinciden.
-//     const validPass = await bcrypt.compare(password, user.password)
-//     if (!validPass) throw new AuthError({ message: 'Usuario o contraseña incorrectos', status: 401 })
-
-//     // Objeto con info que queremos agregar al token.
-//     const tokenInfo = {
-//       id: user.id,
-//       role: user.role,
-//       username: user.username,
-//       email: user.email,
-//       avatar: user.avatar
-//     }
-
-//     const token = jwt.sign(tokenInfo, SECRET, { expiresIn: '7d' })
-//     res.json({
-//       status: 'ok',
-//       data: {
-//         token
-//       }
-//     })
-//   } catch (error) {
-//     next(error)
-//   }
-// }
-
 async function getUser(req, res, next) {
   try {
     const userIdSchema = Joi.object({
@@ -277,7 +239,7 @@ async function getUser(req, res, next) {
 
     // Construimos el objeto de retorno con todas las relaciones
     const returnUser = {
-      id:user.id,
+      id: user.id,
       username: user.username,
       avatar: user.avatar,
       entries: user.entries.map((entry) => {
@@ -299,45 +261,15 @@ async function getUser(req, res, next) {
         };
         return entryWithPhotos;
       }),
-      
     };
 
     // Agregamos el email y createdAt si es el propio usuario
-    
+
     res.json({ user: returnUser });
   } catch (err) {
     next(err);
   }
 }
-// async function getUser (req, res, next) {
-//   try {
-//     const { userId } = req.params
-
-//     // Obtenemos el usuario desde la base de datos
-//     const user = await getUserBy({ id: userId })
-//     if (user instanceof Error) throw user
-
-//     // Si no existe ese usuario, retornamos un error
-//     if (!user) throw new AccessError({ message: 'Usuario no encontrado' })
-
-//     // Filtraremos los elementos de usuario que necesitamos
-//     const { id, username, avatar } = user
-
-//     // Generamos el usuario de retorno
-//     const returnUser = { id, username, avatar }
-
-//     // En el caso de que el usuario consulte por su
-//     // propia info, le entregaremos el email
-//     if (user.id === req.user.id) {
-//       returnUser.email = user.email
-//       returnUser.createdAt = user.createdAt
-//     }
-
-//     res.json({ user: returnUser })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
 
 async function editUserAvatar(req, res, next) {
   try {
@@ -369,7 +301,7 @@ async function editUserAvatar(req, res, next) {
     }
 
     // Obtenemos los datos del usuario para comprobar si ya tiene un avatar previo.
-    const user = await getUserBy({ id: req.user.id });
+    const user = await selectEntryByIdQuery({ id: req.user.id });
     if (user instanceof Error) {
       console.error("Error al obtener usuario:", user);
       throw user;
@@ -382,7 +314,7 @@ async function editUserAvatar(req, res, next) {
     }
 
     // Guardamos el avatar en una carpeta del servidor y obtenemos el nombre con el que lo hemos guardado.
-    const avatar = await savePhoto({ images: [req.files.avatar], width: 100 });
+    const avatar = await saveImage({ images: [req.files.avatar], width: 100 });
     console.log("Avatar guardado:", avatar);
 
     const savedAvatar = await updateUserAvatar({ avatar, userId: req.user.id });
@@ -401,38 +333,6 @@ async function editUserAvatar(req, res, next) {
   }
 }
 
-// async function editUserAvatar (req, res, next) {
-//   try {
-//     // Lanzamos un error si falta el avatar. La propiedad files puede no existir en caso
-//     // de que no recibamos ningún archivo. Usamos la interrogación para indicarle a JavaScript
-//     // que dicha propiedad puede ser undefined para evitar que se detenga el server con un error.
-//     if (!req.files?.avatar) throw new ValidationError({ message: 'Faltan campos', status: 400 })
-
-//     // Obtenemos los datos del usuario para comprobar si ya tiene un avatar previo.
-//     // const { user } = req
-//     const user = await getUserBy({ id: req.user.id })
-//     if (user instanceof Error) throw user
-
-//     // Si el usuario tiene un avatar previo lo eliminamos.
-//     if (user.avatar) {
-//       await deletePhoto({ name: user.avatar })
-//     }
-
-//     // Guardamos el avatar en una carpeta del servidor y obtenemos el nombre con el que lo hemos
-//     // guardado.
-//     const avatar = await savePhoto({ img: req.files.avatar, width: 100 })
-
-//     const savedAvatar = await updateUserAvatar({ avatar, userId: req.user.id })
-//     if (savedAvatar instanceof Error) throw savedAvatar
-
-//     res.send({
-//       status: 'ok',
-//       message: 'Avatar actualizado'
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
 async function sendRecoverPass(req, res, next) {
   try {
     // Definimos un esquema de Joi para validar la solicitud.
@@ -456,7 +356,7 @@ async function sendRecoverPass(req, res, next) {
     const { email } = req.body;
 
     // Buscamos un usuario en función del correo electrónico.
-    const user = await getUserBy({ email });
+    const user = await selectEntryByIdQuery({ email });
 
     // Si ocurre un error al buscar el usuario, lanzamos una excepción.
     if (user instanceof Error) {
@@ -505,36 +405,6 @@ async function sendRecoverPass(req, res, next) {
     next(err);
   }
 }
-
-// async function sendRecoverPass (req, res, next) {
-//   try {
-//     const { email } = req.body
-//     if (!email) throw new ValidationError({ message: 'Faltan campos', status: 400 })
-
-//     const user = await getUserBy({ email })
-//     if (user instanceof Error) throw user
-//     if (!user) throw user
-
-//     const recoverPassCode = randomDigits({ number: 9 })
-
-//     const insertedCode = await updateUserRecoverPass({ id: user.id, recoverPassCode })
-//     if (insertedCode instanceof Error) throw insertedCode
-
-//     const emailSubject = 'Recuperación de contraseña'
-//     const emailBody = recoveryPassword({ recoverPassCode })
-
-//     const sentMail = await sendMail(email, emailSubject, emailBody)
-//     if (sentMail instanceof Error) throw sentMail
-
-//     res.send({
-//       status: 'ok',
-//       message: 'Correo de recuperación enviado'
-//     })
-//   } catch (err) {
-//     console.log(err)
-//     next(err)
-//   }
-// }
 
 async function editUserPass(req, res, next) {
   try {

@@ -1,13 +1,20 @@
-import express from 'express';
-import multer from 'multer';
+import express from "express";
+import multer from "multer";
 import { VIDEO_DIR } from "../config.js";
 // Middlewares
-import authUser from '../middlewares/auth_user.js';
-import userExists from '../middlewares/user_exists.js';
-import authUserOptional from '../middlewares/auth_user_optional.js';
+import authUserController from "../middlewares/auth_user_controller.js";
+import userExistsController from "../middlewares/user_exists_controller.js";
+import authUserOptionalController from "../middlewares/auth_user_optional_controller.js";
 
 // Controllers
-import * as entryController from '../controllers/entry_controller.js';
+import * as entryController from "../controllers/entry_controller.js";
+
+// Importamos las funciones controladoras finales.
+import {
+  createEntryController,
+  listEntriesController,
+  getEntryController,
+} from "../controllers/entry_controller.js";
 
 const router = express.Router();
 
@@ -21,65 +28,109 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+// Crear una entrada.
+router.post(
+  "/",
+  authUserController,
+  userExistsController,
+  createEntryController
+);
 
-// Routes
+// Obtener todas las entradas.
+router.get("/", authUserOptionalController, listEntriesController);
 
-// Obtener todas las fotos
-// GET /entries/photos
-router.get('/photos', entryController.getAllPhotosController);
+// Obtener una sola entrada.
+router.get("/:id", authUserOptionalController, getEntryController);
 
 // Rutas para dar y eliminar likes
-router.post('/:entryId/likes/add', authUser, userExists, entryController.addLikeController);
-router.post('/:entryId/likes/remove', authUser, userExists, entryController.removeLikeController);
-
-// Crear una entrada
-// POST /entries/
-router.post('/', authUser, userExists, entryController.createEntry);
+router.post(
+  "/:entryId/likes/add",
+  authUserController,
+  userExistsController,
+  entryController.addLikeController
+);
+router.post(
+  "/:entryId/likes/remove",
+  authUserController,
+  userExistsController,
+  entryController.removeLikeController
+);
 
 // Nueva ruta para obtener entradas por descripción
 // GET /entries/description?description=<descripción>
-router.get('/description', entryController.searchEntriesByDescription);
-
-// Obtener todas las entradas
-// GET /entries/
-router.get('/', entryController.listEntries);
-
-// Obtener una sola entrada
-// GET /entries/1
-router.get('/:id', entryController.getEntry);
+router.get("/description", entryController.searchEntriesByDescription);
 
 // PUT /entries/1
-router.put('/:id', authUser, userExists, entryController.editEntry);
-router.patch('/:id', authUser, userExists, entryController.editEntry);
+router.put(
+  "/:id",
+  authUserController,
+  userExistsController,
+  entryController.editEntry
+);
+router.patch(
+  "/:id",
+  authUserController,
+  userExistsController,
+  entryController.editEntry
+);
 
 // Agregar imágenes al post
 // POST /entries/1/photos
-router.post('/:id/photos', authUser, userExists, entryController.addPhoto);
+router.post(
+  "/:id/photos",
+  authUserController,
+  userExistsController,
+  entryController.addPhoto
+);
 
 // Borrar una foto
 // DELETE /entries/4/photos/9
-router.delete('/:id/photos/:photoId', authUser, userExists, entryController.deleteEntryPhoto);
+router.delete(
+  "/:id/photos/:photoId",
+  authUserController,
+  userExistsController,
+  entryController.deleteEntryPhoto
+);
 
 // Agregar comentario a una entrada
 // POST /entries/1/comments
-router.post('/:id/comments', authUser, userExists, entryController.addComment);
+router.post(
+  "/:id/comments",
+  authUserController,
+  userExistsController,
+  entryController.addComment
+);
 
 // Borrar un comentario de una entrada
 // DELETE /entries/1/comments/2
-router.delete('/:id/comments/:commentId', authUser, userExists, entryController.deleteComment);
+router.delete(
+  "/:id/comments/:commentId",
+  authUserController,
+  userExistsController,
+  entryController.deleteComment
+);
 
 // Ruta para la subida de videos
 // POST /entries/1/videos
-router.post("/:id/videos", authUser, userExists, entryController.addVideo);
+router.post(
+  "/:id/videos",
+  authUserController,
+  userExistsController,
+  entryController.addVideo
+);
 
 // Ruta para borrar videos
 // DELETE /entries/4/videos/1
-router.delete("/:id/videos/:videoId", authUser, userExists, (req, res, next) => {
-  console.log("Datos recibidos en la ruta de eliminación de video:");
-  console.log("Entry ID:", req.params.id);
-  console.log("Video ID:", req.params.videoId);
-  entryController.deleteEntryVideo(req, res, next); // Llama a tu controlador
-});
+router.delete(
+  "/:id/videos/:videoId",
+  authUserController,
+  userExistsController,
+  (req, res, next) => {
+    console.log("Datos recibidos en la ruta de eliminación de video:");
+    console.log("Entry ID:", req.params.id);
+    console.log("Video ID:", req.params.videoId);
+    entryController.deleteEntryVideo(req, res, next); // Llama a tu controlador
+  }
+);
 
-export default router
+export default router;

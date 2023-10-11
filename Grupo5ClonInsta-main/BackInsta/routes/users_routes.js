@@ -4,8 +4,8 @@ import express from "express";
 import * as userController from "../controllers/user_controller.js";
 
 // Middlewares
-import authUser from "../middlewares/auth_user.js";
-import userExists from "../middlewares/user_exists.js";
+import authUserController from "../middlewares/auth_user_controller.js";
+import userExistsController from "../middlewares/user_exists_controller.js";
 
 const router = express.Router();
 
@@ -19,13 +19,23 @@ router.post("/validate/:regCode", userController.validateUser);
 router.post("/login", userController.loginUser);
 
 // GET /users/
-router.get("/",userController.allUsers);
+router.get(
+  "/",
+  authUserController,
+  userExistsController,
+  userController.allUsers
+);
 
 // GET /users/1
-router.get("/:userId",  userController.getUser);
+router.get("/:userId", userController.getUser);
 
 // PUT /users/avatar
-router.put("/avatar", authUser, userExists, userController.editUserAvatar);
+router.put(
+  "/avatar",
+  authUserController,
+  userExistsController,
+  userController.editUserAvatar
+);
 
 // PUT /users/recover-password
 router.put("/recover-password", userController.sendRecoverPass);
