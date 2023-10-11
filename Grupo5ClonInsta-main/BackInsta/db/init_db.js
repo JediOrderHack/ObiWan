@@ -63,7 +63,7 @@ const init = async () => {
       CREATE TABLE IF NOT EXISTS likes(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         userId INT UNSIGNED NOT NULL,
-        postId INT UNSIGNED,
+        postId INT UNSIGNED NOT NULL,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         modifiedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (userId) REFERENCES users(id),
