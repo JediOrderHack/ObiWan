@@ -1,6 +1,151 @@
 import getPool from "../pool.js";
-import ContentError from "../../errors/content_error.js";
+import generateError from "../../helpers/generate_error.js";
 
+// Función que se conecta a la base de datos e inserta una nueva entrada.
+async function insertEntryQuery({ description, userId }) {
+  let connection;
+
+  try {
+    connection = await getPool();
+
+    // Insertamos la entrada y obtenemos el ID que MySQL ha generado.
+    const [entry] = await connection.query(
+      "INSERT INTO entries (description, userId) VALUES (?, ?)",
+      [description, userId]
+    );
+
+    // Retornamos el ID de la entrada.
+    return entry.insertId;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
+// Función que se conecta a la base de datos y retorna todas las entradas.
+async function selectAllEntriesQuery({ userId }) {
+  const connection = await getPool();
+
+  try {
+    const [entries] = await connection.query(
+      `
+        SELECT
+          e.id AS id,
+          e.description AS description,
+          e.createdAt AS createdAt,
+          e.userId AS userId,
+          u.username,
+          u.avatar,
+          e.userId = ? AS owner,
+          COUNT(DISTINCT l.id) AS likesCount,
+          BIT_OR(l.user_id = ?) AS likedByMe
+        FROM entries e
+        INNER JOIN users u ON e.userId = u.id
+        LEFT JOIN likes l ON e.id = l.post_id
+        GROUP BY e.id
+      `,
+      [userId, userId]
+    );
+
+    // Recorremos el array de entradas.
+    for (const entry of entries) {
+      // Obtenemos las fotos de la entrada.
+      const [photos] = await connection.query(
+        `SELECT id, photoName FROM photos WHERE entryId = ?`,
+        [entry.id]
+      );
+
+      // Obtenemos los comentarios de la entrada.
+      const [comments] = await connection.query(
+        ` 
+          SELECT c.id, c.commentText, u.username
+          FROM comments c
+          INNER JOIN users u on c.userId = u.id 
+          WHERE c.entryId = ?
+        `,
+        [entry.id]
+      );
+
+      // Agregamos a la entrada las fotos y los comentarios.
+      entry.photos = photos;
+      entry.comments = comments;
+
+      // Modificamos el valor de la propiedad "owner" de tipo Number a tipo Boolean.
+      entry.owner = Boolean(entry.owner);
+
+      // Hacemos lo mismo con "likedByMe".
+      entry.likedByMe = Boolean(entry.likedByMe);
+    }
+
+    return entries;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
+// Función que se conecta a la base de datos y retorna una entrada concreta.
+async function selectEntryByIdQuery({ entryId, userId }) {
+  let connection;
+
+  try {
+    connection = await getPool();
+
+    const [entries] = await connection.query(
+      `
+        SELECT
+          e.id,
+          e.description,
+          e.createdAt,
+          e.userId,
+          u.username,
+          u.avatar,
+          e.userId = ? AS owner,
+          COUNT(DISTINCT l.id) AS likesCount,
+          BIT_OR(l.user_id = ?) AS likedByMe
+        FROM entries e
+        INNER JOIN users u ON e.userId = u.id
+        LEFT JOIN likes l ON e.id = l.post_id
+        WHERE e.id = ?
+        GROUP BY e.id
+      `,
+      [userId, userId, entryId]
+    );
+
+    if (entries.length < 1) {
+      generateError("Entrada no encontrada", 404);
+    }
+
+    // Obtenemos las fotos de la entrada.
+    const [photos] = await connection.query(
+      `SELECT id, photoName FROM photos WHERE entryId = ?`,
+      [entries[0].id]
+    );
+
+    // Obtenemos los comentarios de la entrada.
+    const [comments] = await connection.query(
+      ` 
+        SELECT c.id, c.commentText, u.username
+        FROM comments c
+        INNER JOIN users u on c.userId = u.id 
+        WHERE c.entryId = ?
+      `,
+      [entries[0].id]
+    );
+
+    // Agregamos a la entrada las fotos y los comentarios.
+    entries[0].photos = photos;
+    entries[0].comments = comments;
+
+    // Modificamos el valor de la propiedad "owner" de tipo Number a tipo Boolean.
+    entries[0].owner = Boolean(entries[0].owner);
+
+    // Hacemos lo mismo con "likedByMe".
+    entries[0].likedByMe = Boolean(entries[0].likedByMe);
+
+    return entries[0];
+  } finally {
+    if (connection) connection.release();
+  }
+}
 
 async function getEntryBy(obj) {
   const userId = obj.userId || 0;
@@ -21,7 +166,7 @@ async function getEntryBy(obj) {
   try {
     connection = await getPool();
     const [entry] = await connection.query(
-  `SELECT entries.*, users.username AS owner, GROUP_CONCAT(photos.photoName) AS photos
+      `SELECT entries.*, users.username AS owner, GROUP_CONCAT(photos.photoName) AS photos
   FROM entries
   LEFT JOIN users ON entries.userId = users.id
   LEFT JOIN photos ON entries.id = photos.entryId
@@ -30,7 +175,7 @@ async function getEntryBy(obj) {
   GROUP BY entries.id`,
       [obj.id]
     );
-console.log("Resultados de la consulta SQL:", entry);
+    console.log("Resultados de la consulta SQL:", entry);
     // Si no se encuentra la entrada, devolvemos null
     if (!entry.length) {
       return null;
@@ -91,45 +236,6 @@ async function getEntriesWithLikesAndPhotosByDescription(description) {
   }
 }
 
-async function newEntry({ description, userId, photos }) {
-  let connection;
-
-  try {
-    connection = await getPool();
-    console.log("Descripción:", description);
-    console.log("UserID:", userId);
-    console.log("Fotos:", photos);
-
-    // Obtén el valor autoincremental de entryId
-    const [insertedEntry] = await connection.query(
-      "INSERT INTO entries (description, userId) VALUES (?, ?)",
-      [description, userId]
-    );
-
-    // Aquí estamos insertando una nueva entrada en la tabla 'entries' y obteniendo el valor autoincremental.
-    const entryId = insertedEntry.insertId;
-
-    if (photos && photos.length > 0) {
-      for (const photoName of photos) {
-        console.log("Insertando foto:", photoName);
-        await insertPhoto({ photoName, entryId });
-        console.log("Foto insertada:", photoName);
-    
-      }
-    }
-
-    const entry = await getEntryBy({ id: entryId, userId });
-    if (entry instanceof Error) throw entry;
-
-    return entry;
-  } catch (error) {
-    console.error("Error en newEntry:", error);
-    return error;
-  } finally {
-    if (connection) connection.release();
-  }
-}
-
 async function updateEntry({ id, userId, description }) {
   let connection;
 
@@ -152,72 +258,21 @@ async function updateEntry({ id, userId, description }) {
   }
 }
 
-async function getAllEntries() {
-  try {
-    const connection = await getPool();
-    const [entries] = await connection.query(`
-      SELECT
-        e.id AS id,
-        e.description AS description,
-        e.createdAt AS createdAt,
-        e.userId AS userId,
-        u.username AS owner,
-        (
-          SELECT CONCAT('[', GROUP_CONCAT('"', p.photoName, '"'), ']')
-          FROM photos p
-          WHERE p.entryId = e.id
-        ) AS photos,
-        NULL AS video,
-        COUNT(DISTINCT l.id) AS likesCount,
-        GROUP_CONCAT(DISTINCT CONCAT(u.username, ': ', c.commentText)) AS comments
-      FROM entries e
-      LEFT JOIN users u ON e.userId = u.id
-      LEFT JOIN likes l ON e.id = l.post_id
-      LEFT JOIN (
-        SELECT entryId, commentText
-        FROM comments
-      ) c ON e.id = c.entryId
-      GROUP BY e.id
-   `);
-    connection.release();
-    return entries;
-  } catch (error) {
-    throw error;
-  }
-}
-
-const getAllPhotos = async () => {
-  const connection = await getPool();
-
-  try {
-    // Realiza la consulta SQL para obtener todas las fotos
-    const [rows] = await connection.query("SELECT * FROM photos");
-    return rows;
-    console.log(rows)
-  } catch (error) {
-    throw error;
-  } finally {
-    connection.release();
-  }
-};
-
-async function insertPhoto({ photoName, entryId }) {
+// Función que se conecta a la base de datos e inserta una nueva foto.
+async function insertPhotoQuery({ photoName, entryId }) {
   let connection;
 
   try {
     connection = await getPool();
 
-    const [entry] = await connection.query(
+    // Insertamos la photo y obtenemos el ID que MySQL ha generado.
+    const [photo] = await connection.query(
       "INSERT INTO photos(entryId, photoName) VALUES(?, ?)",
       [entryId, photoName]
     );
 
-    return {
-      id: entryId,
-      photo: photoName,
-    };
-  } catch (error) {
-    return error;
+    // Retornamos el ID de la foto.
+    return photo.insertId;
   } finally {
     if (connection) connection.release();
   }
@@ -312,11 +367,6 @@ async function removeLike({ entryId, userId }) {
   }
 }
 
-
-
-
-
-
 // async function getEntriesByDescription(description) {
 //   let connection;
 
@@ -338,7 +388,7 @@ async function removeLike({ entryId, userId }) {
 // }
 // Función para obtener todas las entradas con el número de "likes"
 const getAllEntriesWithLikes = async (keyword, userId) => {
-  const entries = await getAllEntries({ keyword, userId });
+  const entries = await selectAllEntriesQuery({ keyword, userId });
 
   // Itera a través de las entradas y obtiene el número de "likes" para cada una
   const entriesWithLikes = await Promise.all(
@@ -350,40 +400,6 @@ const getAllEntriesWithLikes = async (keyword, userId) => {
 
   return entriesWithLikes;
 };
-async function getEntryWithLikesAndPhotos(entryId, userId) {
-  let connection;
-
-  try {
-    connection = await getPool();
-
-    const [entryWithLikesPhotosAndComments] = await connection.query(
-      `SELECT
-        e.id,
-        e.description,
-        e.userId,
-        e.createdAt,
-        u.username AS owner,
-        GROUP_CONCAT(p.photoName) AS photos,
-        MAX(v.videoName) AS video,
-        (SELECT COUNT(*) FROM likes WHERE post_id = e.id) AS likesCount,
-        (SELECT GROUP_CONCAT(commentText) FROM comments c WHERE c.entryId = e.id) AS comments
-      FROM entries e
-      LEFT JOIN users u ON e.userId = u.id
-      LEFT JOIN photos p ON e.id = p.entryId
-      LEFT JOIN videos v ON e.id = v.entryId
-      WHERE e.id = ?
-      GROUP BY e.id, e.description, e.userId, e.createdAt, owner`,
-      [entryId]
-    );
-
-    return entryWithLikesPhotosAndComments[0];
-  } catch (error) {
-    return error;
-  } finally {
-    if (connection) connection.release();
-  }
-}
-
 
 const getLikesCount = async (entryId) => {
   let connection;
@@ -423,7 +439,7 @@ async function insertComment({ entryId, userId, commentText }) {
 
     // Recupera el comentario recién insertado
     const [commentData] = await pool.execute(
-      'SELECT * FROM comments WHERE id = ?',
+      "SELECT * FROM comments WHERE id = ?",
       [insertedCommentId]
     );
 
@@ -441,7 +457,7 @@ async function insertComment({ entryId, userId, commentText }) {
 async function deleteCommentById(commentId) {
   const pool = await getPool();
 
-  const query = 'DELETE FROM comments WHERE id = ?';
+  const query = "DELETE FROM comments WHERE id = ?";
 
   try {
     const [result] = await pool.execute(query, [commentId]);
@@ -458,8 +474,8 @@ async function getEntryById(entryId) {
 
   try {
     // Consulta SQL para buscar la entrada por su ID
-    const query = 'SELECT * FROM entries WHERE id = ?';
-    
+    const query = "SELECT * FROM entries WHERE id = ?";
+
     // Ejecuta la consulta y obtén el resultado
     const [rows] = await connection.query(query, [entryId]);
 
@@ -485,8 +501,8 @@ async function getCommentById(commentId) {
 
   try {
     // Consulta SQL para buscar el comentario por su ID
-    const query = 'SELECT * FROM comments WHERE id = ?';
-    
+    const query = "SELECT * FROM comments WHERE id = ?";
+
     // Ejecuta la consulta y obtén el resultado
     const [rows] = await connection.query(query, [commentId]);
 
@@ -504,7 +520,7 @@ async function getCommentById(commentId) {
     if (connection) connection.release();
   }
 }
-async function insertVideo({  videoName,entryId }) {
+async function insertVideo({ videoName, entryId }) {
   let connection;
 
   try {
@@ -513,14 +529,14 @@ async function insertVideo({  videoName,entryId }) {
     const [entry] = await connection.query(
       "INSERT INTO videos(entryId, videoName) VALUES(?, ?)",
       [entryId, videoName]
-    )
-    return{
+    );
+    return {
       id: entryId,
       video: videoName,
-    }
+    };
   } catch (error) {
     console.error("Error en insertVideo:", error);
-    return error // Puedes considerar lanzar el error para que sea manejado en el nivel superior.
+    return error; // Puedes considerar lanzar el error para que sea manejado en el nivel superior.
   } finally {
     if (connection) connection.release();
   }
@@ -546,44 +562,43 @@ async function checkVideoLimit(entryId) {
   }
 }
 
-async function destroyVideo ({id}){
+async function destroyVideo({ id }) {
   let connection;
 
-  try{
-    connection = await getPool()
+  try {
+    connection = await getPool();
 
-    await connection.query("DELETE FROM videos WHERE id = ?", [id])
-    
-    return{id: id,
-    }
-  }catch(error){
-    return error
-  } finally{
-    if (connection) connection.release()
+    await connection.query("DELETE FROM videos WHERE id = ?", [id]);
+
+    return { id: id };
+  } catch (error) {
+    return error;
+  } finally {
+    if (connection) connection.release();
   }
 }
 
-async function getVideoById(videoId){
-  let connection
+async function getVideoById(videoId) {
+  let connection;
 
-  try{
-    connection = await getPool()
+  try {
+    connection = await getPool();
 
-    const [video] =await connection.query(
+    const [video] = await connection.query(
       "SELECT * FROM videos WHERE id = ?",
       [videoId]
-    )
+    );
 
-    if (video && video.length > 0){
-      return video[0]
+    if (video && video.length > 0) {
+      return video[0];
     }
 
-    return null
-  }catch (error){
-    console.error("Error en getVideobyId", error)
-    return error
-  }finally{
-    if (connection) connection.release()
+    return null;
+  } catch (error) {
+    console.error("Error en getVideobyId", error);
+    return error;
+  } finally {
+    if (connection) connection.release();
   }
 }
 
@@ -594,21 +609,19 @@ export {
   insertComment,
   getLikesCount,
   getEntryBy,
-  newEntry,
+  insertEntryQuery,
   updateEntry,
-  getAllEntries,
-  insertPhoto,
+  selectAllEntriesQuery,
+  insertPhotoQuery,
   destroyPhoto,
-  addLike, 
+  addLike,
   removeLike,
   getPhotoById,
   getEntriesWithLikesAndPhotosByDescription,
   getAllEntriesWithLikes,
-  getEntryWithLikesAndPhotos,
+  selectEntryByIdQuery,
   insertVideo,
   checkVideoLimit,
   destroyVideo,
   getVideoById,
-  getAllPhotos,
 };
-

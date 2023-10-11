@@ -1,107 +1,59 @@
-import crypto from "node:crypto";
-import path from "node:path";
-import fs from "node:fs";
+// Importamos las dependencias.`
+import crypto from "crypto";
+import path from "path";
+import fs from "fs/promises";
 import sharp from "sharp";
 
-import { root, UPLOADS_DIR } from "../config.js";
+// Importamos las variables necesarias para la configuración.
+import { ROOT, UPLOADS_DIR } from "../config.js";
 
-async function saveAvatar ({ img, width }) {
+// Importamos la función que genera errores.
+import generate_error from "../helpers/generate_error.js";
+
+// Función que guarda una imagen en la carpeta uploads.
+async function saveImage({ img, width }) {
   try {
     // Ruta absoluta al directorio de subida de archivos.
-    const uploadsPath = path.resolve('..', UPLOADS_DIR)
+    const uploadsPath = path.resolve(ROOT, UPLOADS_DIR);
 
-    
     try {
       // Intentamos acceder al directorio de subida de archivos con el método "access".
-      await fs.access(uploadsPath)
+      await fs.access(uploadsPath);
     } catch {
       // Si el método "access" lanza un error significa que el directorio no existe.
       // Lo creamos.
-      await fs.mkdir(uploadsPath)
+      await fs.mkdir(uploadsPath);
     }
-    
 
     // Creamos un objeto de tipo Sharp con la imagen dada.
-    const sharpImg = sharp(img.data)
+    const sharpImg = sharp(img.data);
 
     // Redimensionamos la imagen. Width representa un tamaño en píxeles.
-    sharpImg.resize(width)
+    sharpImg.resize(width);
 
     // Generamos un nombre único para la imagen dado que no podemos guardar dos imágenes
     // con el mismo nombre en la carpeta uploads.
-    const randomName = crypto.randomUUID()
-    const imgName = `${randomName}.jpg`
+    const randomName = crypto.randomUUID();
+    const imgName = `${randomName}.jpg`;
 
     // Ruta absoluta a la imagen.
-    const imgPath = path.join(uploadsPath, imgName)
+    const imgPath = path.join(uploadsPath, imgName);
 
     // Guardamos la imagen.
-    sharpImg.toFile(imgPath)
+    sharpImg.toFile(imgPath);
 
     // Retornamos el nombre de la imagen.
-    return imgName
+    return imgName;
   } catch (err) {
-    console.error(err)
-    return new Error('Error al guardar la imagen en el servidor')
+    console.error(err);
+    generate_error("Error al guardar el archivo en disco", 500);
   }
 }
-
-
-
-async function savePhoto({ images, width }) {
-  console.log("Argumentos recibidos por savePhoto:", images);
-  try {
-    if (!images || !Array.isArray(images) || images.length === 0) {
-      throw new Error("Datos de imagen faltantes o inválidos");
-    }
-
-    const photoNames = [];
-
-    for (const img of images) {
-      if (!img || !img.data) {
-        throw new Error("Datos de imagen faltantes o inválidos");
-      }
-
-      // Ruta absoluta al directorio de subida de archivos.
-      const uploadsPath = path.resolve(root, UPLOADS_DIR);
-
-      // Creamos un objeto de tipo Sharp con los datos de la imagen.
-      const sharpImg = sharp(img.data);
-
-      // Redimensionamos la imagen. Width representa un tamaño en píxeles.
-      sharpImg.resize(width);
-
-      // Generamos un nombre único para la imagen dado que no podemos guardar dos imágenes
-      // con el mismo nombre en la carpeta uploads.
-      const randomName = crypto.randomUUID();
-      const imgName = `${randomName}.jpg`;
-
-      // Ruta absoluta a la imagen.
-      const imgPath = path.join(uploadsPath, imgName);
-
-      // Guardamos la imagen.
-      await sharpImg.toFile(imgPath);
-
-      // Agregamos el nombre de la imagen al array de nombres.
-      photoNames.push(imgName);
-
-      // Agregamos un console.log para verificar que la imagen se haya guardado correctamente
-      console.log("Imagen guardada:", imgName);
-    }
-
-    // Retornamos los nombres de las imágenes.
-    return photoNames;
-  } catch (err) {
-    console.error("Error en savePhoto:", err);
-    throw new Error("Error al guardar la imagen en el servidor");
-  }
-}
-
 
 async function deletePhoto({ name }) {
   try {
     // Ruta absoluta al archivo que queremos eliminar.
-    const imgPath = path.resolve(root, UPLOADS_DIR, name);
+    const imgPath = path.resolve(ROOT, UPLOADS_DIR, name);
 
     try {
       await fs.access(imgPath);
@@ -120,4 +72,4 @@ async function deletePhoto({ name }) {
   }
 }
 
-export { savePhoto, deletePhoto, saveAvatar };
+export { saveImage, deletePhoto };

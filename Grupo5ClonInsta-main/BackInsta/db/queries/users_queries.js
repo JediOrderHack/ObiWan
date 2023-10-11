@@ -3,6 +3,7 @@ import getPool from "../pool.js";
 // Errors
 import AuthError from "../../errors/auth_error.js";
 import ValidationError from "../../errors/validation_error.js";
+import generateError from "../../helpers/generate_error.js";
 
 async function getUserWithAll(obj) {
   const queryStr = Object.entries(obj)
@@ -54,22 +55,22 @@ async function getUserWithAll(obj) {
   }
 }
 
-async function getUserBy(obj) {
-  const queryStr = Object.entries(obj)
-    .map((arr) => `${arr[0]} = '${arr[1]}'`)
-    .join(", ");
+// Función que se conecta a la base de datos y retorna un usuario por ID.
+async function selectUserByIdQuery({ userId }) {
   let connection;
 
   try {
     connection = await getPool();
 
-    const [user] = await connection.query(
-      `SELECT * FROM users WHERE ${queryStr}`
-    );
-    return user[0];
-  } catch (error) {
-    console.error("Error en getUserBy:", error);
-    return error;
+    const [users] = await connection.query(`SELECT * FROM users WHERE id = ?`, [
+      userId,
+    ]);
+
+    if (users.length < 1) {
+      generateError("Usuario no encontrado", 404);
+    }
+
+    return users[0];
   } finally {
     if (connection) connection.release();
   }
@@ -82,7 +83,7 @@ async function newUser({ email, username, password, registrationCode }) {
     connection = await getPool();
 
     // Comprobamos si el email está repetido.
-    let user = await getUserBy({ email });
+    let user = await selectEntryByIdQuery({ email });
     if (user instanceof Error) throw user;
 
     // Si el array de usuarios tiene más de 0 usuarios quiere decir que el email está repetido.
@@ -90,7 +91,7 @@ async function newUser({ email, username, password, registrationCode }) {
       throw new AuthError({ message: "Ya existe un usuario con ese email" });
 
     // Comprobamos si el nombre de usuario está repetido.
-    user = await getUserBy({ username });
+    user = await selectEntryByIdQuery({ username });
     if (user instanceof Error) throw user;
 
     // Si el array de usuarios tiene más de 0 usuarios quiere decir que el nombre de usuario está repetido.
@@ -102,7 +103,7 @@ async function newUser({ email, username, password, registrationCode }) {
       "INSERT INTO users (email, username, password, registrationCode, createdAt) VALUES(?, ?, ?, ?, ?)",
       [email, username, password, registrationCode, new Date()]
     );
-    user = await getUserBy({ id: result.insertId });
+    user = await selectEntryByIdQuery({ id: result.insertId });
     if (user instanceof Error) throw user;
 
     return user;
@@ -120,7 +121,7 @@ async function updateUserRegCode({ registrationCode }) {
     connection = await getPool();
 
     // Intentamos localizar a un usuario con el código de registro que nos llegue.
-    const user = await getUserBy({ registrationCode });
+    const user = await selectEntryByIdQuery({ registrationCode });
     if (user instanceof Error) throw user;
 
     // Si no hay usuarios con ese código de registro lanzamos un error.
@@ -186,7 +187,7 @@ async function updateUserPass({ recoveryPassCode, newPass }) {
     connection = await getPool();
 
     // Comprobamos si existe algún usuario con ese código de recuperación.
-    const user = await getUserBy({ recoveryPassCode });
+    const user = await selectEntryByIdQuery({ recoveryPassCode });
     if (user instanceof Error) throw user;
 
     // Si no hay ningún usuario con ese código de recuperación lanzamos un error.
@@ -222,7 +223,7 @@ async function getAllUser() {
 }
 
 export {
-  getUserBy,
+  selectUserByIdQuery,
   newUser,
   updateUserRegCode,
   updateUserAvatar,

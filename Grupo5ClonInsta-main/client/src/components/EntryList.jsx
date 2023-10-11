@@ -6,7 +6,7 @@ import EntryComment from "./EntryComments";
 import { getToken } from "../utils/getToken";
 import ViewComments from "./ViewComments";
 
-const IMAGES_URL = "http://localhost:3000/images";
+const IMAGES_URL = "http://localhost:4000/images";
 
 function EntryList({ entriesProp }) {
   const [entries, setEntries] = useState([]);
@@ -16,7 +16,7 @@ function EntryList({ entriesProp }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/entries", {
+        const response = await axios.get("http://localhost:4000/entries", {
           timeout: 15000,
         });
 

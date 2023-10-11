@@ -15,12 +15,12 @@ import UpdatePassword from './components/UpdatePassword.jsx';
 
 // ENTRIES:
 import NewEntryForm from './forms/NewEntryForm/NewEntryForm.jsx';
-import AvatarForm from './forms/AvatarForm/AvatarForm.jsx';
 import ValidateForm from './forms/ValidateForm/ValidateForm.jsx';
 import EntryList from './components/EntryList.jsx';
 import SearchBar from './components/SearchBar.jsx';
 import SearchEntries from './components/SearchEntries.jsx';
 import LogOut from './components/LogOut.jsx';
+import AvatarPage from './pages/AvatarPage.jsx';
 
 
 
@@ -49,7 +49,7 @@ function App() {
       <Route path='/forgot-password' element={<RecoverPassword />}/>
       <Route path='/update-password' element={<UpdatePassword />}/>
       <Route path='/newEntry' element={<NewEntryForm />}/>
-      <Route path='/avatar' element={<AvatarForm />}/>
+      <Route path='/avatar' element={<AvatarPage />}/>
       <Route path='/users/validate/:id' element={<ValidateForm />}/>
       <Route path='/search/entries' element={<SearchEntries />}/>
       

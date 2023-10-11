@@ -11,7 +11,7 @@ const ValidateForm = () => {
     const activateAccount = async () => {
       try {
         // Realiza la solicitud POST al servidor para activar la cuenta
-        const response = await fetch(`http://localhost:3000/users/validate/${id}`, {
+        const response = await fetch(`http://localhost:4000/users/validate/${id}`, {
           method: 'POST',
         });
 

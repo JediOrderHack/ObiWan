@@ -1,15 +1,16 @@
+// Importamos las funciones que me permiten conectarme a la base de datos.
 import {
   getEntryBy,
-  newEntry,
+  insertEntryQuery,
   updateEntry,
   addLike,
   removeLike,
-  insertPhoto,
+  insertPhotoQuery,
   destroyPhoto,
   getPhotoById,
   getAllEntriesWithLikes,
   getLikesCount,
-  getEntryWithLikesAndPhotos,
+  selectEntryByIdQuery,
   getEntriesWithLikesAndPhotosByDescription,
   insertComment,
   deleteCommentById,
@@ -19,18 +20,21 @@ import {
   checkVideoLimit,
   getVideoById,
   destroyVideo,
-  getAllEntries,
-  getAllPhotos,
-} from "../db/queries/entries_queries.js"
+  selectAllEntriesQuery,
+} from "../db/queries/entries_queries.js";
 
-import ffmpeg from 'fluent-ffmpeg'
-import fs from "fs";
 import Joi from "joi";
+
 // Services
-import { savePhoto, deletePhoto } from "../services/photos.js";
+import { saveImage, deletePhoto } from "../services/photos.js";
 import saveVideo from "../services/videos.js";
 // Config
-import { maxImageSize, VIDEO_DIR , MAX_VIDEO_DURATION, MAX_VIDEO_SIZE} from "../config.js";
+import {
+  MAX_ENTRY_IMAGE_SIZE,
+  VIDEO_DIR,
+  MAX_VIDEO_DURATION,
+  MAX_VIDEO_SIZE,
+} from "../config.js";
 
 // Errors
 import NotFoundError from "../errors/not_found_error.js";
@@ -39,342 +43,110 @@ import AuthError from "../errors/auth_error.js";
 
 import getPool from "../db/pool.js";
 
-import error404 from "../middlewares/error404.js";
+import notFoundController from "../middlewares/not_found_controller.js";
 import EntryNotFound from "../errors/not-found-entry.js";
 
+// Importamos los esquemas de Joi.
+import createEntrySchema from "../schemas/entries/createEntrySchema.js";
 
+// Importamos la función que valida esquemas.
+import validateSchema from "../helpers/validate_schema.js";
 
-async function createEntry(req, res, next) {
+// Función controladora final que inserta una entrada.
+async function createEntryController(req, res, next) {
   try {
+    // Obtenemos los datos necesarios del body.
     const { description } = req.body;
+
+    // Obtenemos el id del usuario que creará la entrada.
     const { id: userId } = req.user;
 
-    // Define un esquema de validación con Joi
-    const schema = Joi.object({
-      description: Joi.string().required(),
+    // Validamos los datos que envía el usuari con Joi.
+    await validateSchema(createEntrySchema, {
+      ...req.body,
+      ...req.files,
     });
 
-    // Valida los datos de entrada con Joi
-    const { error } = schema.validate({ description });
+    // Insertamos la entrada en la DB y obtenemos su ID.
+    const entryId = await insertEntryQuery({ description, userId });
 
-    if (error) {
-      throw new Error(error.details[0].message);
-    }
-
-    // Agrega un console.log para verificar los datos de las imágenes en req.files
-    console.log("Imágenes en req.files:", req.files);
-
-    // Insertar entry en db
-    const entry = await newEntry({ description, userId, photo: "", video: "" });
-
-    if (entry instanceof Error) throw entry;
-
+    // Array donde almacenaremos las fotos.
     const photos = [];
 
-    if (req.files) {
-      const reqPhotos = Array.isArray(req.files.photo)
-        ? req.files.photo
-        : [req.files.photo];
+    // Recorremos las fotos. Utilizamos Object.values para generar un array con las fotos que haya en req.files.
+    for (const photo of Object.values(req.files)) {
+      // Guardamos la foto en el disco y obtenemos su nombre.
+      const photoName = await saveImage({
+        img: photo,
+        width: MAX_ENTRY_IMAGE_SIZE,
+      });
 
-      for (const photo of reqPhotos) {
-        try {
-          if (!photo || !photo.data) {
-            console.error("Datos de imagen faltantes o inválidos");
-            continue; // Salta esta imagen y continúa con la siguiente.
-          }
-          // Agrega un console.log para verificar los datos de la imagen antes de guardarla
-          console.log("Datos de la imagen:", photo);
+      // Insertamos la foto y obtenemos el ID.
+      const photoId = await insertPhotoQuery({
+        photoName,
+        entryId,
+      });
 
-          // Guardamos la foto en el disco.
-          const photoName = await savePhoto({
-            images: [photo], // Envía la imagen como parte de un array
-            width: maxImageSize,
-          });
-
-          // Insertamos la foto y obtenemos los datos de la misma.
-          const newPhoto = await insertPhoto({
-            photoName,
-            entryId: entry.id,
-            photo: photoName,
-          });
-
-          if (newPhoto instanceof Error) throw newPhoto;
-
-          // Pusheamos la foto al array de fotos.
-          photos.push(newPhoto);
-
-          // Agrega un console.log para verificar que la imagen se haya guardado correctamente
-          console.log("Imagen guardada:", photoName);
-        } catch (error) {
-          // Agrega un console.error para registrar errores relacionados con las imágenes
-          console.error("Error al procesar imagen:", error);
-        }
-      }
-    }
-
-    // Lógica para manejar videos
-    const videos = [];
-    if (req.files) {
-      const reqVideos = Array.isArray(req.files.video)
-        ? req.files.video
-        : [req.files.video];
-
-      for (const video of reqVideos) {
-        try {
-          if (!video || !video.data) {
-            console.error("Datos de video faltantes o inválidos");
-            continue;
-          }
-
-          // Guarda el video en el disco utilizando la función saveVideo
-          const videoName = await saveVideo(video, video.name);
-          if (videoName instanceof Error) throw videoName;
-
-          // Inserta el video y obtén los datos del mismo
-          const newVideo = await insertVideo({ videoName, entryId: entry.id });
-          if (newVideo instanceof Error) throw newVideo;
-
-          // Agrega el video al array de videos
-          videos.push(newVideo);
-        } catch (error) {
-          // Agrega un console.error para registrar errores relacionados con los videos
-          console.error("Error al procesar video:", error);
-        }
-      }
+      // Pusheamos la foto al array de fotos.
+      photos.push({
+        id: photoId,
+        photoName,
+      });
     }
 
     res.send({
       status: "ok",
       data: {
         entry: {
-          ...entry,
+          id: entryId,
+          description,
           photos,
-          videos,
+          createdAt: new Date(),
         },
       },
     });
-  } catch (error) {
-    console.error("Error al procesar imagen o video:", error);
-  }
-}
-
-// async function createEntry (req, res, next) {
-//   try {
-//     const { title, place, description } = req.body
-//     const { id: userId } = req.user
-
-//     // Validar que datos obligatorios sean entregados
-//     if (!title) throw new ValidationError({ message: 'El campo title es obligatorio', field: 'title' })
-//     if (!place) throw new ValidationError({ message: 'El campo place es obligatorio', field: 'place' })
-//     if (!description) throw new ValidationError({ message: 'El campo description es obligatorio', field: 'description' })
-
-//     // Insertar entry en db
-//     const entry = await newEntry({ title, place, description, userId })
-//     if (entry instanceof Error) throw entry
-
-//     const photos = []
-//     if (req.files) {
-//       const reqPhotos = Object.values(req.files).slice(0, 3)
-//       for (const photo of reqPhotos) {
-//         // Guardamos la foto en el disco.
-//         const photoName = await savePhoto({ img: photo, width: maxImageSize })
-
-//         // Insertamos la foto y obtenemos los datos de la misma.
-//         const newPhoto = await insertPhoto({ photoName, entryId: entry.id })
-//         if (newPhoto instanceof Error) throw newPhoto
-
-//         // Pusheamos la foto al array de fotos.
-//         photos.push(newPhoto)
-//       }
-//     }
-
-//     res.send({
-//       status: 'ok',
-//       data: {
-//         entry: {
-//           ...entry,
-//           photos
-//         }
-//       }
-//     })
-//   } catch (error) {
-//     next(error)
-//   }
-// }
-
-
-// async function createEntry (req, res, next) {
-//   try {
-//     const { description } = req.body
-//     const { id: userId } = req.user
-
-//     // Validar que datos obligatorios sean entregados
-//     if (!) throw new ValidationError({ message: 'El campo  es obligatorio', field: '' })
-//     if () throw new ValidationError({ message: 'El campo es obligatorio', field: ' })
-//     if (!description) throw new ValidationError({ message: 'El campo description es obligatorio', field: 'description' })
-
-//     // Insertar entry en db
-//     const entry = await newEntry({ ,, description, userId })
-//     if (entry instanceof Error) throw entry
-
-//     const photos = []
-//     if (req.files) {
-//       const reqPhotos = Object.values(req.files).slice(0, 3)
-//       for (const photo of reqPhotos) {
-//         // Guardamos la foto en el disco.
-//         const photoName = await savePhoto({ img: photo, width: maxImageSize })
-
-//         // Insertamos la foto y obtenemos los datos de la misma.
-//         const newPhoto = await insertPhoto({ photoName, entryId: entry.id })
-//         if (newPhoto instanceof Error) throw newPhoto
-
-//         // Pusheamos la foto al array de fotos.
-//         photos.push(newPhoto)
-//       }
-//     }
-
-//     res.send({
-//       status: 'ok',
-//       data: {
-//         entry: {
-//           ...entry,
-//           photos
-//         }
-//       }
-//     })
-//   } catch (error) {
-//     next(error)
-//   }
-// }
-
-// Controlador para verificar si un usuario ha dado "like" en una entrada específica
-
-async function hasLikedEntryController(req, res, next) {
-  try {
-    // Obtener el id de la entrada (entryId) de los parámetros de la solicitud
-    const { entryId } = req.params;
-    // Obtener el id del usuario (userId) de la solicitud actual
-    const userId = req.user.id;
-
-    // Realizar la consulta SQL para verificar si el usuario ha dado "me gusta"
-    const connection = await getPool();
-    const [result] = await connection.query(
-      `
-      SELECT EXISTS(
-        SELECT 1
-        FROM likes
-        WHERE user_id = ? AND post_id = ?
-      ) AS hasLiked;
-      `,
-      [userId, entryId]
-    );
-
-    // El resultado será un objeto con una propiedad "hasLiked" que será 1 si ha dado "me gusta" o 0 si no ha dado "me gusta"
-    const hasLiked = result[0].hasLiked === 1;
-
-    res.json({
-      status: "ok",
-      hasLiked: hasLiked,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-// Controlador para listar todas las entradas
-async function listEntries(req, res, next) {
-  try {
-    const entries = await getAllEntries();
-    res.json({ entries });
-    console.log(entries)
   } catch (err) {
     next(err);
   }
 }
 
-
-// async function listEntries (req, res, next) {
-//   try {
-//     const { keyword } = req.query
-
-//     // Dado que la propiedad user puede no existir lo indicamos por medio de la interrogación.
-//     const entries = await getAllEntries({ keyword, userId: req.user?.id })
-//     if (entries instanceof Error) throw entries
-
-//     res.send({
-//       status: 'ok',
-//       data: {
-//         entries
-//       }
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
-
-const getAllPhotosController = async (req, res) => {
+// Función controladora final que lista las entradas.
+async function listEntriesController(req, res, next) {
   try {
-    const photos = await getAllPhotos(); // Llama a la función para obtener todas las fotos
-    res.json(photos);
-  } catch (error) {
-    console.error("Error al obtener las fotos:", error);
-    res.status(500).json({ error: "Error al obtener las fotos" });
+    const entries = await selectAllEntriesQuery({ userId: req.user?.id || 0 });
+
+    res.send({
+      status: "ok",
+      data: {
+        entries,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Función controladora final que retorna una entrada concreta.
+const getEntryController = async (req, res, next) => {
+  try {
+    // Obtenemos el id de la entrada de los path params.
+    const { id: entryId } = req.params;
+
+    const entry = await selectEntryByIdQuery({
+      entryId,
+      userId: req.user?.id || 0,
+    });
+
+    res.send({
+      status: "ok",
+      data: {
+        entry,
+      },
+    });
+  } catch (err) {
+    next(err);
   }
 };
-
-
-// Controlador para obtener una sola entrada
-const getEntry = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const entry = await getEntryWithLikesAndPhotos(id);
-    if (!entry) {
-      res.status(404).json({ error: "Entrada no encontrada." });
-    } else {
-      // Elimina el campo userId de la entrada antes de enviar la respuesta
-      delete entry.userId;
-
-      res.status(200).json(entry);
-    }
-  } catch (error) {
-    console.error("Error en getEntry:", error);
-    res.status(500).json({ error: "Error al obtener la entrada." });
-  }
-};
-
-
-// // Función para obtener una sola entrada con el número de "likes"
-// const getEntryWithLikes = async (entryId, userId) => {
-//   const entry = await getEntryBy({ id: entryId, userId });
-
-//   if (!entry) {
-//     return null;
-//   }
-
-//   const likesCount = await getLikesCount(entryId);
-//   return { ...entry, likes: likesCount };
-// };
-
-// Función para obtener el número de "likes" para una entrada específica
-
-// async function getEntry (req, res, next) {
-//   try {
-//     const { id } = req.params
-//     const userId = req.user?.id
-
-//     const entry = await getEntryBy({ id, userId })
-//     if (entry instanceof Error) throw entry
-
-//     res.send({
-//       status: 'ok',
-//       data: {
-//         entry
-//       }
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
 
 async function editEntry(req, res, next) {
   try {
@@ -443,13 +215,13 @@ async function editEntry(req, res, next) {
           }
 
           // Guardamos la foto en el disco.
-          const photoName = await savePhoto({
+          const photoName = await saveImage({
             images: [photo], // Envía la imagen como parte de un array
-            width: maxImageSize,
+            width: MAX_ENTRY_IMAGE_SIZE,
           });
 
           // Insertamos la foto y obtenemos los datos de la misma.
-          const newPhoto = await insertPhoto({
+          const newPhoto = await insertPhotoQuery({
             photoName,
             entryId: editedEntry.id,
           });
@@ -479,59 +251,6 @@ async function editEntry(req, res, next) {
   }
 }
 
-// async function editEntry (req, res, next) {
-//   try {
-//     const { id } = req.params
-//     const userId = req.user?.id
-
-//     // Revisa si la entrada existe
-//     const originalEntry = await getEntryBy({ id, userId })
-//     if (originalEntry instanceof Error) throw originalEntry
-
-//     // Revisa si la entrada le pertenece al usuario logueado
-//     if (!originalEntry.owner) throw new AuthError({ message: 'No tienes suficientes permisos', status: 401 })
-
-//     const editedEntry = {
-//       ...originalEntry,
-//       ...req.body
-//     }
-
-//     const photos = []
-
-//     if (req.files) {
-//       const currentPhotosLength = originalEntry.photos.length
-//       const availablePhotoSpaces = 3 - currentPhotosLength
-//       if (availablePhotoSpaces === 0) throw new ContentError({ message: 'Tienes el número máximo de fotos, para agregar una debes eliminar una', status: 400 })
-
-//       const currentPhotos = Object.values(req.files).slice(0, availablePhotoSpaces)
-
-//       for (const photo of currentPhotos) {
-//         // Guardamos la foto en el disco.
-//         const photoName = await savePhoto({ img: photo, width: maxImageSize })
-
-//         // Insertamos la foto y obtenemos los datos de la misma.
-//         const newPhoto = await insertPhoto({ photoName, entryId: editedEntry.id })
-//         if (newPhoto instanceof Error) throw newPhoto
-
-//         // Pusheamos la foto al array de fotos.
-//         photos.push(newPhoto)
-//       }
-//     }
-
-//     const updatedEntry = await updateEntry(editedEntry)
-//     if (updatedEntry instanceof Error) throw updatedEntry
-
-//     res.send({
-//       status: 'ok',
-//       message: 'Entrada actualizada',
-//       data: {
-//         entry: updatedEntry
-//       }
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
 async function addPhoto(req, res, next) {
   try {
     const paramsSchema = Joi.object({
@@ -574,13 +293,13 @@ async function addPhoto(req, res, next) {
     for (const photo of currentPhotos) {
       try {
         // Guardamos la foto en el disco.
-        const photoName = await savePhoto({
+        const photoName = await saveImage({
           images: [photo], // Envía la imagen como parte de un array
-          width: maxImageSize,
+          width: MAX_ENTRY_IMAGE_SIZE,
         });
 
         // Insertamos la foto y obtenemos los datos de la misma.
-        const newPhoto = await insertPhoto({ photoName, entryId: id });
+        const newPhoto = await insertPhotoQuery({ photoName, entryId: id });
         if (newPhoto instanceof Error) throw newPhoto;
 
         photos.push(newPhoto);
@@ -600,46 +319,6 @@ async function addPhoto(req, res, next) {
     next(err);
   }
 }
-
-
-// async function addPhoto (req, res, next) {
-//   try {
-//     const { id } = req.params
-//     const { id: userId } = req.user
-
-//     // Si no hay foto lanzamos un error.
-//     if (!req.files?.photo) throw new ContentError({ message: 'Faltan campos', status: 400 })
-
-//     const entry = await getEntryBy({ id, userId })
-//     if (entry instanceof Error) throw entry
-
-//     // Si no somos los dueños de la entrada lanzamos un error.
-//     if (!entry.owner) throw new AuthError({ message: 'No tienes suficientes permisos', status: 401 })
-
-//     // Si la entrada ya tiene tres fotos lanzamos un error.
-//     if (entry.photos.length > 2) throw new ContentError({ message: 'Límite de tres fotos alcanzado', status: 418 })
-
-//     // Guardamos la foto en la carpeta uploads y obtenemos el nombre que le hemos dado.
-//     const photoName = await savePhoto({ img: req.files.photo, width: maxImageSize })
-
-//     // Guardamos la foto en la base de datos.
-//     const photo = await insertPhoto({ photoName, entryId: id })
-//     if (photo instanceof Error) throw photo
-
-//     res.send({
-//       status: 'ok',
-//       data: {
-//         photo: {
-//           ...photo,
-//           entryId: Number(entry.id)
-//         }
-//       }
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
-
 
 async function deleteEntryPhoto(req, res, next) {
   try {
@@ -683,47 +362,10 @@ async function deleteEntryPhoto(req, res, next) {
   }
 }
 
-
-// async function deleteEntryPhoto (req, res, next) {
-//   try {
-//     const { id, photoId } = req.params
-//     const { id: userId } = req.user
-
-//     const entry = await getEntryBy({ id, userId })
-//     if (entry instanceof Error) throw entry
-
-//     // Si no somos los dueños de la entrada lanzamos un error.
-//     if (!entry.owner) throw new AuthError({ message: 'No tienes suficientes permisos', status: 401 })
-
-//     // Localizamos la foto en el array de fotos de la entrada.
-//     const photo = entry.photos.find((photo) => photo.id === Number(photoId))
-
-//     // Si no hay foto lanzamos un error.
-//     if (!photo) throw new ContentError({ message: 'Foto no encontrada', status: 404 })
-
-//     // Borramos la foto de la carpeta uploads.
-//     const deletedPhoto = await deletePhoto({ name: photo.name })
-//     if (deletedPhoto instanceof Error) throw deletedPhoto
-
-//     // Borramos la foto en la base de datos.
-//     const destroyedPhoto = await destroyPhoto({ id: photoId })
-//     if (destroyedPhoto instanceof Error) throw destroyedPhoto
-
-//     res.send({
-//       status: 'ok',
-//       message: 'Foto eliminada'
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
-
-
-
 async function addLikeController(req, res, next) {
-  try {  
+  try {
     // Obtener el id de los params
-    const { entryId }= req.params;
+    const { entryId } = req.params;
 
     // Llama a la función para dar like.
     const result = await addLike({ entryId, userId: req.user.id });
@@ -737,15 +379,13 @@ async function addLikeController(req, res, next) {
   }
 }
 
-
-
 async function removeLikeController(req, res, next) {
   try {
     // Validar los datos de entrada utilizando el esquema Joi
     const { entryId } = req.params;
 
     // Llama a la función para eliminar el like.
-    const result = await removeLike({ entryId, userId:req.user.id });
+    const result = await removeLike({ entryId, userId: req.user.id });
 
     res.json({
       status: "ok",
@@ -756,33 +396,19 @@ async function removeLikeController(req, res, next) {
   }
 }
 
-
-
-// // Controlador para eliminar un like de una entrada.
-// async function removeLikeController(req, res, next) {
-//   try {
-//     const { entryId, userId } = req.body;
-
-//     // Llama a la función para eliminar el like.
-//     const result = await removeLike({ entryId, userId });
-
-//     res.json({
-//       status: 'ok',
-//       message: result,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
 const searchEntriesByDescription = async (req, res) => {
   try {
     const { description } = req.query; // Obtén la descripción de los parámetros de consulta
 
     // Llama a la función getEntriesWithLikesAndPhotos con la descripción como parámetro
-    const entries = await getEntriesWithLikesAndPhotosByDescription(description);
+    const entries = await getEntriesWithLikesAndPhotosByDescription(
+      description
+    );
 
     if (!entries) {
-      res.status(404).json({ error: "No se encontraron entradas con esa descripción." });
+      res
+        .status(404)
+        .json({ error: "No se encontraron entradas con esa descripción." });
     } else {
       res.status(200).json(entries);
     }
@@ -802,8 +428,8 @@ async function addComment(req, res, next) {
     // Validar que el comentario no esté vacío
     if (!commentText) {
       return res.status(400).json({
-        status: 'error',
-        message: 'El comentario no puede estar vacío.',
+        status: "error",
+        message: "El comentario no puede estar vacío.",
       });
     }
 
@@ -811,26 +437,29 @@ async function addComment(req, res, next) {
     const entry = await getEntryById(id);
     if (!entry) {
       return res.status(404).json({
-        status: 'error',
-        message: 'La entrada no existe.',
+        status: "error",
+        message: "La entrada no existe.",
       });
     }
 
     // Insertar el comentario en la base de datos
-    const newComment = await insertComment({ entryId: id, userId, commentText });
+    const newComment = await insertComment({
+      entryId: id,
+      userId,
+      commentText,
+    });
 
     res.json({
-      status: 'ok',
+      status: "ok",
       data: {
         comment: newComment,
       },
     });
   } catch (error) {
-    console.error('Error en addComment:', error);
+    console.error("Error en addComment:", error);
     next(error);
   }
 }
-
 
 // Controlador para borrar un comentario de una entrada
 async function deleteComment(req, res, next) {
@@ -841,8 +470,8 @@ async function deleteComment(req, res, next) {
     const entry = await getEntryById(id);
     if (!entry) {
       return res.status(404).json({
-        status: 'error',
-        message: 'La entrada no existe.',
+        status: "error",
+        message: "La entrada no existe.",
       });
     }
 
@@ -850,16 +479,16 @@ async function deleteComment(req, res, next) {
     const comment = await getCommentById(commentId);
     if (!comment) {
       return res.status(404).json({
-        status: 'error',
-        message: 'El comentario no existe.',
+        status: "error",
+        message: "El comentario no existe.",
       });
     }
 
     // Comprobar si el usuario logueado es el propietario del comentario
     if (comment.userId !== req.user.id) {
       return res.status(401).json({
-        status: 'error',
-        message: 'No tienes permiso para eliminar este comentario.',
+        status: "error",
+        message: "No tienes permiso para eliminar este comentario.",
       });
     }
 
@@ -868,17 +497,17 @@ async function deleteComment(req, res, next) {
 
     if (!deletedComment) {
       return res.status(404).json({
-        status: 'error',
-        message: 'El comentario no pudo ser eliminado.',
+        status: "error",
+        message: "El comentario no pudo ser eliminado.",
       });
     }
 
     res.json({
-      status: 'ok',
-      message: 'Comentario eliminado.',
+      status: "ok",
+      message: "Comentario eliminado.",
     });
   } catch (error) {
-    console.error('Error en deleteComment:', error);
+    console.error("Error en deleteComment:", error);
     next(error);
   }
 }
@@ -939,7 +568,6 @@ async function addVideo(req, res, next) {
 
         videos.push(newVideo);
       } catch (error) {
-        ;
         next(error); // Enviar el error al manejador de errores
         return; // Salir de la función para evitar la respuesta 200 incorrecta
       }
@@ -998,12 +626,10 @@ async function deleteEntryVideo(req, res, next) {
   }
 }
 
-
-
 export {
-  createEntry,
-  listEntries,
-  getEntry,
+  createEntryController,
+  listEntriesController,
+  getEntryController,
   editEntry,
   addPhoto,
   deleteEntryPhoto,
@@ -1014,6 +640,4 @@ export {
   deleteComment,
   addVideo,
   deleteEntryVideo,
-  getAllPhotosController,
-  hasLikedEntryController
 };

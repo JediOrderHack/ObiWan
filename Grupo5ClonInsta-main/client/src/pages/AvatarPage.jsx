@@ -1,19 +1,19 @@
 // Importamos los hooks.
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 
 // Importamos los componentes.
 import { Navigate } from 'react-router-dom';
 import AvatarForm from '../forms/AvatarForm/AvatarForm';
 
 const AvatarPage = () => {
-    const { authUser, authForm, loading } = useAuth();
+    const { authUser, authUpdateAvatar, loading } = useAuth();
 
-    // Si la persona está autenticada redirigimos a la página principal.
-    if (authUser) return <Navigate to="/" />;
+    // Si la persona NO está autenticada redirigimos a la página principal.
+    // if (!authUser) return <Navigate to="/home" />;
 
     return (
         <main>
-            <AvatarForm authForm={authForm} loading={loading} />
+            <AvatarForm authUser={authUser} authUpdateAvatar={authUpdateAvatar} loading={loading} />
         </main>
     );
 };
