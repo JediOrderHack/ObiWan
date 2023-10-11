@@ -19,7 +19,7 @@ router.post("/validate/:regCode", userController.validateUser);
 router.post("/login", userController.loginUser);
 
 // GET /users/
-router.get("/", authUser, userExists, userController.allUsers);
+router.get("/",userController.allUsers);
 
 // GET /users/1
 router.get("/:userId",  userController.getUser);

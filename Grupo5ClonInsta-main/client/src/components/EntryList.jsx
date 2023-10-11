@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserAvatar from "./UserAvatar";
+import EditButton from "./EditButton";
 
-// Rutas de las imágenes y los videos en tu servidor Express
+
 const IMAGES_URL = "http://localhost:3000/images";
-
+const VITE_API_URL = "http://localhost:3000"; // Asegúrate de tener la URL correcta para tus solicitudes
+const getLoggedInUserId = () => {
+  // Devuelve el ID del usuario logueado, o null si no hay ningún usuario logueado.
+};
 function EntryList() {
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [entries, setEntries] = useState([]);
 
   useEffect(() => {
-    // Realiza una solicitud GET al servidor para obtener las entradas
-    axios
-      .get("http://localhost:3000/entries")
-      .then((response) => {
-        // Verifica que response.entries sea un array antes de establecer el estado
+    setLoggedInUserId(getLoggedInUserId());
+
+    const fetchEntries = async () => {
+      try {
+        const response = await axios.get(`${VITE_API_URL}/entries`);
+
         if (Array.isArray(response.data.entries)) {
           setEntries(response.data.entries);
         } else {
@@ -22,54 +28,48 @@ function EntryList() {
             response.data
           );
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error al obtener las entradas:", error);
-      });
+      }
+    };
+
+    fetchEntries();
   }, []);
+console.log(entries)
+  return (
+    <div>
+      {entries.map((entry) => (
+        <div key={entry.id}>
+          <UserAvatar userId={entry.userId} />
+          <div>Nombre de Usuario: {entry.owner}</div>
+          <div>
+            Fotos Subidas:
+            {entry.photos &&
+              entry.photos
+                .split(",")
+                .map((photoName) => (
+                  <img
+                    key={photoName}
+                    src={`${IMAGES_URL}/${photoName}`}
+                    alt={`Foto: ${photoName}`}
+                  />
+                ))}
+          </div>
+          <div>Número de Likes: {entry.likesCount}</div>
+          {/* Botón para dar/quitar like */}
+          <button>Dar/Quitar Like</button>
 
-   return (
-     <div>
-       {entries.map((entry) => (
-        
-         <div key={entry.id}>
-           {/* Muestra la foto de avatar */}
+          {/* Botón para editar entrada */}
           
-            <UserAvatar userId={entry.userId} />
-            
-           {/* Muestra el nombre de usuario */}
-           <div>Nombre de Usuario: {entry.owner}</div>
+            <EditButton entryId={entry.id} />
+          
 
-           {/* Muestra las fotos subidas */}
-           <div>
-             Fotos Subidas:
-             {entry.photos &&
-               entry.photos
-                 .split(",")
-                 .map((photoName) => (
-                   <img
-                     key={photoName}
-                     src={`${IMAGES_URL}/${photoName}`}
-                     alt={`Foto: ${photoName}`}
-                   />
-                 ))}
-           </div>
-
-           {/* Muestra el número de likes */}
-           <div>Número de Likes: {entry.likesCount}</div>
-
-           {/* Botón para dar/quitar like */}
-           <button>Dar/Quitar Like</button>
-
-           {/* Muestra la descripción */}
-           <div>Descripción: {entry.description}</div>
-
-           {/* Muestra los comentarios */}
-           <div>Comentarios: {entry.comments}</div>
-         </div>
-       ))}
-     </div>
-   );
+          <div>Descripción: {entry.description}</div>
+          <div>Comentarios: {entry.comments}</div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default EntryList;
+export default EntryList

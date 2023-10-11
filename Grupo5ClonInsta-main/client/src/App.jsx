@@ -7,7 +7,7 @@ import {Route, Routes } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.jsx';
 
 // USERS:
-import Home from './pages/Home/Home.jsx';
+
 import RegisterForm from './forms/RegisterForm/RegisterForm.jsx'
 import LoginForm from './forms/LoginForm/LoginForm.jsx';
 import RecoverPassword from './components/RecoverPassword.jsx';
@@ -18,7 +18,7 @@ import NewEntryForm from './forms/NewEntryForm/NewEntryForm.jsx';
 import AvatarForm from './forms/AvatarForm/AvatarForm.jsx';
 import ValidateForm from './forms/ValidateForm/ValidateForm.jsx';
 import EntryList from './components/EntryList.jsx';
-
+import EditEntryPage from './pages/EditEntry.jsx';
 
 
 
@@ -41,6 +41,7 @@ function App() {
       <Route path='/forgot-password' element={<RecoverPassword />}/>
       <Route path='/update-password' element={<UpdatePassword />}/>
       <Route path='/newEntry' element={<NewEntryForm />}/>
+      <Route path='/:id/editEntry' element={<EditEntryPage/>}/>
       <Route path='/avatar' element={<AvatarForm />}/>
       <Route path='/users/validate/:id' element={<ValidateForm />}/>
 
