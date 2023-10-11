@@ -39,6 +39,7 @@ function App() {
       <NavLink to='/Register'>Register</NavLink>{' | '}
       <NavLink to='/avatar'>Avatar</NavLink>{' | '}
       <NavLink to='/Logout'>Logout</NavLink>{' | '}
+      
 
 
     <Routes>
@@ -50,7 +51,7 @@ function App() {
       <Route path='/update-password' element={<UpdatePassword />}/>
       <Route path='/newEntry' element={<NewEntryForm />}/>
       <Route path='/avatar' element={<AvatarPage />}/>
-      <Route path='/users/validate/:id' element={<ValidateForm />}/>
+      <Route path='/users/validate/:regCode' element={<ValidateForm />}/>
       <Route path='/search/entries' element={<SearchEntries />}/>
       
 

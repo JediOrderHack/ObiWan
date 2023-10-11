@@ -13,7 +13,7 @@ const RecoverPassword = () => {
 
   const handleRecoverPassword = async () => {
     try {
-      const response = await axios.put("http://localhost:4000/users/recover-password", { email });
+      const response = await axios.put("http://localhost:3000/users/recover-password", { email });
       setMessage(response.data.message);
 
       // Redirige al usuario a la página /update-password

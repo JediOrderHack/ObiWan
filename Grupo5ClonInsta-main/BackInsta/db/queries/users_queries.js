@@ -237,6 +237,26 @@ async function updateUserRecoverPass({ id, recoverPassCode }) {
     if (connection) connection.release();
   }
 }
+async function selectUserQuery(obj) {
+  const queryStr = Object.entries(obj)
+    .map((arr) => `${arr[0]} = '${arr[1]}'`)
+    .join(", ");
+  let connection;
+
+  try {
+    connection = await getPool();
+
+    const [user] = await connection.query(
+      `SELECT * FROM users WHERE ${queryStr}`
+    );
+    return user[0];
+  } catch (error) {
+    console.error("Error en getUserBy:", error);
+    return error;
+  } finally {
+    if (connection) connection.release();
+  }
+}
 
 async function updateUserPass({ recoveryPassCode, newPass }) {
   let connection;
@@ -245,7 +265,7 @@ async function updateUserPass({ recoveryPassCode, newPass }) {
     connection = await getPool();
 
     // Comprobamos si existe algún usuario con ese código de recuperación.
-    const user = await selectEntryByIdQuery({ recoveryPassCode });
+    const user = await selectUserQuery({ recoveryPassCode });
     if (user instanceof Error) throw user;
 
     // Si no hay ningún usuario con ese código de recuperación lanzamos un error.
@@ -267,18 +287,7 @@ async function updateUserPass({ recoveryPassCode, newPass }) {
   }
 }
 
-async function getAllUser() {
-  try {
-    const connection = await getPool();
-    const [users] = await connection.query(
-      "SELECT username, avatar FROM users"
-    );
-    connection.release();
-    return users;
-  } catch (error) {
-    throw error;
-  }
-}
+
 
 export {
   insertuserQuery,
@@ -289,5 +298,5 @@ export {
   updateUserAvatar,
   updateUserRecoverPass,
   updateUserPass,
-  getAllUser,
+  selectUserQuery,
 };

@@ -11,7 +11,7 @@ import {
   updateUserAvatar,
   updateUserRecoverPass,
   updateUserPass,
-  getAllUser,
+  selectUserQuery,
 } from "../db/queries/users_queries.js";
 
 // Helpers
@@ -244,7 +244,7 @@ async function editUserAvatar(req, res, next) {
     }
 
     // Obtenemos los datos del usuario para comprobar si ya tiene un avatar previo.
-    const user = await selectEntryByIdQuery({ id: req.user.id });
+    const user = await selectUserByIdQuery({ id: req.user.id });
     if (user instanceof Error) {
       console.error("Error al obtener usuario:", user);
       throw user;
@@ -299,7 +299,7 @@ async function sendRecoverPass(req, res, next) {
     const { email } = req.body;
 
     // Buscamos un usuario en función del correo electrónico.
-    const user = await selectEntryByIdQuery({ email });
+    const user = await selectUserQuery({ email });
 
     // Si ocurre un error al buscar el usuario, lanzamos una excepción.
     if (user instanceof Error) {
@@ -349,6 +349,7 @@ async function sendRecoverPass(req, res, next) {
   }
 }
 
+
 async function editUserPass(req, res, next) {
   try {
     const schema = Joi.object({
@@ -390,14 +391,7 @@ async function editUserPass(req, res, next) {
   }
 }
 
-async function allUsers(req, res, next) {
-  try {
-    const users = await getAllUser();
-    res.json({ users });
-  } catch (err) {
-    next(err);
-  }
-}
+
 
 export {
   createUserController,
@@ -408,5 +402,4 @@ export {
   editUserAvatar,
   sendRecoverPass,
   editUserPass,
-  allUsers,
 };

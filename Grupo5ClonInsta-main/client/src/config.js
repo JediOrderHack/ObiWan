@@ -1,4 +1,4 @@
-const APIUrl = 'http://localhost:4000'
+const APIUrl = 'http://localhost:3000'
 const userLocalStorageKey = 'diarioViajesUser'
 
 export {
