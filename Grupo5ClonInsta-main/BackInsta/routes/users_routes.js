@@ -1,35 +1,45 @@
+// Importamos Express y creamos Router.
 import express from "express";
+const router = express.Router();
 
 // Controllers
 import * as userController from "../controllers/user_controller.js";
 
-// Middlewares
+// Funciones controladoras intermedias.
 import authUserController from "../middlewares/auth_user_controller.js";
+import authUserOptionalController from "../middlewares/auth_user_optional_controller.js";
 import userExistsController from "../middlewares/user_exists_controller.js";
 
-const router = express.Router();
+// Importamos las funciones controladoras finales.
+import {
+  createUserController,
+  validateUserController,
+  loginUserController,
+  getUserPrivateProfileController,
+  getUserPublicProfileController,
+} from "../controllers/user_controller.js";
 
-// POST /users/
-router.post("/", userController.createUser);
+// Crear usuario.
+router.post("/", createUserController);
 
-// POST /users/validate/codigo de registro
-router.post("/validate/:regCode", userController.validateUser);
+// Validar usuario.
+router.put("/validate/:regCode", validateUserController);
 
-// POST /users/login
-router.post("/login", userController.loginUser);
+// Login de usuario.
+router.post("/login", loginUserController);
 
-// GET /users/
+// Obtener perfil privado de un usuario.
 router.get(
   "/",
   authUserController,
   userExistsController,
-  userController.allUsers
+  getUserPrivateProfileController
 );
 
-// GET /users/1
-router.get("/:userId", userController.getUser);
+// Obtener perfil público de un usuario con sus fotos.
+router.get("/:id", authUserOptionalController, getUserPublicProfileController);
 
-// PUT /users/avatar
+// Actualizar avatar de usuario.
 router.put(
   "/avatar",
   authUserController,
