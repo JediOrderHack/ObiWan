@@ -40,7 +40,7 @@ app.use(fileUpload());
 app.use(morgan("dev"));
 
 // Middleware que indica a Express dónde están las rutas con ficheros estáticos.
-app.use("/images", express.static(UPLOADS_DIR));
+app.use("/uploads", express.static(UPLOADS_DIR));
 app.use("/videos", express.static(VIDEO_DIR));
 
 // Middleware que indica a Express donde están las rutas.
