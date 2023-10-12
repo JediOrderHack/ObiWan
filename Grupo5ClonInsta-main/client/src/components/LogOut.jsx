@@ -13,6 +13,7 @@ function LogOut() {
 
     // Redirige al usuario a la página de inicio de sesión o a la página que desees
     navigate('/login'); // Cambia '/login' por la ruta adecuada
+     window.location.reload();
   };
 
   return (
