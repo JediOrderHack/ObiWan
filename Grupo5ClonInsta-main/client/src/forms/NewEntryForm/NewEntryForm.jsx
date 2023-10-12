@@ -6,14 +6,14 @@ import { useNavigate } from "react-router-dom";
 const { VITE_API_URL } = import.meta.env;
 
 const NewEntryForm = () => {
-  const [files, setFiles] = useState([]); // Cambiar a un arreglo para múltiples archivos
+  const [files, setFiles] = useState([]);
   const [description, setDescription] = useState("");
-  const [imagePreviews, setImagePreviews] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]); // Estado para almacenar las vistas previas
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files).slice(0, 3); // Limitar a 3 imágenes
+    const selectedFiles = Array.from(e.target.files).slice(0, 3);
     if (files.length + selectedFiles.length > 3) {
       alert("Solo puedes seleccionar un máximo de 3 imágenes.");
     } else {
@@ -32,9 +32,8 @@ const NewEntryForm = () => {
   const handleUpload = async () => {
     try {
       const formData = new FormData();
-      // Agregar cada archivo al formulario
       files.forEach((file, index) => {
-        formData.append('photo', file);
+        formData.append(`photo${index + 1}`, file);
       });
       formData.append("description", description);
 
@@ -51,7 +50,8 @@ const NewEntryForm = () => {
 
       if (responseData.status === "ok") {
         console.log("Entrada creada con éxito");
-        navigate("/home");
+        const entryData = responseData.data.entry;
+        navigate(`/home`);
       } else {
         console.error("Error al crear la entrada:", responseData.data);
       }

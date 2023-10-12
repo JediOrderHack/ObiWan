@@ -1,36 +1,56 @@
-import express from 'express'
+// Importamos Express y creamos Router.
+import express from "express";
+const router = express.Router();
 
 // Controllers
-import * as userController from '../controllers/user_controller.js'
+import * as userController from "../controllers/user_controller.js";
 
-// Middlewares
-import authUser from '../middlewares/auth_user.js'
-import userExists from '../middlewares/user_exists.js'
+// Funciones controladoras intermedias.
+import authUserController from "../middlewares/auth_user_controller.js";
+import authUserOptionalController from "../middlewares/auth_user_optional_controller.js";
+import userExistsController from "../middlewares/user_exists_controller.js";
 
-const router = express.Router()
+// Importamos las funciones controladoras finales.
+import {
+  createUserController,
+  validateUserController,
+  loginUserController,
+  getUserPrivateProfileController,
+  getUserPublicProfileController,
+} from "../controllers/user_controller.js";
 
-// POST /users/
-router.post('/', userController.createUser)
+// Crear usuario.
+router.post("/", createUserController);
 
-// POST /users/validate/codigo de registro
-router.post('/validate/:regCode', userController.validateUser)
+// Validar usuario.
+router.put("/validate/:regCode", validateUserController);
 
-// POST /users/login
-router.post('/login', userController.loginUser)
+// Login de usuario.
+router.post("/login", loginUserController);
 
-// GET /users/
-router.get('/', authUser, userExists, userController.allUsers)
+// Obtener perfil privado de un usuario.
+router.get(
+  "/",
+  authUserController,
+  userExistsController,
+  getUserPrivateProfileController
+);
 
-// GET /users/1
-router.get('/:userId', authUser, userExists, userController.getUser)
+// Obtener perfil público de un usuario con sus fotos.
+router.get("/:id", authUserOptionalController, getUserPublicProfileController);
 
-// PUT /users/avatar
-router.put('/avatar', authUser, userExists, userController.editUserAvatar)
+// Actualizar avatar de usuario.
+router.put(
+  "/avatar",
+  authUserController,
+  userExistsController,
+  userController.editUserAvatar
+);
 
 // PUT /users/recover-password
-router.put('/recover-password', userController.sendRecoverPass)
+router.put("/recover-password", userController.sendRecoverPass);
 
 // PUT /users/reset-password
-router.put('/reset-password', userController.editUserPass)
+router.put("/reset-password", userController.editUserPass);
 
-export default router
+export default router;

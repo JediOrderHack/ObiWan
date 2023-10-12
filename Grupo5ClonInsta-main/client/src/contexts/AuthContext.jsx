@@ -10,6 +10,7 @@ import {
     getPrivateProfile,
     signInService,
     signUpService,
+    updateAvatarService,
 } from '../services/authService';
 
 // Importamos las constantes.
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const [authUser, setAuthUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authToken, setAuthToken] = useState(getToken());
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -37,20 +38,23 @@ export const AuthProvider = ({ children }) => {
 
                 const body = await getPrivateProfile();
 
+                if (body.status === 'error') {
+                    throw new Error(body.message)
+                }
+
+                console.log(body);
+
                 setAuthUser(body.data.user);
             } catch (err) {
-                alert(err.message);
+                console.error(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
-        // Obtenemos el token.
-        const authToken = getToken();
-
         // Si existe token buscamos los datos del usuario.
         if (authToken) fetchUser();
-    }, [isAuthenticated]);
+    }, [authToken]);
 
     // Función que registra a un usuario en la base de datos.
      const authRegister = async (
@@ -61,14 +65,16 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
 
-           
+            const body = await signUpService(username, email, password);
 
-            await signUpService(username, email, password);
+            if (body.status === 'error') {
+                throw new Error(body.message)
+            }
 
             // Una vez registrados redirigimos a la página de login.
             navigate('/login');
         } catch (err) {
-            alert(err.message);
+            console.error(err.message);
         } finally {
             setLoading(false);
         }
@@ -81,14 +87,18 @@ export const AuthProvider = ({ children }) => {
 
             const body = await signInService(username, password);
 
+            if (body.status === 'error') {
+                throw new Error(body.message)
+            }
+
             // Almacenamos el token en el localStorage. Dado que la variable token es un string no es
             // necesario usar JSON.stringify.
             localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, body.data.token);
 
             // Indicamos que el usuario está autorizado.
-            setIsAuthenticated(true);
+            setAuthToken(body.data.token);
         } catch (err) {
-            alert(err.message);
+            console.error(err.message);
         } finally {
             setLoading(false);
         }
@@ -101,17 +111,49 @@ export const AuthProvider = ({ children }) => {
 
         // Establecemos el usuario a null y isAuthenticated a false.
         setAuthUser(null);
-        setIsAuthenticated(false);
+        setAuthToken(null);
     };
+
+    // Función que actualiza el avatar.
+    const authUpdateAvatar = async (avatar) => {
+        try {
+            setLoading(true);
+
+
+            console.log(avatar);
+
+            // Creamos un objeto formData para agregar el avatar.
+            const formData = new FormData();
+            
+            formData.append('avatar', avatar);
+
+            const body = await updateAvatarService(formData);
+
+            if (body.status === 'error') {
+                throw new Error(body.message)
+            }
+
+            // Actualizamos el avatar del usuario en el State.
+            setAuthUser({
+                ...authUser,
+                avatar: body.users[0].avatar
+            })
+        } catch (err) {
+            console.error(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <AuthContext.Provider
             value={{
                 authUser,
-                isAuthenticated,
+                isAuthenticated: authToken,
                 authRegister,
                 authLogin,
                 authLogout,
+                authUpdateAvatar,
                 loading,
             }}
         >

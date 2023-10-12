@@ -1,3 +1,4 @@
+
 import { CLIENT } from '../config.js'
 
 const validationCode = ({ username, registrationCode }) => (`¡Bienvenid@ ${username}!
