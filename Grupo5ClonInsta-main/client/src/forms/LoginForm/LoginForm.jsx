@@ -46,7 +46,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}/>
     </div>
     <div className="mb-4">
-      <label for="password" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-400">Password</label>
+      <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-400">Password</label>
       <input className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
               type="password"
               value={password}

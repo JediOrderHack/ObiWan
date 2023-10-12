@@ -6,7 +6,7 @@ import EntryComment from "./EntryComments";
 import { getToken } from "../utils/getToken";
 import ViewComments from "./ViewComments";
 
-const IMAGES_URL = "http://localhost:3000/images";
+const IMAGES_URL = "http://localhost:4000/images";
 
 function SearchEntries() {
   const [entries, setEntries] = useState([]);
@@ -18,7 +18,7 @@ function SearchEntries() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/entries", {
+        const response = await axios.get("http://localhost:4000/entries", {
           timeout: 10000,
         });
 
@@ -97,7 +97,7 @@ function SearchEntries() {
             </div>
             <EntryLikes key={entry.id} entry={entry} />
             <div>Descripción: {entry.description}</div>
-            <ViewComments comments={entry.comments}/>
+            <ViewComments comments={entry.comments} />
             <EntryComment
               entryId={entry.id}
               onCommentAdded={() => handleCommentAdded(entry.id)}
@@ -110,4 +110,3 @@ function SearchEntries() {
 }
 
 export default SearchEntries;
-

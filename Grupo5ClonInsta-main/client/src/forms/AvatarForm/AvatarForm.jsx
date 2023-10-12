@@ -4,42 +4,41 @@ import axios from "axios";
 import { getToken } from "../../utils/getToken";
 
 
-
-const BASE_URL = 'http://localhost:4000';
+// const BASE_URL = 'http://localhost:4000';
 
 function AvatarForm(){
-  const token = getToken();
+  const [avatar, setAvatar] = useState('');
+  
 
-// Datos que deseas enviar en la solicitud PUT (por ejemplo, la imagen del avatar)
-const [avatar, setAvatar] = useState('');
-
-
-// Realiza la solicitud PUT usando Axios
-const handleUpload = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await axios.post(`${BASE_URL}/avatar`, avatar, {
+  const handleUpload = async (e) => {
+    const token = getToken();
+    e.preventDefault()
+    const file = e.target.files;
+    const formData = new FormData();
+    formData.append(avatar, file);
+    console.log(token);
+    try {
+      const response = await axios.put("http://localhost:4000/users/avatar", formData, { 
+        avatar,
       headers: {
         Authorization: token,
         "Content-Type": "multipart/form-data",
-      }
-    })
-
-    if (response.status === 200) {
-      
-      console.log("Subida avatar exitosa");
-    } else {
-      // Maneja el error de acuerdo a tus necesidades.
-      console.error('Error en la subida del avatar', response.data);
+      }, });
+      if (response.status === 200) {
+        // Guardamos el token en el localStorage.
+        console.log("SUBIDA AVATAR KFC SO GOOD");
+      } else {
+        // Maneja el error de acuerdo a tus necesidades.
+        console.error('NO QUIERE SUBIR', response.data);
+      }      } 
+      catch (error) {
+      setAvatar("Error: " + error.response.data.avatar);
     }
-  }catch (err) {
-    console.error(err);
-  }
-}
+  };
 
   return (
     <form onSubmit={handleUpload}>
-      <input type="file" accept="image/*" onChange={(e) => setAvatar(e.target.files[0])} required/>
+      <input type="file" accept="image/*"  onChange={(e) => setAvatar(e.target.files)} required/>
       <button>Subir foto de perfil</button>
     </form>
   );

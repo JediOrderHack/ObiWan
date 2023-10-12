@@ -223,7 +223,7 @@ async function editUserAvatar(req, res, next) {
     const schema = Joi.object({
       avatar: Joi.any().required(), // Validamos que haya un campo 'avatar' en la solicitud
     });
-
+    
     // Puedes agregar un console.log para verificar que se está procesando la solicitud.
     console.log("Solicitud de edición de avatar:", req.files);
 

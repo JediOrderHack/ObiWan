@@ -49,12 +49,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/entries/",
+							"raw": "http://localhost:4000/entries/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								""
@@ -75,12 +75,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3000/entries/",
+							"raw": "http://localhost:4000/entries/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								""
@@ -113,12 +113,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/entries/1",
+							"raw": "http://localhost:4000/entries/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								"1"
@@ -156,12 +156,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/entries/1",
+							"raw": "http://localhost:4000/entries/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								"1"
@@ -198,12 +198,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/entries/1",
+							"raw": "http://localhost:4000/entries/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								"1"
@@ -254,12 +254,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/entries/1/photos",
+							"raw": "http://localhost:4000/entries/1/photos",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								"1",
@@ -281,12 +281,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3000/entries/1/photos/3",
+							"raw": "http://localhost:4000/entries/1/photos/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"entries",
 								"1",
@@ -317,12 +317,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/",
+							"raw": "http://localhost:4000/users/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								""
@@ -337,12 +337,12 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/users/validate/8c535421-3a15-4850-840d-d7757326e21c",
+							"raw": "http://localhost:4000/users/validate/8c535421-3a15-4850-840d-d7757326e21c",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								"validate",
@@ -373,12 +373,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/login",
+							"raw": "http://localhost:4000/users/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								"login"
@@ -399,12 +399,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3000/users/1",
+							"raw": "http://localhost:4000/users/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								"1"
@@ -435,12 +435,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/avatar",
+							"raw": "http://localhost:4000/users/avatar",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								"avatar"
@@ -470,12 +470,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/recover-password",
+							"raw": "http://localhost:4000/users/recover-password",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								"recover-password"
@@ -506,12 +506,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/reset-password",
+							"raw": "http://localhost:4000/users/reset-password",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "4000",
 							"path": [
 								"users",
 								"reset-password"

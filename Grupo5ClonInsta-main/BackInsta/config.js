@@ -3,7 +3,7 @@ import "dotenv/config";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const MAX_AVATAR_IMAGE_SIZE = 150;
 const MAX_ENTRY_IMAGE_SIZE = 1024;
