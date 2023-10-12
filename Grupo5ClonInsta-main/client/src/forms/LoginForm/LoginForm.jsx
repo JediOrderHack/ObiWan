@@ -1,6 +1,7 @@
 // Importamos axios.
 import axios from 'axios';
-
+//Importamos navigat.
+import { useNavigate } from 'react-router-dom';
 // Importamos los hooks.
 import { useState } from 'react';
 
@@ -14,6 +15,8 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -26,6 +29,10 @@ function LoginForm() {
         // Guardamos el token en el localStorage.
         localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, response.data.data.token);
         console.log("Login exitoso");
+        
+        navigate("/home");
+        
+        window.location.reload();
       } else {
         // Maneja el error de acuerdo a tus necesidades.
         console.error('Error en la solicitud de Login:', response.data);

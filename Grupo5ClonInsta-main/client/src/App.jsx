@@ -22,6 +22,7 @@ import SearchEntries from './components/SearchEntries.jsx';
 import LogOut from './components/LogOut.jsx';
 import AvatarPage from './pages/AvatarPage.jsx';
 import PrivateProfileCard from './components/PrivateProfileCard.jsx';
+import ProfileButton from './components/ProfileButton.jsx';
 
 
 
@@ -47,7 +48,7 @@ function App() {
       {" | "}
       <NavLink to="/Logout">Logout</NavLink>
       {" | "}
-      <NavLink to="/perfil">Perfil</NavLink>
+      <NavLink to="/perfil"><ProfileButton/></NavLink>
       {" | "}
       <Routes>
         <Route path="/home" element={<EntryList />} />
