@@ -1,47 +1,60 @@
-import express from 'express'
-import morgan from 'morgan'
-import fileUpload from 'express-fileupload'
-import cors from 'cors'
-import bodyParser from 'body-parser'
-import multer from 'multer'
-import http from 'http'
-// Config
-import { PORT, UPLOADS_DIR, VIDEO_DIR } from './config.js'
+// Importamos las dependencias.
+import http from "http";
+import express from "express";
+import morgan from "morgan";
+import fileUpload from "express-fileupload";
+import cors from "cors";
 
-// Import Routes
-import usersRoutes from './routes/users_routes.js'
-import entriesRoutes from './routes/entries_routes.js'
-import chatRoutes from './routes/chat_routes.js'
+// Importamos las variables necesarias para la configuración.
+import { PORT, UPLOADS_DIR, VIDEO_DIR } from "./config.js";
 
-// Errors
-import error404 from './middlewares/error404.js'
-import errorMiddleware from './middlewares/error_middleware.js'
-import serverListener from './helpers/server_listener.js'
-import chatConfig from './services/chat.js'
+// Importamos la configuración del chat.
+import chatConfig from "./services/chat.js";
 
+// Importamos las rutas.
+import usersRoutes from "./routes/users_routes.js";
+import entriesRoutes from "./routes/entries_routes.js";
+import chatRoutes from "./routes/chat_routes.js";
 
+// Importamos las funciones controladoras de los errores.
+import notFoundController from "./middlewares/not_found_controller.js";
+import errorController from "./middlewares/error_controller.js";
 
-const app = express()
-const server =http.createServer(app)
-const io = chatConfig(server)
+// Creamos el servidor con Express.
+const app = express();
 
-// Middlewares
-app.use(cors())
-app.use(express.json())
-app.use(morgan('common'))
-app.use(fileUpload())
-app.use('/images', express.static(UPLOADS_DIR))
-app.use('/videos', express.static(VIDEO_DIR))
+// Creamos el servidor para el chat.
+const server = http.createServer(app);
+const io = chatConfig(server);
 
+// Middleware que evita problemas de conexión con el cliente.
+app.use(cors());
 
-// Routes
-app.use('/users', usersRoutes)
-app.use('/entries', entriesRoutes)
-app.use('/chat', chatRoutes)
+// Middleware que permite leer un body en formato "raw".
+app.use(express.json());
 
-// Error Handling
-app.use(error404)
-app.use(errorMiddleware)
+// Middleware que permite leer un body en formato "form-data".
+app.use(fileUpload());
 
+// Middleware que muestra información por consola de la petición entrante.
+app.use(morgan("dev"));
 
-app.listen(PORT, serverListener)
+// Middleware que indica a Express dónde están las rutas con ficheros estáticos.
+app.use("/images", express.static(UPLOADS_DIR));
+app.use("/videos", express.static(VIDEO_DIR));
+
+// Middleware que indica a Express donde están las rutas.
+app.use("/users", usersRoutes);
+app.use("/entries", entriesRoutes);
+app.use("/chat", chatRoutes);
+
+// Middleware de ruta no encontrada y middleware de error.
+app.use(notFoundController);
+app.use(errorController);
+
+// Middleware que indica a Express cuál es el puerto en el que debe funcionar.
+app.listen(PORT, () => {
+  console.log(
+    `Server running at: http://localhost:${PORT}. Press Ctrl-C to terminate.`
+  );
+});

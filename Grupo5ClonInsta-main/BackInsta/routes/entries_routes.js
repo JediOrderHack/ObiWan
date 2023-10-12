@@ -1,85 +1,58 @@
-import express from 'express';
-import multer from 'multer';
-import { VIDEO_DIR } from "../config.js";
-// Middlewares
-import authUser from '../middlewares/auth_user.js';
-import userExists from '../middlewares/user_exists.js';
-import authUserOptional from '../middlewares/auth_user_optional.js';
-
-// Controllers
-import * as entryController from '../controllers/entry_controller.js';
-
+// Importamos Express y creamos un Router.
+import express from "express";
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, VIDEO_DIR);
-  },
-  filename: function (req, file, cb) {
-    const videoName = Date.now() + "-" + file.originalname;
-    cb(null, videoName);
-  },
-});
+// Importamos las funciones controladoras intermedias.
+import authUserController from "../middlewares/auth_user_controller.js";
+import userExistsController from "../middlewares/user_exists_controller.js";
+import authUserOptionalController from "../middlewares/auth_user_optional_controller.js";
 
-const upload = multer({ storage: storage });
+// Importamos las funciones controladoras finales.
+import {
+  createEntryController,
+  listEntriesController,
+  getEntryController,
+  editEntryController,
+  addLikeController,
+  removeLikeController,
+} from "../controllers/entry_controller.js";
 
-// Routes
+// Crear una entrada.
+router.post(
+  "/",
+  authUserController,
+  userExistsController,
+  createEntryController
+);
 
-// Obtener todas las fotos
-// GET /entries/photos
-router.get('/photos', entryController.getAllPhotosController);
+// Obtener todas las entradas.
+router.get("/", authUserOptionalController, listEntriesController);
 
-// Rutas para dar y eliminar likes
-router.post('/:entryId/likes/add', authUser, userExists, entryController.addLikeController);
-router.post('/:entryId/likes/remove', authUser, userExists, entryController.removeLikeController);
+// Obtener una sola entrada.
+router.get("/:id", authUserOptionalController, getEntryController);
 
-// Crear una entrada
-// POST /entries/
-router.post('/', authUser, userExists, entryController.createEntry);
+// Editar una entrada.
+router.put(
+  "/:id",
+  authUserController,
+  userExistsController,
+  editEntryController
+);
 
-// Nueva ruta para obtener entradas por descripción
-// GET /entries/description?description=<descripción>
-router.get('/description', entryController.searchEntriesByDescription);
+// Dar like.
+router.post(
+  "/:entryId/likes",
+  authUserController,
+  userExistsController,
+  addLikeController
+);
 
-// Obtener todas las entradas
-// GET /entries/
-router.get('/', entryController.listEntries);
+// Eliminar like.
+router.delete(
+  "/:entryId/likes",
+  authUserController,
+  userExistsController,
+  removeLikeController
+);
 
-// Obtener una sola entrada
-// GET /entries/1
-router.get('/:id', entryController.getEntry);
-
-// PUT /entries/1
-router.put('/:id', authUser, userExists, entryController.editEntry);
-router.patch('/:id', authUser, userExists, entryController.editEntry);
-
-// Agregar imágenes al post
-// POST /entries/1/photos
-router.post('/:id/photos', authUser, userExists, entryController.addPhoto);
-
-// Borrar una foto
-// DELETE /entries/4/photos/9
-router.delete('/:id/photos/:photoId', authUser, userExists, entryController.deleteEntryPhoto);
-
-// Agregar comentario a una entrada
-// POST /entries/1/comments
-router.post('/:id/comments', authUser, userExists, entryController.addComment);
-
-// Borrar un comentario de una entrada
-// DELETE /entries/1/comments/2
-router.delete('/:id/comments/:commentId', authUser, userExists, entryController.deleteComment);
-
-// Ruta para la subida de videos
-// POST /entries/1/videos
-router.post("/:id/videos", authUser, userExists, entryController.addVideo);
-
-// Ruta para borrar videos
-// DELETE /entries/4/videos/1
-router.delete("/:id/videos/:videoId", authUser, userExists, (req, res, next) => {
-  console.log("Datos recibidos en la ruta de eliminación de video:");
-  console.log("Entry ID:", req.params.id);
-  console.log("Video ID:", req.params.videoId);
-  entryController.deleteEntryVideo(req, res, next); // Llama a tu controlador
-});
-
-export default router
+export default router;
