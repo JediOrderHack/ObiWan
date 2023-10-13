@@ -11,7 +11,7 @@ const PublicProfileButton = ({ userId }) => {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`http://localhost:3000/users/${userId}`, {
+        .get(`http://localhost:4000/users/${userId}`, {
           headers: {
             Authorization: token,
           },

@@ -4,7 +4,7 @@ import { getToken } from "../utils/getToken.js";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import LogOut from "./LogOut.jsx"; // Importa LogOut
 import AvatarEditor from "../forms/AvatarForm/AvatarForm.jsx";
-const UPLOADS_DIR = "http://localhost:3000/uploads";
+const UPLOADS_DIR = "http://localhost:4000/uploads";
 
 const PrivateProfileCard = () => {
   const [user, setUser] = useState(null);
@@ -13,7 +13,7 @@ const PrivateProfileCard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users", {
+      .get("http://localhost:4000/users", {
         headers: {
           Authorization: token,
         },
@@ -35,15 +35,17 @@ const PrivateProfileCard = () => {
 
   return (
     <div className="private-profile-card">
-      {user ? 
-      (
+      {user ? (
         <div>
           <h2>Perfil Privado de {user.username}</h2>
           <p>Email: {user.email}</p>
-          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" /><br/>
-          <AvatarEditor/>
+          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
+          <br />
+          <AvatarEditor />
           <button onClick={goToAvatarEditor}></button>
-          <button><LogOut/></button>
+          <button>
+            <LogOut />
+          </button>
         </div>
       ) : (
         <p>Cargando perfil privado...</p>
@@ -53,4 +55,3 @@ const PrivateProfileCard = () => {
 };
 
 export default PrivateProfileCard;
-

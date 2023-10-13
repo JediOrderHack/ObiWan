@@ -9,7 +9,7 @@ const EditEntryForm = ({ entry, onEdit }) => {
   };
 
   const handleFileChange = (e) => {
-    const newPhotos = Array.from (e.target.files);
+    const newPhotos = Array.from(e.target.files);
     setPhotos([...photos, ...newPhotos]);
   };
 
@@ -29,10 +29,13 @@ const EditEntryForm = ({ entry, onEdit }) => {
       });
 
       // Send a PUT request to the edit entry endpoint
-      const response = await fetch(`http://localhost:3000/entries/${entry.id}`, {
-        method: "PUT",
-        body: formData,
-      });
+      const response = await fetch(
+        `http://localhost:4000/entries/${entry.id}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         // Entry updated successfully, you can handle the response here

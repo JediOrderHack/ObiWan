@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const socket = io('http://localhost:3000'); // Reemplaza 'URL_DE_TU_SERVIDOR' con la URL de tu servidor Socket.io
+  const [newMessage, setNewMessage] = useState("");
+  const socket = io("http://localhost:4000"); // Reemplaza 'URL_DE_TU_SERVIDOR' con la URL de tu servidor Socket.io
 
   useEffect(() => {
     // Escucha eventos de nuevos mensajes desde el servidor
-    socket.on('newMessage', (message) => {
+    socket.on("newMessage", (message) => {
       setMessages([...messages, message]);
     });
 
@@ -20,8 +20,8 @@ const Chat = () => {
 
   const handleSendMessage = () => {
     // Envia el nuevo mensaje al servidor a través del socket
-    socket.emit('sendMessage', newMessage);
-    setNewMessage('');
+    socket.emit("sendMessage", newMessage);
+    setNewMessage("");
   };
 
   return (

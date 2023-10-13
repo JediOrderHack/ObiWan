@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import "./RegisterForm.css"
+import React, { useState } from "react";
+import axios from "axios";
+import "./RegisterForm.css";
 
-const BASE_URL = 'http://localhost:3000/users';
+const BASE_URL = "http://localhost:4000/users";
 
 function RegisterForm() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,18 +20,19 @@ function RegisterForm() {
       });
 
       if (response.status === 200) {
-        console.log('Registro exitoso');
-        setSuccessMessage('Revisa tu correo y entra en el enlace para activar tu cuenta.');
+        console.log("Registro exitoso");
+        setSuccessMessage(
+          "Revisa tu correo y entra en el enlace para activar tu cuenta."
+        );
       } else {
-        console.error('Error en la solicitud de registro:', response.data);
+        console.error("Error en la solicitud de registro:", response.data);
       }
     } catch (error) {
-      console.error('Error al registrar:', error);
+      console.error("Error al registrar:", error);
     }
   };
 
   return (
-
     <div className="post_container">
       <div className="post_top">
         {successMessage ? (
