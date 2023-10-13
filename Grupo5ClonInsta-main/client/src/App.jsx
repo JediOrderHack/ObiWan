@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom';
+import { BrowserRouter, NavLink } from 'react-router-dom';
 
 
 import {Route, Routes } from 'react-router-dom';
@@ -23,6 +23,7 @@ import ProfileButton from './components/ProfileButton.jsx';
 import PublicProfileCard from './components/PublicProfileCard.jsx';
 import EditEntryForm from './forms/EditEntryForm/EditEntryForm.jsx';
 import AvatarEditor from './forms/AvatarForm/AvatarForm.jsx';
+import PublicProfileButton from './components/PublicProfileButton.jsx';
 
 
 
@@ -36,7 +37,6 @@ function App() {
   return (
     <>
       <NavLink to="/home">Home</NavLink> {" | "}
-
       <NavLink to="/NewEntry">Nueva entrada</NavLink>
       {" | "}
       <NavLink to="/login">Login</NavLink>
@@ -47,9 +47,9 @@ function App() {
       {" | "}
       <NavLink to="/Logout">Logout</NavLink>
       {" | "}
-      <NavLink to="/perfil"><ProfileButton/></NavLink>
-      
-
+      <NavLink to="/perfil">
+        <ProfileButton />
+      </NavLink>
       <Routes>
         <Route path="/home" element={<EntryList />} />
         <Route path="/login" element={<LoginForm />} />

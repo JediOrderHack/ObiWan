@@ -30,7 +30,11 @@ const PublicProfileCard = () => {
     <div>
       {userData && (
         <div>
-          <UserAvatar userId={userData.user.id} />
+          <img
+            key={`avatar`}
+            src={`${UPLOADS_DIR}/${userData.user.avatar}`}
+            alt={`avatar`}
+          />
           <div>Nombre de Usuario: {userData.user.username}</div>
           {userData.user.entries.map((entry, index) => (
             <div key={`entry_${entry.id}_${index}`}>
