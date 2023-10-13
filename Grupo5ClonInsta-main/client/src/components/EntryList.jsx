@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserAvatar from "./UserAvatar";
+import PublicProfileButton from "./PublicProfileButton";
 
 const IMAGES_URL = "http://localhost:3000/uploads";
 
@@ -45,7 +46,7 @@ function EntryList() {
       />
       {entries.map((entry, index) => (
         <div key={`entry_${entry.id}_${index}`}>
-          <UserAvatar userId={entry.userId} />
+          <PublicProfileButton userId={entry.userId} />
           <div>Nombre de Usuario: {entry.username}</div>
           <div>
             Fotos Subidas:

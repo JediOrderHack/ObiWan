@@ -18,8 +18,7 @@ function LogOut() {
 
   return (
     <div>
-      <h2>Logout</h2>
-      <p>¿Estás seguro de que deseas cerrar sesión?</p>
+      
       <button onClick={handleLogout}>Cerrar Sesión</button>
     </div>
   );

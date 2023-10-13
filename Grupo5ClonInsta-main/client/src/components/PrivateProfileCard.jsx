@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken } from "../utils/getToken.js";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
-const UPLOADS_DIR = "http://localhost:3000/images";
+import LogOut from "./LogOut.jsx";
+const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PrivateProfileCard = () => {
   const [user, setUser] = useState(null);
@@ -18,6 +19,7 @@ const PrivateProfileCard = () => {
       })
       .then((response) => {
         setUser(response.data.data.user);
+        console.log(response.data.data.user)
       })
       .catch((error) => {
         console.error("Error al obtener el perfil privado:", error);
@@ -28,11 +30,13 @@ const PrivateProfileCard = () => {
 
   return (
     <div className="private-profile-card">
-      {user ? (
+      {user ? 
+      (
         <div>
           <h2>Perfil Privado de {user.username}</h2>
           <p>Email: {user.email}</p>
-          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
+          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" /><br/>
+          <button><LogOut/></button>
         </div>
       ) : (
         <p>Cargando perfil privado...</p>

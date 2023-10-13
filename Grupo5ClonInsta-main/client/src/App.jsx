@@ -23,6 +23,7 @@ import LogOut from './components/LogOut.jsx';
 import AvatarPage from './pages/AvatarPage.jsx';
 import PrivateProfileCard from './components/PrivateProfileCard.jsx';
 import ProfileButton from './components/ProfileButton.jsx';
+import PublicProfileCard from './components/PublicProfileCard.jsx';
 
 
 
@@ -46,10 +47,11 @@ function App() {
       {" | "}
       <NavLink to="/avatar">Avatar</NavLink>
       {" | "}
-      <NavLink to="/Logout">Logout</NavLink>
-      {" | "}
-      <NavLink to="/perfil"><ProfileButton/></NavLink>
-      {" | "}
+      {/* <NavLink to="/Logout">Logout</NavLink>
+      {" | "} */}
+      <NavLink to="/perfil">
+        <ProfileButton />
+      </NavLink>
       <Routes>
         <Route path="/home" element={<EntryList />} />
         <Route path="/login" element={<LoginForm />} />
@@ -59,9 +61,10 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/newEntry" element={<NewEntryForm />} />
         <Route path="/avatar" element={<AvatarPage />} />
-        <Route path="/users/validate/:id" element={<ValidateForm />} />
+        <Route path="/users/validate/:regCode" element={<ValidateForm />} />
         <Route path="/search/entries" element={<SearchEntries />} />
         <Route path="/perfil" element={<PrivateProfileCard />} />
+        <Route path="/perfil-publico/:userId" element={<PublicProfileCard />}/>
       </Routes>
     </>
   );
