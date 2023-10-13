@@ -1,47 +1,60 @@
-// Importamos los hooks.
-import { useState } from "react";
-import axios from "axios";
+
+const { VITE_API_URL } = import.meta.env;
+
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Asegúrate de tener axios instalado en tu proyecto
 import { getToken } from "../../utils/getToken";
 
+const AvatarEditor = () => {
+  const token= getToken()
+  const [avatar, setAvatar] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
-// const BASE_URL = 'http://localhost:4000';
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    setAvatar(file);
 
-function AvatarForm(){
-  const [avatar, setAvatar] = useState('');
-  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
-  const handleUpload = async (e) => {
-    const token = getToken();
-    e.preventDefault()
-    const file = e.target.files;
-    const formData = new FormData();
-    formData.append(avatar, file);
-    console.log(token);
+  const handleAvatarUpload = async () => {
     try {
-      const response = await axios.put("http://localhost:4000/users/avatar", formData, { 
-        avatar,
-      headers: {
-        Authorization: token,
-        "Content-Type": "multipart/form-data",
-      }, });
-      if (response.status === 200) {
-        // Guardamos el token en el localStorage.
-        console.log("SUBIDA AVATAR KFC SO GOOD");
-      } else {
-        // Maneja el error de acuerdo a tus necesidades.
-        console.error('NO QUIERE SUBIR', response.data);
-      }      } 
-      catch (error) {
-      setAvatar("Error: " + error.response.data.avatar);
+      const formData = new FormData();
+      formData.append("avatar", avatar);
+
+      // Hacer una solicitud para enviar el avatar al servidor
+      await axios.put(`${VITE_API_URL}/users/avatar`, formData, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // Actualizar el avatar del usuario en el frontend si es necesario
+      // ...
+      
+      // Limpiar el estado después de subir la imagen
+      setAvatar(null);
+      setPreviewUrl(null);
+    } catch (error) {
+      console.error("Error al subir el avatar:", error);
+      // Manejar errores según tus necesidades
     }
   };
 
   return (
-    <form onSubmit={handleUpload}>
-      <input type="file" accept="image/*"  onChange={(e) => setAvatar(e.target.files)} required/>
-      <button>Subir foto de perfil</button>
-    </form>
+    <div>
+      <h2>Editar Avatar</h2>
+      {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
+      <input type="file" accept="image/*" onChange={handleAvatarChange} />
+      {avatar && <button onClick={handleAvatarUpload}>Guardar Avatar</button>}
+    </div>
   );
 }
 
-export default AvatarForm;
+export default AvatarEditor;
+

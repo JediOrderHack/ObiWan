@@ -1,6 +1,6 @@
 import useAuth from "../hooks/useAuth";
 
-const IMAGES_URL = "http://localhost:4000/images";
+const IMAGES_URL = "http://localhost:4000/uploads";
 
 function UserAvatar() {
   const { authUser } = useAuth();

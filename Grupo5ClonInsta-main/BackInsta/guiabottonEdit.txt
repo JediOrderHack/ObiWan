@@ -1,0 +1,5 @@
+Agregar información de usuario logueado: Asegúrate de que tu sistema de autenticación almacene información sobre el usuario logueado, como su ID o nombre de usuario, en un estado global o contexto.
+
+Modificar el componente EntryList:
+
+En tu componente EntryList, importa la información del usuario logueado y realiza una verificación para determinar si el usuario actual es el dueño de cada entrada. Luego, condiciona la renderización del botón de edición en consecuencia.

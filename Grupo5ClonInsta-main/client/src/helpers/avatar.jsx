@@ -3,7 +3,7 @@ import { APIUrl } from "../config";
 const avatar = (img) => {
   return img ? (
     <img
-      src={APIUrl + "/images/" + img}
+      src={APIUrl + "/uploads/" + img}
       alt=""
       className="h-10 w-10 rounded-full bg-gray-100"
     />

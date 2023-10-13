@@ -48,10 +48,10 @@ async function selectAllEntriesQuery({ userId, search }) {
           u.avatar,
           e.userId = ? AS owner,
           COUNT(DISTINCT l.id) AS likesCount,
-          BIT_OR(l.user_id = ?) AS likedByMe
+          BIT_OR(l.userId = ?) AS likedByMe
         FROM entries e
         INNER JOIN users u ON e.userId = u.id
-        LEFT JOIN likes l ON e.id = l.post_id
+        LEFT JOIN likes l ON e.id = l.postId
         WHERE e.description LIKE ?
         GROUP BY e.id
       `,
@@ -104,10 +104,10 @@ async function selectEntryByIdQuery({ entryId, userId }) {
           u.avatar,
           e.userId = ? AS owner,
           COUNT(DISTINCT l.id) AS likesCount,
-          BIT_OR(l.user_id = ?) AS likedByMe
+          BIT_OR(l.userId = ?) AS likedByMe
         FROM entries e
         INNER JOIN users u ON e.userId = u.id
-        LEFT JOIN likes l ON e.id = l.post_id
+        LEFT JOIN likes l ON e.id = l.postId
         WHERE e.id = ?
         GROUP BY e.id
       `,
@@ -196,7 +196,7 @@ async function insertLikeQuery({ entryId, userId }) {
 
     // Comprobamos si el usuario ya ha dado like a esta entrada.
     const [likes] = await connection.query(
-      "SELECT id FROM likes WHERE post_id = ? AND user_id = ?",
+      "SELECT id FROM likes WHERE postId = ? AND userId = ?",
       [entryId, userId]
     );
 
@@ -207,7 +207,7 @@ async function insertLikeQuery({ entryId, userId }) {
 
     // Agregamos el like.
     await connection.query(
-      "INSERT INTO likes (post_id, user_id) VALUES (?, ?)",
+      "INSERT INTO likes (postId, userId) VALUES (?, ?)",
       [entryId, userId]
     );
   } finally {
@@ -228,7 +228,7 @@ async function deleteLikeQuery({ entryId, userId }) {
 
     // Comprobamos que exista un like.
     const [likes] = await connection.query(
-      "SELECT id FROM likes WHERE post_id = ? AND user_id = ?",
+      "SELECT id FROM likes WHERE postId = ? AND userId = ?",
       [entryId, userId]
     );
 
@@ -238,7 +238,7 @@ async function deleteLikeQuery({ entryId, userId }) {
     }
 
     await connection.query(
-      "DELETE FROM likes WHERE post_id = ? AND user_id = ?",
+      "DELETE FROM likes WHERE postId = ? AND userId = ?",
       [entryId, userId]
     );
   } finally {

@@ -166,11 +166,11 @@ async function selectUserPhotosQuery({ publicUserId, tokenUserId }) {
           u.avatar,
           e.userId = ? AS owner,
           COUNT(DISTINCT l.id) AS likesCount,
-          BIT_OR(l.user_id = ?) AS likedByMe,
+          BIT_OR(l.userId = ?) AS likedByMe,
           e.createdAt
         FROM entries e
         INNER JOIN users u ON e.userId = u.id
-        LEFT JOIN likes l ON e.id = l.post_id
+        LEFT JOIN likes l ON e.id = l.postId
         WHERE e.userId = ?
         GROUP BY e.id
       `,
@@ -214,6 +214,27 @@ async function updateUserAvatar({ avatar, userId }) {
     );
   } catch (error) {
     console.error("Error en updateUserAvatar:", error);
+    return error;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
+async function getUserBy(obj) {
+  const queryStr = Object.entries(obj)
+    .map((arr) => `${arr[0]} = '${arr[1]}'`)
+    .join(", ");
+  let connection;
+
+  try {
+    connection = await getPool();
+
+    const [user] = await connection.query(
+      `SELECT * FROM users WHERE ${queryStr}`
+    );
+    return user[0];
+  } catch (error) {
+    console.error("Error en getUserBy:", error);
     return error;
   } finally {
     if (connection) connection.release();
@@ -289,6 +310,8 @@ async function updateUserPass({ recoveryPassCode, newPass }) {
 
 
 
+
+
 export {
   insertuserQuery,
   updateUserRegCodeQuery,
@@ -299,4 +322,5 @@ export {
   updateUserRecoverPass,
   updateUserPass,
   selectUserQuery,
+  getUserBy
 };

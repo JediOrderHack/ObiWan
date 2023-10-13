@@ -133,7 +133,7 @@ const init = async () => {
     await connection.query(`
       CREATE TABLE IF NOT EXISTS chat_room_membership (
         membership_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        user_id INT UNSIGNED NOT NULL,
+        userId INT UNSIGNED NOT NULL,
         room_id INT UNSIGNED NOT NULL,
         joined_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
@@ -146,7 +146,7 @@ const init = async () => {
       CREATE TABLE IF NOT EXISTS chat_messages (
         message_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         room_id INT UNSIGNED NOT NULL,
-        user_id INT UNSIGNED NOT NULL,
+        userId INT UNSIGNED NOT NULL,
         message_text TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )

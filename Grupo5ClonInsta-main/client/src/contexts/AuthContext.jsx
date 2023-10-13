@@ -41,9 +41,6 @@ export const AuthProvider = ({ children }) => {
                 if (body.status === 'error') {
                     throw new Error(body.message)
                 }
-
-                console.log(body);
-
                 setAuthUser(body.data.user);
             } catch (err) {
                 console.error(err.message);
@@ -118,9 +115,6 @@ export const AuthProvider = ({ children }) => {
     const authUpdateAvatar = async (avatar) => {
         try {
             setLoading(true);
-
-
-            console.log(avatar);
 
             // Creamos un objeto formData para agregar el avatar.
             const formData = new FormData();

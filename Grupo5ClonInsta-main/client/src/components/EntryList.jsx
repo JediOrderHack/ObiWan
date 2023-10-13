@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserAvatar from "./UserAvatar";
+import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
-import EntryComment from "./EntryComments";
-import { getToken } from "../utils/getToken";
-import ViewComments from "./ViewComments";
 
 // Rutas de las imágenes y los videos en tu servidor Express
 const IMAGES_URL = "http://localhost:4000/images";
 
-function EntryList({ entriesProp }) {
+function EntryList() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
-  const userAuthToken = getToken();
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/entries", {
+          params: {
+            search,
+          },
           timeout: 15000,
         });
 
-        if (response.data.entries && Array.isArray(response.data.entries)) {
-          setEntries(response.data.entries.reverse());
+        if (
+          response.data.data.entries &&
+          Array.isArray(response.data.data.entries)
+        ) {
+          setEntries(response.data.data.entries.reverse());
         } else {
           console.error(
             "La respuesta del servidor no contiene un array de entradas:",
@@ -34,38 +38,38 @@ function EntryList({ entriesProp }) {
       }
     };
 
-    fetchData(); // Llama a fetchData() cuando se monta el componente
-  }, []);
-
-  const handleCommentAdded = (entryId) => {
-    // Puedes agregar aquí la lógica que deseas después de que se agrega un comentario
-    // Por ejemplo, puedes actualizar la lista de comentarios o hacer cualquier otra acción necesaria.
-    console.log(`Comentario agregado para la entrada con ID: ${entryId}`);
-  };
+    fetchData();
+  }, [search]);
 
   return (
     <div>
+      <input
+        type="text"
+        placeholder="Buscar entradas"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
       {entries.map((entry, index) => (
         <div key={`entry_${entry.id}_${index}`}>
-          <UserAvatar userId={entry.userId} />
-          <div>Nombre de Usuario: {entry.owner}</div>
+          <PublicProfileButton userId={entry.userId} />
+          <div>Nombre de Usuario: {entry.username}</div>
           <div>
             Fotos Subidas:
             {entry.photos &&
-              JSON.parse(entry.photos).map((photoUrl, photoIndex) => (
+              entry.photos.map((photo, photoIndex) => (
                 <img
                   key={`photo_${entry.id}_${photoIndex}`}
-                  src={`${IMAGES_URL}/${photoUrl}`}
+                  src={`${IMAGES_URL}/${photo.photoName}`}
                   alt={`Foto ${photoIndex + 1}`}
                 />
               ))}
           </div>
-          <EntryLikes key={entry.id} entry={entry} />
           <div>Descripción: {entry.description}</div>
-          <ViewComments comments={entry.comments} entryId={entry.id}/>
-          <EntryComment
+          <div>Likes: {entry.likesCount}</div>
+          <EntryLikes
             entryId={entry.id}
-            onCommentAdded={() => handleCommentAdded(entry.id)}
+            userId={entry.userId}
+            likedByMe={entry.likedByMe}
           />
         </div>
       ))}
@@ -74,5 +78,4 @@ function EntryList({ entriesProp }) {
 }
 
 export default EntryList;
-
 
