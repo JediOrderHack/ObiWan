@@ -1,84 +1,75 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { getToken } from "../../utils/getToken";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
 
-const { VITE_API_URL } = import.meta.env;
-
-const EditEntryForm = () => {
-  const { entryId } = useParams(); // Obtén el ID de la entrada de los parámetros de la URL
-  const [entry, setEntry] = useState(null);
-  const [description, setDescription] = useState("");
-  const inputRef = useRef(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Carga la entrada existente cuando el componente se monta
-    const fetchEntry = async () => {
-      try {
-        const token = getToken();
-        const response = await axios.get(`${VITE_API_URL}/entries/${entryId}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-
-        const responseData = response.data;
-        if (responseData.status === "ok") {
-          setEntry(responseData.data);
-          setDescription(responseData.data.description);
-        } else {
-          console.error("Error al obtener la entrada:", responseData.data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchEntry();
-  }, [entryId]);
+const EditEntryForm = ({ entry, onEdit }) => {
+  const [description, setDescription] = useState(entry.description);
+  const [photos, setPhotos] = useState([...entry.photos]);
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
-  const handleUpdate = async () => {
+  const handleFileChange = (e) => {
+    const newPhotos = Array.from (e.target.files);
+    setPhotos([...photos, ...newPhotos]);
+  };
+
+  const handleRemoveImage = (index) => {
+    const newPhotos = [...photos];
+    newPhotos.splice(index, 1);
+    setPhotos(newPhotos);
+  };
+
+  const handleEdit = async () => {
     try {
-      const token = getToken();
-      const response = await axios.put(
-        `${VITE_API_URL}/entries/${entryId}`,
-        {
-          description: description,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      // Create a FormData object to send the images
+      const formData = new FormData();
+      formData.append("description", description);
+      photos.forEach((photo) => {
+        formData.append("images", photo);
+      });
 
-      const responseData = response.data;
+      // Send a PUT request to the edit entry endpoint
+      const response = await fetch(`http://localhost:3000/entries/${entry.id}`, {
+        method: "PUT",
+        body: formData,
+      });
 
-      if (responseData.status === "ok") {
-        console.log("Entrada actualizada con éxito");
-        navigate("/home");
+      if (response.ok) {
+        // Entry updated successfully, you can handle the response here
+        const updatedEntry = await response.json();
+        onEdit(updatedEntry); // Update the state or perform any necessary actions
       } else {
-        console.error("Error al actualizar la entrada:", responseData.data);
+        // Handle the error response if needed
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      // Handle any network or other errors
+      console.error(error);
     }
   };
 
   return (
     <div>
       <h2>Editar Entrada</h2>
-      {entry && (
-        <div>
-          <label>Imagen:</label>
-          {/* Aquí puedes mostrar la imagen actual si es necesario */}
+      <div>
+        <label>Imagen:</label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+        />
+      </div>
+      {photos.map((photo, index) => (
+        <div key={index}>
+          <img
+            src={URL.createObjectURL(photo)}
+            alt={`Image ${index}`}
+            width="100"
+            height="100"
+          />
+          <button onClick={() => handleRemoveImage(index)}>Borrar</button>
         </div>
-      )}
+      ))}
       <div>
         <label>Descripción:</label>
         <textarea
@@ -88,7 +79,7 @@ const EditEntryForm = () => {
           onChange={handleDescriptionChange}
         />
       </div>
-      <button onClick={handleUpdate}>Actualizar Entrada</button>
+      <button onClick={handleEdit}>Guardar Cambios</button>
     </div>
   );
 };
