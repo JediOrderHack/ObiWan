@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken } from "../utils/getToken.js";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
-import LogOut from "./LogOut.jsx";
+import LogOut from "./LogOut.jsx"; // Importa LogOut
+import AvatarEditor from "../forms/AvatarForm/AvatarForm.jsx";
 const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PrivateProfileCard = () => {
@@ -19,7 +20,7 @@ const PrivateProfileCard = () => {
       })
       .then((response) => {
         setUser(response.data.data.user);
-        console.log(response.data.data.user)
+        console.log(response.data.data.user);
       })
       .catch((error) => {
         console.error("Error al obtener el perfil privado:", error);
@@ -27,6 +28,10 @@ const PrivateProfileCard = () => {
         navigate("/login");
       });
   }, [navigate, token]);
+
+  const goToAvatarEditor = () => {
+    navigate("/avatar");
+  };
 
   return (
     <div className="private-profile-card">
@@ -36,6 +41,8 @@ const PrivateProfileCard = () => {
           <h2>Perfil Privado de {user.username}</h2>
           <p>Email: {user.email}</p>
           <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" /><br/>
+          <AvatarEditor/>
+          <button onClick={goToAvatarEditor}></button>
           <button><LogOut/></button>
         </div>
       ) : (
@@ -46,3 +53,4 @@ const PrivateProfileCard = () => {
 };
 
 export default PrivateProfileCard;
+

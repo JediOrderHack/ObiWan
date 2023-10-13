@@ -1,4 +1,4 @@
-import { getToken } from "../utils/getToken";
+import { getToken } from "../../utils/getToken";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -45,6 +45,7 @@ const ProfileButton = () => {
         )
       ) : (
         // Si el usuario no está autenticado, muestra una imagen por defecto y enlace a la página de inicio de sesión
+        
         <Link to="/login">
           <img
             src={`${UPLOADS_DIR}/DefaultAvatar.png`}

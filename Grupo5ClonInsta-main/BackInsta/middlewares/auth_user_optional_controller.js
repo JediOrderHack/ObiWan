@@ -11,11 +11,12 @@ import generateError from "../helpers/generate_error.js";
 async function authUserOptionalController(req, res, next) {
   try {
     const { authorization } = req.headers;
-
+    console.log(authorization)
     // Si hay token creamos la propiedad user en el objeto request.
     if (authorization) {
       // Variable que almacenará la info del token una vez desencriptada.
       let tokenInfo;
+    
 
       try {
         tokenInfo = jwt.verify(authorization, SECRET);

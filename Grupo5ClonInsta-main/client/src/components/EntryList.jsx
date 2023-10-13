@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // Importar estilos del carrusel
+import { Carousel } from "react-responsive-carousel";
 import UserAvatar from "./UserAvatar";
 import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
 
 const IMAGES_URL = "http://localhost:3000/uploads";
+
+const imageStyles = {
+  maxWidth: "80%", // Establece un ancho máximo del 80% del contenedor
+  maxHeight: "60vh", // Establece una altura máxima del 60% del viewport height
+};
 
 function EntryList() {
   const [entries, setEntries] = useState([]);
@@ -52,17 +59,18 @@ function EntryList() {
         <div key={`entry_${entry.id}_${index}`}>
           <PublicProfileButton userId={entry.userId} />
           <div>Nombre de Usuario: {entry.username}</div>
-          <div>
-            Fotos Subidas:
+          <Carousel>
             {entry.photos &&
               entry.photos.map((photo, photoIndex) => (
-                <img
-                  key={`photo_${entry.id}_${photoIndex}`}
-                  src={`${IMAGES_URL}/${photo.photoName}`}
-                  alt={`Foto ${photoIndex + 1}`}
-                />
+                <div key={`photo_${entry.id}_${photoIndex}`}>
+                  <img
+                    src={`${IMAGES_URL}/${photo.photoName}`}
+                    alt={`Foto ${photoIndex + 1}`}
+                    style={imageStyles}
+                  />
+                </div>
               ))}
-          </div>
+          </Carousel>
           <div>Descripción: {entry.description}</div>
           <div>Likes: {entry.likesCount}</div>
           <EntryLikes
@@ -77,4 +85,3 @@ function EntryList() {
 }
 
 export default EntryList;
-
