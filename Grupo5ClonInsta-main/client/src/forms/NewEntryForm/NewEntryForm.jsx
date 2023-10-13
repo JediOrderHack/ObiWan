@@ -8,7 +8,7 @@ const { VITE_API_URL } = import.meta.env;
 const NewEntryForm = () => {
   const [files, setFiles] = useState([]);
   const [description, setDescription] = useState("");
-  const [imagePreviews, setImagePreviews] = useState([]); // Estado para almacenar las vistas previas
+  const [imagePreviews, setImagePreviews] = useState([]);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -19,7 +19,6 @@ const NewEntryForm = () => {
     } else {
       setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
 
-      // Mostrar vista previa de todas las imágenes seleccionadas
       const previews = selectedFiles.map((file) => URL.createObjectURL(file));
       setImagePreviews((prevPreviews) => [...prevPreviews, ...previews]);
     }
@@ -39,21 +38,25 @@ const NewEntryForm = () => {
 
       const token = getToken();
 
-      const response = await axios.post(`${VITE_API_URL}/entries`, formData, {
-        headers: {
-          Authorization: token,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      if (token) {
+        const response = await axios.post(`${VITE_API_URL}/entries`, formData, {
+          headers: {
+            Authorization: token,
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-      const responseData = response.data;
+        const responseData = response.data;
 
-      if (responseData.status === "ok") {
-        console.log("Entrada creada con éxito");
-        const entryData = responseData.data.entry;
-        navigate(`/home`);
+        if (responseData.status === "ok") {
+          console.log("Entrada creada con éxito");
+          const entryData = responseData.data.entry;
+          navigate(`/home`);
+        } else {
+          console.error("Error al crear la entrada:", responseData.data);
+        }
       } else {
-        console.error("Error al crear la entrada:", responseData.data);
+        navigate(`/login`);
       }
     } catch (err) {
       console.error(err);

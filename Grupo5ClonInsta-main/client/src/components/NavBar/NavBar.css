@@ -1,0 +1,61 @@
+.navigation_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #fff7ad, #ffa9fa);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px 10px 20px;
+  z-index: 100;
+  height: 110px;
+}
+
+.navigation_left {
+  display: flex;
+  align-items: center;
+}
+
+.center-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.center-logo img {
+  max-width: 200px;
+  max-height: 80px;
+}
+
+.auth_btns {
+  display: flex;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  align-items: flex-end; /* Alinea los elementos a la derecha */
+  margin-right: 25px;
+}
+
+.profile-button-container, .auth-buttons {
+  margin: 10px 0; /* Agrega margen vertical entre los elementos */
+}
+
+.profile-button-container img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid white;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.auth-buttons a {
+  text-decoration: none;
+  margin: 0 10px; /* Añade margen horizontal entre los enlaces para separarlos */
+}

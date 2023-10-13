@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import "./RegisterForm.css"
 
 const BASE_URL = 'http://localhost:3000/users';
 
@@ -30,39 +31,46 @@ function RegisterForm() {
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      {successMessage ? (
-        <div className="success-message">{successMessage}</div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>username:</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button type="submit">Registrarse</button>
-        </form>
-      )}
+
+    <div className="post_container">
+      <div className="post_top">
+        {successMessage ? (
+          <div className="success-message">{successMessage}</div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Username:</label>
+              <br></br>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Email:</label>
+              <br></br>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Password:</label>
+              <br></br>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <button type="submit">Registrarse</button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

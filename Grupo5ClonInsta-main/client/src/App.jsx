@@ -1,6 +1,10 @@
 import { useState } from 'react'
+<<<<<<< HEAD
 import { BrowserRouter, NavLink } from 'react-router-dom';
 
+=======
+import "./App.css";
+>>>>>>> 10e56286245adda704c2baf1dfd83c74e3060a5b
 
 import {Route, Routes } from 'react-router-dom';
 
@@ -19,11 +23,12 @@ import ValidateForm from './forms/ValidateForm/ValidateForm.jsx';
 import EntryList from './components/EntryList.jsx';
 import LogOut from './components/LogOut.jsx';
 import PrivateProfileCard from './components/PrivateProfileCard.jsx';
-import ProfileButton from './components/ProfileButton.jsx';
+import ProfileButton from './components/ProfileButton/ProfileButton.jsx';
 import PublicProfileCard from './components/PublicProfileCard.jsx';
 import EditEntryForm from './forms/EditEntryForm/EditEntryForm.jsx';
 import AvatarEditor from './forms/AvatarForm/AvatarForm.jsx';
 import PublicProfileButton from './components/PublicProfileButton.jsx';
+import NavBar from './components/NavBar/NavBar.jsx';
 
 
 
@@ -36,21 +41,10 @@ function App() {
 
   return (
     <>
-      <NavLink to="/home">Home</NavLink> {" | "}
-      <NavLink to="/NewEntry">Nueva entrada</NavLink>
-      {" | "}
-      <NavLink to="/login">Login</NavLink>
-      {" | "}
-      <NavLink to="/Register">Register</NavLink>
-      {" | "}
-      <NavLink to="/avatar">Avatar</NavLink>
-      {" | "}
-      <NavLink to="/Logout">Logout</NavLink>
-      {" | "}
-      <NavLink to="/perfil">
-        <ProfileButton />
-      </NavLink>
-      <Routes>
+      <NavBar />
+
+
+      <Routes classname="app">
         <Route path="/home" element={<EntryList />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/LogOut" element={<LogOut />} />
@@ -64,6 +58,7 @@ function App() {
         <Route path="/perfil-publico/:userId" element={<PublicProfileCard />} />
         <Route path="/editEntry/:entryId" element={<EditEntryForm />} />
       </Routes>
+      <footer>Made with ♥️</footer>
     </>
   );
 }

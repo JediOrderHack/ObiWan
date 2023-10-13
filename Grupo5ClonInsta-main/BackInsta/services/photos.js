@@ -26,7 +26,7 @@ async function saveImage({ req, img, width }) {
     }
 
     // Creamos un objeto de tipo Sharp con la imagen dada.
-    const sharpImg = sharp(req.files.avatar.data);
+    const sharpImg = sharp(img.data); // Cambiado req.files.avatar.data a img.data
 
     // Redimensionamos la imagen. Width representa un tamaño en píxeles.
     sharpImg.resize(width);

@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  background: linear-gradient(90deg, #cdffd8, #94b9ff);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.app {
+  width: 700px;
+  margin: 0 auto;
+}
+
+.app .title {
+  color: white;
+  font-size: 75px;
+  text-align: center;
+  margin-top: 30px;
+  font-weight: 700;
+}
+
+footer {
+  text-align: center;
+  margin-top: 80px;
+  padding-bottom: 10px;
+  color: white;
+  font-size: 25px;
+  font-weight: 700;
+}

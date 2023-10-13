@@ -1,21 +1,16 @@
-// Importamos axios.
 import axios from 'axios';
-//Importamos navigat.
 import { useNavigate } from 'react-router-dom';
-// Importamos los hooks.
 import { useState } from 'react';
+import { TOKEN_LOCAL_STORAGE_KEY } from '../../utils/constants';
+import "./LoginForm.css"
 
-// Importamos el nombre con el que guardamos el token en el localStorage.
-import { TOKEN_LOCAL_STORAGE_KEY } from '../../utils/constants'
-
-// Importamos la URL base de nuestra API.
 const { VITE_API_URL } = import.meta.env;
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,27 +21,24 @@ const navigate = useNavigate();
       });
 
       if (response.status === 200) {
-        // Guardamos el token en el localStorage.
         localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, response.data.data.token);
         console.log("Login exitoso");
-        
         navigate("/home");
-        
         window.location.reload();
       } else {
-        // Maneja el error de acuerdo a tus necesidades.
         console.error('Error en la solicitud de Login:', response.data);
       }
-    }catch (err) {
+    } catch (err) {
       console.error(err);
     }
   }
-  
-    return (
-      <div>
+
+  return (
+    <div className="post_container">
+      <div className="post_top">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="form-group">
             <label>email:</label>
             <input
               type="text"
@@ -54,7 +46,7 @@ const navigate = useNavigate();
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div>
+          <div className="form-group">
             <label>password:</label>
             <input
               type="password"
@@ -64,13 +56,12 @@ const navigate = useNavigate();
           </div>
           <button type="submit" onSubmit={handleSubmit}>Log In</button>
         </form>
-
-      {/* Agrega un enlace a la página de recuperación de contraseña */}
-      <p>
-        ¿Olvidaste tu contraseña? <a href="/forgot-password">Recupérala aquí</a>
-      </p>
+        <p>
+          ¿Olvidaste tu contraseña? <a href="/forgot-password">Recupérala aquí</a>
+        </p>
+      </div>
     </div>
-    );
-  }
-  
-  export default LoginForm;
+  );
+}
+
+export default LoginForm;
