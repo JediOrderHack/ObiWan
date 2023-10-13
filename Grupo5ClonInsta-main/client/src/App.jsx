@@ -20,6 +20,8 @@ import EntryList from './components/EntryList.jsx';
 import LogOut from './components/LogOut.jsx';
 import PrivateProfileCard from './components/PrivateProfileCard.jsx';
 import ProfileButton from './components/ProfileButton.jsx';
+import PublicProfileCard from './components/PublicProfileCard.jsx';
+import EditEntryForm from './forms/EditEntryForm/EditEntryForm.jsx';
 import AvatarEditor from './forms/AvatarForm/AvatarForm.jsx';
 
 
@@ -59,6 +61,8 @@ function App() {
         <Route path="/avatar" element={<AvatarEditor />} />
         <Route path="/users/validate/:regCode" element={<ValidateForm />} />
         <Route path="/perfil" element={<PrivateProfileCard />} />
+        <Route path="/perfil-publico/:userId" element={<PublicProfileCard />} />
+        <Route path="/editEntry/:entryId" element={<EditEntryForm />} />
       </Routes>
     </>
   );

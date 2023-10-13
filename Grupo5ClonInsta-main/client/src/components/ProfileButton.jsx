@@ -20,6 +20,7 @@ const ProfileButton = () => {
       })
       .then((response) => {
         setUser(response.data.data.user);
+        console.log(response.data.data.user)
     
       })
       .catch((error) => {
