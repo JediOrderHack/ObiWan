@@ -1,4 +1,4 @@
-// Importamos las dependencias.`
+// Importamos las dependencias.
 import crypto from "crypto";
 import path from "path";
 import fs from "fs/promises";
@@ -11,7 +11,7 @@ import { ROOT, UPLOADS_DIR } from "../config.js";
 import generate_error from "../helpers/generate_error.js";
 
 // Función que guarda una imagen en la carpeta uploads.
-async function saveImage({ img, width }) {
+async function saveImage({ req, img, width }) {
   try {
     // Ruta absoluta al directorio de subida de archivos.
     const uploadsPath = path.resolve(ROOT, UPLOADS_DIR);
@@ -26,7 +26,7 @@ async function saveImage({ img, width }) {
     }
 
     // Creamos un objeto de tipo Sharp con la imagen dada.
-    const sharpImg = sharp(img.data);
+    const sharpImg = sharp(req.files.avatar.data);
 
     // Redimensionamos la imagen. Width representa un tamaño en píxeles.
     sharpImg.resize(width);
@@ -40,7 +40,7 @@ async function saveImage({ img, width }) {
     const imgPath = path.join(uploadsPath, imgName);
 
     // Guardamos la imagen.
-    sharpImg.toFile(imgPath);
+    await sharpImg.toFile(imgPath);
 
     // Retornamos el nombre de la imagen.
     return imgName;

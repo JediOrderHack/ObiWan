@@ -12,6 +12,7 @@ import {
   updateUserRecoverPass,
   updateUserPass,
   selectUserQuery,
+  getUserBy
 } from "../db/queries/users_queries.js";
 
 // Helpers
@@ -244,7 +245,7 @@ async function editUserAvatar(req, res, next) {
     }
 
     // Obtenemos los datos del usuario para comprobar si ya tiene un avatar previo.
-    const user = await selectUserByIdQuery({ id: req.user.id });
+    const user = await getUserBy({ id: req.user.id });
     if (user instanceof Error) {
       console.error("Error al obtener usuario:", user);
       throw user;
@@ -256,8 +257,8 @@ async function editUserAvatar(req, res, next) {
       await deletePhoto({ name: user.avatar });
     }
 
-    // Guardamos el avatar en una carpeta del servidor y obtenemos el nombre con el que lo hemos guardado.
-    const avatar = await saveImage({ images: [req.files.avatar], width: 100 });
+    // Llamamos a la función saveImage pasando la solicitud (req) como argumento
+    const avatar = await saveImage({ req, img: req.files.avatar, width: 100 });
     console.log("Avatar guardado:", avatar);
 
     const savedAvatar = await updateUserAvatar({ avatar, userId: req.user.id });
@@ -275,6 +276,7 @@ async function editUserAvatar(req, res, next) {
     next(err);
   }
 }
+
 
 async function sendRecoverPass(req, res, next) {
   try {
@@ -390,6 +392,8 @@ async function editUserPass(req, res, next) {
     next(err);
   }
 }
+
+
 
 
 

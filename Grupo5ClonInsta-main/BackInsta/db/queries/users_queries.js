@@ -220,6 +220,27 @@ async function updateUserAvatar({ avatar, userId }) {
   }
 }
 
+async function getUserBy(obj) {
+  const queryStr = Object.entries(obj)
+    .map((arr) => `${arr[0]} = '${arr[1]}'`)
+    .join(", ");
+  let connection;
+
+  try {
+    connection = await getPool();
+
+    const [user] = await connection.query(
+      `SELECT * FROM users WHERE ${queryStr}`
+    );
+    return user[0];
+  } catch (error) {
+    console.error("Error en getUserBy:", error);
+    return error;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
 async function updateUserRecoverPass({ id, recoverPassCode }) {
   let connection;
 
@@ -289,6 +310,8 @@ async function updateUserPass({ recoveryPassCode, newPass }) {
 
 
 
+
+
 export {
   insertuserQuery,
   updateUserRegCodeQuery,
@@ -299,4 +322,5 @@ export {
   updateUserRecoverPass,
   updateUserPass,
   selectUserQuery,
+  getUserBy
 };

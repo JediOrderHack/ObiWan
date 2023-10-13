@@ -25,7 +25,7 @@ async function sendMessage(roomId, userId, messageText) {
     const connection = await getPool();
 
     const [result] = await connection.execute(
-      "INSERT INTO chat_messages (room_id, user_id, message_text) VALUES (?, ?, ?)",
+      "INSERT INTO chat_messages (room_id, userId, message_text) VALUES (?, ?, ?)",
       [roomId, userId, messageText]
     );
 

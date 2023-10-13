@@ -104,7 +104,7 @@ async function selectEntryByIdQuery({ entryId, userId }) {
           u.avatar,
           e.userId = ? AS owner,
           COUNT(DISTINCT l.id) AS likesCount,
-          BIT_OR(l.user_id = ?) AS likedByMe
+          BIT_OR(l.userId = ?) AS likedByMe
         FROM entries e
         INNER JOIN users u ON e.userId = u.id
         LEFT JOIN likes l ON e.id = l.postId
@@ -207,7 +207,7 @@ async function insertLikeQuery({ entryId, userId }) {
 
     // Agregamos el like.
     await connection.query(
-      "INSERT INTO likes (postId, user_id) VALUES (?, ?)",
+      "INSERT INTO likes (postId, userId) VALUES (?, ?)",
       [entryId, userId]
     );
   } finally {

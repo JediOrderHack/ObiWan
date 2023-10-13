@@ -21,12 +21,12 @@ const ProfileButton = () => {
       .then((response) => {
         setUser(response.data.data.user);
         console.log(response.data.data.user)
+    
       })
       .catch((error) => {
         console.error("Error al obtener el perfil privado:", error);
          });
          }, []);
-         console.log(user)
   return (
     <div className="profile-button">
       {token ? (
