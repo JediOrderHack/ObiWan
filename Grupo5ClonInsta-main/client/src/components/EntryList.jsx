@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserAvatar from "./UserAvatar";
+import EntryLikes from "./EntryLikes";
 
 const IMAGES_URL = "http://localhost:3000/uploads";
 
@@ -10,30 +11,33 @@ function EntryList() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/entries", {
-        params: {
-          search,
-        },
-        timeout: 15000,
-      });
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/entries", {
+          params: {
+            search,
+          },
+          timeout: 15000,
+        });
 
-      if (response.data.data.entries && Array.isArray(response.data.data.entries)) {
-        setEntries(response.data.data.entries.reverse());
-      } else {
-        console.error(
-          "La respuesta del servidor no contiene un array de entradas:",
-          response.data
-        );
+        if (
+          response.data.data.entries &&
+          Array.isArray(response.data.data.entries)
+        ) {
+          setEntries(response.data.data.entries.reverse());
+        } else {
+          console.error(
+            "La respuesta del servidor no contiene un array de entradas:",
+            response.data
+          );
+        }
+      } catch (error) {
+        console.error("Error al obtener las entradas:", error);
       }
-    } catch (error) {
-      console.error("Error al obtener las entradas:", error);
-    }
-  };
+    };
 
-  fetchData();
-}, [search]);
+    fetchData();
+  }, [search]);
 
   return (
     <div>
@@ -59,6 +63,12 @@ function EntryList() {
               ))}
           </div>
           <div>Descripción: {entry.description}</div>
+          <div>Likes: {entry.likesCount}</div>
+          <EntryLikes
+            entryId={entry.id}
+            userId={entry.userId}
+            likedByMe={entry.likedByMe}
+          />
         </div>
       ))}
     </div>
@@ -66,3 +76,4 @@ function EntryList() {
 }
 
 export default EntryList;
+

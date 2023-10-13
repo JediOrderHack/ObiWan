@@ -2,7 +2,7 @@ import { getToken } from "../utils/getToken";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-const UPLOADS_DIR = "http://localhost:3000/images";
+const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 
 const ProfileButton = () => {
@@ -20,13 +20,12 @@ const ProfileButton = () => {
       })
       .then((response) => {
         setUser(response.data.data.user);
-        console.log(response.data.user)
+    
       })
       .catch((error) => {
         console.error("Error al obtener el perfil privado:", error);
          });
          }, []);
-         console.log(user)
   return (
     <div className="profile-button">
       {token ? (

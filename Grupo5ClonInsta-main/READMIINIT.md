@@ -43,8 +43,8 @@ Este ejercicio consiste en crear una API que simule el funcionamiento de una apl
 | Campo     | Tipo     | Descripción                                      |
 | --------- | -------- | --------------------------------------------     |
 | id        | INT      | Identificador único del like.                    |
-| user_id   | INT      | Identificador del usuario que dio el like.       |
-| post_id   | INT      | Identificador de la entrada que recibió el like. |
+| userId   | INT      | Identificador del usuario que dio el like.       |
+| postId   | INT      | Identificador de la entrada que recibió el like. |
 | createdAt | DATETIME | Fecha y hora de creación del like.               |
 | update_at | DATETIME | Fecha y hora de modificación del like.           |
 

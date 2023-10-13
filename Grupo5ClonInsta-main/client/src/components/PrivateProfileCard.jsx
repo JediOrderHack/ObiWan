@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken } from "../utils/getToken.js";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
-const UPLOADS_DIR = "http://localhost:3000/images";
+const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PrivateProfileCard = () => {
   const [user, setUser] = useState(null);
