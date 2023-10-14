@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../utils/constants';
 import "../Auth.css"
-
+import { NavLink } from 'react-router-dom';
 const { VITE_API_URL } = import.meta.env;
-
+import logo from "../../assets/logo-2.png"
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,33 +34,39 @@ function LoginForm() {
   }
 
   return (
-    
+    <div className='app'>
+      
       <div className="auth_container">
-        <h2 className="title">Login</h2>
-        <div className='auth-box'>
-        <form onSubmit={handleSubmit}>
-          <div className="input_box">
-            <label>email:</label>
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <h2 className="title">Regístrate</h2>
+
+          <div className="auth_box">
+            <div className="input_box">
+              <p>Usuario</p>
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="input_box">
+              <p>Contraseña</p>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="input_box">
-            <label>password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button type="submit" onSubmit={handleSubmit}>Log In</button>
-        </form>
+          <button onClick={handleSubmit}>
+            <img src={logo} alt="" />
+          </button>
+
+          <NavLink to="/forgot-password">
+            <button className="forget_btn">¿Has olvidado tu Meowseña?</button>
+          </NavLink>
         </div>
-        <p>
-          ¿Olvidaste tu contraseña? <a href="/forgot-password">Recupérala aquí</a>
-        </p>
+
+      <footer>Made with ♥️</footer>
       </div>
   );
 }

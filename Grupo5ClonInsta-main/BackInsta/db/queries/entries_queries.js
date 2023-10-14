@@ -281,4 +281,5 @@ export {
   insertPhotoQuery,
   insertLikeQuery,
   deleteLikeQuery,
+  checkEntryLikeQuery
 };

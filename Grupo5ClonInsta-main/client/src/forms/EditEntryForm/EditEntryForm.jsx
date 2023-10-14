@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link} from "react-router-dom"; // Importa 'navigate' de '@reach/router'.
+import { useParams, Link } from "react-router-dom"; // Importa 'navigate' de '@reach/router'.
 import "./EditEntryForm.css";
 import { getToken } from "../../utils/getToken";
 
@@ -8,14 +8,13 @@ function EditEntryForm() {
   const { entryId } = useParams();
   const token = getToken();
   const [description, setDescription] = useState("");
- 
 
   useEffect(() => {
     // Obtén la descripción actual de la entrada desde el servidor.
     const fetchEntryDescription = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/entries/${entryId}`,
+          `http://localhost:4000/entries/${entryId}`,
           {
             headers: {
               Authorization: token,
@@ -42,7 +41,7 @@ function EditEntryForm() {
     try {
       // Envía una solicitud al servidor para actualizar la descripción de la entrada.
       await axios.put(
-        `http://localhost:3000/entries/${entryId}`,
+        `http://localhost:4000/entries/${entryId}`,
         {
           description: description,
         },
@@ -55,7 +54,7 @@ function EditEntryForm() {
       console.log(token);
 
       // Utiliza 'Navigate' para redirigir al usuario a la lista de entradas después de la actualización.
-     return <Link to="/home" />; // Cambio a Navigate dentro del JSX
+      return <Link to="/home" />; // Cambio a Navigate dentro del JSX
     } catch (error) {
       console.error("Error al actualizar la descripción de la entrada:", error);
     }
@@ -79,5 +78,3 @@ function EditEntryForm() {
 }
 
 export default EditEntryForm;
-
-

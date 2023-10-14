@@ -3,21 +3,20 @@ import axios from "axios";
 import UserAvatar from "./UserAvatar";
 import { useParams } from "react-router-dom";
 
-const UPLOADS_DIR = "http://localhost:3000/uploads";
+const UPLOADS_DIR = "http://localhost:4000/uploads";
 
 const PublicProfileCard = () => {
-  const {userId}= useParams()
-  const [userData, setUserData] = useState(null)
+  const { userId } = useParams();
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     // Verificar si userId es nulo antes de hacer la solicitud GET
     if (userId) {
       axios
-        .get(`http://localhost:3000/users/${userId}`)
+        .get(`http://localhost:4000/users/${userId}`)
         .then((response) => {
-          
           setUserData(response.data.data);
-          console.log(response.data.data)
+          console.log(response.data.data);
         })
         .catch((error) => {
           console.error("Error al obtener el perfil público:", error);

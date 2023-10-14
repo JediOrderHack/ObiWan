@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./RegisterForm.css";
+import "../Auth.css"
+import { NavLink } from 'react-router-dom';
+const BASE_URL = "http://localhost:4000/users";
+import logo from "../../assets/logo-2.png"
 
-const BASE_URL = "http://localhost:3000/users";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -33,46 +35,47 @@ function RegisterForm() {
   };
 
   return (
-    <div className="post_container">
-      <div className="post_top">
-        {successMessage ? (
-          <div className="success-message">{successMessage}</div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Username:</label>
-              <br></br>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email:</label>
-              <br></br>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Password:</label>
-              <br></br>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit">Registrarse</button>
-            </div>
-          </form>
-        )}
+    <div className="app">
+  
+      <div className="auth_container">
+        <h2 className="title">Regístrate</h2>
+
+        <div className="auth_box">
+          <div className="input_box">
+            <p>Usuario</p>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            {successMessage && (
+              <div className="error-message">{successMessage}</div>
+            )}
+          </div>
+          <div className="input_box">
+            <p>Contraseña</p>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="input_box">
+            <p>Email</p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <button onClick={handleSubmit}>
+          Deja tu huella en <img src={logo} alt="" />
+        </button>
       </div>
-    </div>
+    <footer>Made with ♥️</footer>
+  </div>
   );
 }
 

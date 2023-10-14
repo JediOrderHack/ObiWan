@@ -2,7 +2,7 @@ import { getToken } from "../../utils/getToken";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-const UPLOADS_DIR = "http://localhost:3000/uploads";
+const UPLOADS_DIR = "http://localhost:4000/uploads";
 
 const ProfileButton = () => {
   const [user, setUser] = useState(null);
@@ -11,7 +11,7 @@ const ProfileButton = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users/", {
+      .get("http://localhost:4000/users/", {
         headers: {
           Authorization: token,
         },
@@ -52,7 +52,10 @@ const ProfileButton = () => {
         )
       ) : (
         <Link to="/perfil">
-          <img src={`${UPLOADS_DIR}/DefaultAvatar.png`} alt="Avatar por defecto" />
+          <img
+            src={`${UPLOADS_DIR}/DefaultAvatar.png`}
+            alt="Avatar por defecto"
+          />
         </Link>
       )}
     </div>

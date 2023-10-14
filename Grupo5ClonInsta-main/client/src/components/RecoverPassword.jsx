@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import logo from "../assets/logo-2.png"
 
 const RecoverPassword = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +16,7 @@ const RecoverPassword = () => {
   const handleRecoverPassword = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:3000/users/recover-password",
+        "http://localhost:4000/users/recover-password",
         { email }
       );
       setMessage(response.data.message);
@@ -27,18 +29,39 @@ const RecoverPassword = () => {
   };
 
   return (
-    <div>
-      <h2>Reestablecer Meowseña</h2>
-      <label> Escribe tu email </label>
-      <input
-        type="email"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={handleEmailChange}
-      />
-      <button onClick={handleRecoverPassword}>MeOw</button>
-      <p>{message}</p>
+    
+
+<div className="app">
+
+  <div className="auth_container reset_container">
+    <h2 className="title title-2">Restablecer meowseña</h2>
+
+    <div className="auth_box">
+      <div className="input_box">
+        <p>Escribe tu email</p>
+        <input
+          type="email"
+          required
+          onChange={handleEmailChange}
+        />
+      </div>
     </div>
+
+    {email !== "" ? (
+      <NavLink to="/update-password">
+        <button>
+          <img src={logo} alt="" />
+        </button>
+      </NavLink>
+    ) : (
+      <button>
+        <img src={logo} alt="" />
+      </button>
+    )}
+  </div>
+
+<footer>Made with ♥️</footer>
+</div>
   );
 };
 

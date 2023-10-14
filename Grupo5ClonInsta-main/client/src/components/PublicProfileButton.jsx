@@ -2,7 +2,7 @@ import { getToken } from "../utils/getToken";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-const UPLOADS_DIR = "http://localhost:3000/uploads";
+const UPLOADS_DIR = "http://localhost:4000/uploads";
 
 const PublicProfileButton = ({ userId }) => {
   const [user, setUser] = useState(null);
@@ -11,7 +11,7 @@ const PublicProfileButton = ({ userId }) => {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`http://localhost:3000/users/${userId}`, {
+        .get(`http://localhost:4000/users/${userId}`, {
           headers: {
             Authorization: token,
           },

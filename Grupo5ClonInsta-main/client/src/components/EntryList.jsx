@@ -7,9 +7,7 @@ import EntryLikes from "./EntryLikes";
 import { Link, useParams } from "react-router-dom";
 import { getToken } from "../utils/getToken";
 
-
-
-const IMAGES_URL = "http://localhost:3000/uploads";
+const IMAGES_URL = "http://localhost:4000/uploads";
 
 const imageStyles = {
   maxWidth: "80%",
@@ -32,7 +30,7 @@ function EntryList() {
             }
           : {};
 
-        const response = await axios.get("http://localhost:3000/entries", {
+        const response = await axios.get("http://localhost:4000/entries", {
           params: {
             search,
           },
@@ -60,7 +58,7 @@ function EntryList() {
   }, [search, token]);
   // Obtén la información del usuario desde el token (ajusta esto según la estructura de tu token).
   const userFromToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-  console.log(userFromToken)
+  console.log(userFromToken);
 
   const updateLikesCount = (entryId, newCount) => {
     setEntries((prevEntries) => {

@@ -255,4 +255,5 @@ export {
   editEntryController,
   addLikeController,
   removeLikeController,
+  checkEntryLikeController
 };

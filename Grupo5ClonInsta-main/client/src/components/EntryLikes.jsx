@@ -10,7 +10,7 @@ function EntryLikes({ entryId, likesCount, updateLikesCount }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/entries/${entryId}/likes`,
+          `http://localhost:4000/entries/${entryId}/likes`,
           {
             headers: {
               Authorization: token,
@@ -33,7 +33,7 @@ function EntryLikes({ entryId, likesCount, updateLikesCount }) {
       if (!liked) {
         // Envía una solicitud POST para dar like.
         await axios.post(
-          `http://localhost:3000/entries/${entryId}/likes`,
+          `http://localhost:4000/entries/${entryId}/likes`,
           null,
           {
             headers: {
@@ -45,7 +45,7 @@ function EntryLikes({ entryId, likesCount, updateLikesCount }) {
         updateLikesCount(entryId, likesCount + 1); // Incrementa el contador
       } else {
         // Envía una solicitud DELETE para eliminar el like.
-        await axios.delete(`http://localhost:3000/entries/${entryId}/likes`, {
+        await axios.delete(`http://localhost:4000/entries/${entryId}/likes`, {
           headers: {
             Authorization: token,
           },
@@ -60,9 +60,7 @@ function EntryLikes({ entryId, likesCount, updateLikesCount }) {
 
   return (
     <div>
-      <button onClick={handleLikeClick}>
-        {liked ? "Dislike" : "Like"}
-      </button>
+      <button onClick={handleLikeClick}>{liked ? "Dislike" : "Like"}</button>
     </div>
   );
 }
