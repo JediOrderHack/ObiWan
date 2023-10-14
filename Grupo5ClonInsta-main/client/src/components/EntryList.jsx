@@ -6,7 +6,7 @@ import UserAvatar from "./UserAvatar";
 import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
 
-const IMAGES_URL = "http://localhost:4000/uploads";
+const IMAGES_URL = "http://localhost:3000/uploads";
 
 const imageStyles = {
   maxWidth: "80%", // Establece un ancho máximo del 80% del contenedor
@@ -21,7 +21,7 @@ function EntryList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/entries", {
+        const response = await axios.get("http://localhost:3000/entries", {
           params: {
             search,
           },

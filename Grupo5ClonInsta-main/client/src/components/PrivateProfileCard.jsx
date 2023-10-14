@@ -4,7 +4,7 @@ import { getToken } from "../utils/getToken.js";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import LogOut from "./LogOut.jsx"; // Importa LogOut
 import AvatarEditor from "../forms/AvatarForm/AvatarForm.jsx";
-const UPLOADS_DIR = "http://localhost:4000/uploads";
+const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PrivateProfileCard = () => {
   const [user, setUser] = useState(null);
@@ -13,7 +13,7 @@ const PrivateProfileCard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/users", {
+      .get("http://localhost:3000/users", {
         headers: {
           Authorization: token,
         },

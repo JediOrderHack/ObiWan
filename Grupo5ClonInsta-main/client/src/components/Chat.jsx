@@ -4,7 +4,7 @@ import io from "socket.io-client";
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const socket = io("http://localhost:4000"); // Reemplaza 'URL_DE_TU_SERVIDOR' con la URL de tu servidor Socket.io
+  const socket = io("http://localhost:3000"); // Reemplaza 'URL_DE_TU_SERVIDOR' con la URL de tu servidor Socket.io
 
   useEffect(() => {
     // Escucha eventos de nuevos mensajes desde el servidor

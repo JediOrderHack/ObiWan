@@ -30,7 +30,7 @@ const EditEntryForm = ({ entry, onEdit }) => {
 
       // Send a PUT request to the edit entry endpoint
       const response = await fetch(
-        `http://localhost:4000/entries/${entry.id}`,
+        `http://localhost:3000/entries/${entry.id}`,
         {
           method: "PUT",
           body: formData,
