@@ -11,17 +11,18 @@ import generateError from "../helpers/generate_error.js";
 async function authUserController(req, res, next) {
   try {
     const { authorization } = req.headers;
-
+console.log(authorization)
     // Si falta el token lanzamos un error.
     if (!authorization)
       generateError("Falta la cabecera de autenticación", 401);
 
     // Variable que almacenará la info del token una vez desencriptada.
     let tokenInfo;
+    console.log(tokenInfo)
 
     try {
       tokenInfo = jwt.verify(authorization, SECRET);
-
+console.log(tokenInfo)
       // Creamos una propiedad inventada por nosotros en el objeto request para añadir
       // los datos del usuario.
       req.user = tokenInfo;

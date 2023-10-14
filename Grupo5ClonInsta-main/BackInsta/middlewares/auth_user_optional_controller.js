@@ -22,6 +22,7 @@ async function authUserOptionalController(req, res, next) {
         tokenInfo = jwt.verify(authorization, SECRET);
 
         req.user = tokenInfo;
+        console.log(tokenInfo)
       } catch {
         generateError("Token inválido", 401);
       }

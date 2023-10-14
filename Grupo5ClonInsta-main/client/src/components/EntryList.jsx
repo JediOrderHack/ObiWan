@@ -5,6 +5,10 @@ import { Carousel } from "react-responsive-carousel";
 import UserAvatar from "./UserAvatar";
 import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
+import { Link, useParams } from "react-router-dom";
+import { getToken } from "../utils/getToken";
+
+
 
 const IMAGES_URL = "http://localhost:3000/uploads";
 
@@ -17,15 +21,25 @@ function EntryList() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
+  const token = getToken();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Verifica si el token está presente antes de incluirlo en la solicitud.
+        const headers = token;
+        console.log(token)
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {};
+
         const response = await axios.get("http://localhost:3000/entries", {
           params: {
             search,
           },
           timeout: 15000,
+          headers,
         });
 
         if (
@@ -45,7 +59,10 @@ function EntryList() {
     };
 
     fetchData();
-  }, [search]);
+  }, [search, token]);
+  // Obtén la información del usuario desde el token (ajusta esto según la estructura de tu token).
+  const userFromToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  console.log(userFromToken)
 
   return (
     <div>
@@ -78,6 +95,11 @@ function EntryList() {
             userId={entry.userId}
             likedByMe={entry.likedByMe}
           />
+          {entry.userId === userFromToken?.id && (
+            <Link to={`/editEntry/${entry.id}`}>
+              <button>Editar Entrada</button>
+            </Link>
+          )}
         </div>
       ))}
     </div>
