@@ -18,10 +18,13 @@ const UpdatePassword = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      const response = await axios.put("http://localhost:3000/users/reset-password", {
-        recoveryPassCode,
-        newPass,
-      });
+      const response = await axios.put(
+        "http://localhost:3000/users/reset-password",
+        {
+          recoveryPassCode,
+          newPass,
+        }
+      );
       setMessage(response.data.message);
 
       // Si la contraseña se actualiza correctamente, redirige al usuario a la página de inicio de sesión (/login)

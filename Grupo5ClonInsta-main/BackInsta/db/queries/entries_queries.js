@@ -253,6 +253,26 @@ async function deleteLikeQuery({ entryId, userId }) {
   }
 }
 
+
+// Define la consulta para verificar si un usuario ha dado "like" a una entrada específica.
+async function checkEntryLikeQuery(userId, entryId) {
+  const connection = await getPool();
+
+  try {
+    const [result] = await connection.query(
+      "SELECT id FROM likes WHERE userId = ? AND postId = ?",
+      [userId, entryId]
+    );
+
+    // Devuelve un valor booleano indicando si el usuario ha dado "like" a la entrada.
+    return result.length > 0;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
+
+
 export {
   insertEntryQuery,
   selectAllEntriesQuery,
@@ -261,4 +281,5 @@ export {
   insertPhotoQuery,
   insertLikeQuery,
   deleteLikeQuery,
+  checkEntryLikeQuery
 };

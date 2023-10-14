@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
 const HttpService = axios.create({
-  baseURL: 'http://localhost:3000', // Cambia esto a la URL de tu servidor
+  baseURL: "http://localhost:3000", // Cambia esto a la URL de tu servidor
   timeout: 5000, // Tiempo máximo de espera para las solicitudes en milisegundos
   headers: {
-    'Content-Type': 'application/json', // Tipo de contenido para las solicitudes
+    "Content-Type": "application/json", // Tipo de contenido para las solicitudes
   },
 });
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // Importar estilos del carrusel
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import UserAvatar from "./UserAvatar";
 import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
 import { Link, useParams } from "react-router-dom";
@@ -13,13 +12,12 @@ import { getToken } from "../utils/getToken";
 const IMAGES_URL = "http://localhost:3000/uploads";
 
 const imageStyles = {
-  maxWidth: "80%", // Establece un ancho máximo del 80% del contenedor
-  maxHeight: "60vh", // Establece una altura máxima del 60% del viewport height
+  maxWidth: "80%",
+  maxHeight: "60vh",
 };
 
 function EntryList() {
   const [entries, setEntries] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const token = getToken();
 
@@ -64,6 +62,17 @@ function EntryList() {
   const userFromToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
   console.log(userFromToken)
 
+  const updateLikesCount = (entryId, newCount) => {
+    setEntries((prevEntries) => {
+      return prevEntries.map((entry) => {
+        if (entry.id === entryId) {
+          return { ...entry, likesCount: newCount };
+        }
+        return entry;
+      });
+    });
+  };
+
   return (
     <div>
       <input
@@ -92,8 +101,8 @@ function EntryList() {
           <div>Likes: {entry.likesCount}</div>
           <EntryLikes
             entryId={entry.id}
-            userId={entry.userId}
-            likedByMe={entry.likedByMe}
+            likesCount={entry.likesCount}
+            updateLikesCount={updateLikesCount}
           />
           {entry.userId === userFromToken?.id && (
             <Link to={`/editEntry/${entry.id}`}>
