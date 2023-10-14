@@ -6,8 +6,8 @@ import { useParams } from "react-router-dom";
 const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PublicProfileCard = () => {
-  const { userId } = useParams();
-  const [userData, setUserData] = useState(null);
+  const {userId}= useParams()
+  const [userData, setUserData] = useState(null)
 
   useEffect(() => {
     // Verificar si userId es nulo antes de hacer la solicitud GET
@@ -15,8 +15,9 @@ const PublicProfileCard = () => {
       axios
         .get(`http://localhost:3000/users/${userId}`)
         .then((response) => {
+          
           setUserData(response.data.data);
-          console.log(response.data.data);
+          console.log(response.data.data)
         })
         .catch((error) => {
           console.error("Error al obtener el perfil público:", error);
@@ -29,7 +30,11 @@ const PublicProfileCard = () => {
     <div>
       {userData && (
         <div>
-          <UserAvatar userId={userData.user.id} />
+          <img
+            key={`avatar`}
+            src={`${UPLOADS_DIR}/${userData.user.avatar}`}
+            alt={`avatar`}
+          />
           <div>Nombre de Usuario: {userData.user.username}</div>
           {userData.user.entries.map((entry, index) => (
             <div key={`entry_${entry.id}_${index}`}>
