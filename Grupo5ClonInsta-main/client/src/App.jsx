@@ -1,5 +1,10 @@
 import { useState } from 'react'
+<<<<<<< HEAD
+import { BrowserRouter, NavLink } from 'react-router-dom';
+
+=======
 import "./App.css";
+>>>>>>> 10e56286245adda704c2baf1dfd83c74e3060a5b
 
 import {Route, Routes } from 'react-router-dom';
 
@@ -22,6 +27,7 @@ import ProfileButton from './components/ProfileButton/ProfileButton.jsx';
 import PublicProfileCard from './components/PublicProfileCard.jsx';
 import EditEntryForm from './forms/EditEntryForm/EditEntryForm.jsx';
 import AvatarEditor from './forms/AvatarForm/AvatarForm.jsx';
+import PublicProfileButton from './components/PublicProfileButton.jsx';
 import NavBar from './components/NavBar/NavBar.jsx';
 
 
