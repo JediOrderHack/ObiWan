@@ -33,11 +33,18 @@ router.get("/:id", authUserOptionalController, getEntryController);
 
 // Editar una entrada.
 router.put(
-  "/:id",
+  "/:entryId",
   authUserController,
   userExistsController,
-  editEntryController
+  (req, res, next) => {
+    // Agregar un console.log para ver la información en esta etapa.
+    console.log("Información en la ruta /:entryId:", req.params, req.user, req.body);
+
+    // Luego, llama a la función editEntryController.
+    editEntryController(req, res, next);
+  }
 );
+
 
 // Dar like.
 router.post(
