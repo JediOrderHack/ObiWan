@@ -37,7 +37,7 @@ function EntryList() {
           console.log(response.data.data.entries)
         } else {
           console.error(
-            "La respuesta del servidor no contiene un array de entradas:",
+            "Las respuesta del servidor no contiene un array de entradas:",
             response.data
           );
         }
