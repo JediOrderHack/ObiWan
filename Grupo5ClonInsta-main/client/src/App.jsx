@@ -2,9 +2,8 @@ import { useState } from 'react'
 
 import { BrowserRouter, NavLink } from 'react-router-dom';
 
-
 import {Route, Routes } from 'react-router-dom';
-
+import "./App.css";
 import PrivateRoutes from './components/PrivateRoutes.jsx';
 
 // USERS:
