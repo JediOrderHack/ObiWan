@@ -19,7 +19,7 @@ const UpdatePassword = () => {
   const handleUpdatePassword = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:4000/users/reset-password",
+        "http://localhost:3000/users/reset-password",
         {
           recoveryPassCode,
           newPass,

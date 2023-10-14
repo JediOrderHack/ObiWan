@@ -15,6 +15,7 @@ import {
   editEntryController,
   addLikeController,
   removeLikeController,
+  checkEntryLikeController
 } from "../controllers/entry_controller.js";
 
 // Crear una entrada.
@@ -54,5 +55,12 @@ router.delete(
   userExistsController,
   removeLikeController
 );
+
+// saber si le he dado like.
+router.get(
+  "/:entryId/likes",
+  authUserController,
+  checkEntryLikeController
+)
 
 export default router;

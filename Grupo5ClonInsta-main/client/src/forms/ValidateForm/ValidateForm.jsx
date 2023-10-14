@@ -12,7 +12,7 @@ const ValidateForm = () => {
       try {
         // Realiza la solicitud PUT al servidor para activar la cuenta
         const response = await fetch(
-          `http://localhost:4000/users/validate/${regCode}`,
+          `http://localhost:3000/users/validate/${regCode}`,
           {
             method: "PUT",
           }

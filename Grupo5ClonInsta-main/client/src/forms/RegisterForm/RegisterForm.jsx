@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./RegisterForm.css";
 
-const BASE_URL = "http://localhost:4000/users";
+const BASE_URL = "http://localhost:3000/users";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");

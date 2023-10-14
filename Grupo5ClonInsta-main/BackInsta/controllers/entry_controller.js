@@ -7,6 +7,7 @@ import {
   insertPhotoQuery,
   selectEntryByIdQuery,
   selectAllEntriesQuery,
+  checkEntryLikeQuery
 } from "../db/queries/entries_queries.js";
 
 // Importamos la función que guarda una foto en disco.
@@ -217,6 +218,28 @@ async function removeLikeController(req, res, next) {
   }
 }
 
+
+// Define el controlador para verificar si un usuario ha dado "like" a una entrada específica.
+async function checkEntryLikeController(req, res, next) {
+  try {
+    // Asegúrate de obtener el ID de usuario de manera adecuada. Por ejemplo, desde req.user.
+    const userId = req.user.id;
+
+    // Asegúrate de obtener el ID de entrada desde los parámetros de la solicitud.
+    const entryId = req.params.entryId;
+
+    // Utiliza la consulta para verificar si el usuario ha dado "like" a la entrada.
+    const hasLiked = await checkEntryLikeQuery(userId, entryId);
+
+    // Devuelve un valor booleano que indica si el usuario ha dado "like" a la entrada.
+    res.send({ hasLiked });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
 export {
   createEntryController,
   listEntriesController,
@@ -224,4 +247,5 @@ export {
   editEntryController,
   addLikeController,
   removeLikeController,
+  checkEntryLikeController
 };
