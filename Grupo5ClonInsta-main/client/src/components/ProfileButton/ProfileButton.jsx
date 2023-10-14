@@ -33,6 +33,7 @@ const ProfileButton = () => {
         user && user.avatar ? (
           <Link to="/perfil">
             <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
+            <p>@{user.username}</p>
           </Link>
         ) : (
           // Si el usuario no tiene avatar, muestra una imagen por defecto

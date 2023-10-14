@@ -27,3 +27,4 @@ const LikeButton = ({ postId }) => {
     </button>
   );
 };
+export default LikeButton
