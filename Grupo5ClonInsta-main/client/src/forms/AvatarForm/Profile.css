@@ -1,0 +1,111 @@
+.profile_container .profile_top {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile_container .profile_top .avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile_container .profile_top .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.profile_container .profile_top p {
+  color: white;
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.profile_container .profile_posts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 30px;
+  grid-gap: 0px;
+}
+
+.profile_container .profile_posts div {
+  width: 100%;
+  height: 350px;
+}
+
+.profile_container .profile_posts img {
+  width: 100%;
+  height: 100%;
+}
+
+.edit_profile_container {
+  width: 80%;
+  background: #fff9c7;
+  margin: 0 auto;
+  margin-top: 30px;
+  border-radius: 15px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.edit_profile_container .avatar {
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit_profile_container .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.edit_profile_container p {
+  color: #676462;
+  font-size: 45px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.edit_profile_container button {
+  width: 200px;
+  height: 200px;
+  border: 0;
+  border-radius: 15px;
+  color: white;
+  font-size: 200px;
+  background: linear-gradient(90deg, #cdffd8, #94b9ff);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Larger than mobile */
+@media (min-width: 400px) {}
+
+/* Larger than phablet (also point when grid becomes active) */
+@media (min-width: 550px) {}
+
+/* Larger than tablet */
+@media (min-width: 750px) {}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {}

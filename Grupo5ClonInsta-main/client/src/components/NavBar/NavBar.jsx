@@ -35,13 +35,13 @@ function NavBar() {
         <div className="profile-button-container">
           <NavLink to="/perfil"><ProfileButton/></NavLink>
         </div>
-        {isLoggedIn ? null : (
+        {/* {isLoggedIn ? null : ( */}
           <div className="auth-buttons">
             <NavLink to="/login">Login</NavLink>
             <span> | </span>
             <NavLink to="/register">Register</NavLink>
           </div>
-        )}
+        {/* )} */}
       </div>
     </div>
   );

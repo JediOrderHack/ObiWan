@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { getToken } from "../../utils/getToken";
 import { useNavigate } from "react-router-dom";
-
+import './NewEntryForm.css'
 const { VITE_API_URL } = import.meta.env;
 
 const NewEntryForm = () => {
@@ -64,19 +64,20 @@ const NewEntryForm = () => {
   };
 
   return (
-    <div>
+    <div className="new-entry-form">
       <h2>Nueva Entrada</h2>
-      <div>
-        <label>Imagen:</label>
+      <div className="file-input-container">
+        <label className="file-label">Imagen:</label>
         <input
+          className="file-input"
           type="file"
           accept="image/*"
           multiple
           onChange={handleFileChange}
           ref={inputRef}
-          style={{ display: "none" }}
         />
         <button
+          className="file-upload-button"
           onClick={() => {
             inputRef.current.click();
           }}
@@ -85,20 +86,29 @@ const NewEntryForm = () => {
         </button>
       </div>
       {imagePreviews.map((preview, index) => (
-        <img key={index} src={preview} alt={`Preview ${index + 1}`} width="100" height="100" />
+        <img
+          key={index}
+          src={preview}
+          alt={`Preview ${index + 1}`}
+          className="image-preview"
+        />
       ))}
-      <div>
-        <label>Descripción:</label>
+      <div className="description-container">
+        <label className="description-label">Descripción:</label>
         <textarea
+          className="description-input"
           rows="4"
           cols="50"
           value={description}
           onChange={handleDescriptionChange}
         />
       </div>
-      <button onClick={handleUpload}>Crear Entrada</button>
+      <button className="upload-button" onClick={handleUpload}>
+        Crear Entrada
+      </button>
     </div>
   );
 };
+
 
 export default NewEntryForm;

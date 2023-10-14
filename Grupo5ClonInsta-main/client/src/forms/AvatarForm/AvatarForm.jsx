@@ -4,6 +4,7 @@ const { VITE_API_URL } = import.meta.env;
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Asegúrate de tener axios instalado en tu proyecto
 import { getToken } from "../../utils/getToken";
+import './Profile.css'
 
 const AvatarEditor = () => {
   const token= getToken()
