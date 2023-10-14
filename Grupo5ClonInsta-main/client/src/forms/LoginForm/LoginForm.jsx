@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../utils/constants';
-import "./LoginForm.css"
+import "../Auth.css"
 
 const { VITE_API_URL } = import.meta.env;
 
@@ -34,11 +34,12 @@ function LoginForm() {
   }
 
   return (
-    <div className="post_container">
-      <div className="post_top">
-        <h2>Login</h2>
+    
+      <div className="auth_container">
+        <h2 className="title">Login</h2>
+        <div className='auth-box'>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="input_box">
             <label>email:</label>
             <input
               type="text"
@@ -46,7 +47,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="input_box">
             <label>password:</label>
             <input
               type="password"
@@ -56,11 +57,11 @@ function LoginForm() {
           </div>
           <button type="submit" onSubmit={handleSubmit}>Log In</button>
         </form>
+        </div>
         <p>
           ¿Olvidaste tu contraseña? <a href="/forgot-password">Recupérala aquí</a>
         </p>
       </div>
-    </div>
   );
 }
 
