@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { BrowserRouter, NavLink } from 'react-router-dom';
+
 import "./App.css";
 
 import {Route, Routes } from 'react-router-dom';
@@ -22,6 +24,7 @@ import ProfileButton from './components/ProfileButton/ProfileButton.jsx';
 import PublicProfileCard from './components/PublicProfileCard.jsx';
 import EditEntryForm from './forms/EditEntryForm/EditEntryForm.jsx';
 import AvatarEditor from './forms/AvatarForm/AvatarForm.jsx';
+import PublicProfileButton from './components/PublicProfileButton.jsx';
 import NavBar from './components/NavBar/NavBar.jsx';
 
 

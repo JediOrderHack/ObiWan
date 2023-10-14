@@ -34,11 +34,22 @@ const ProfileButton = () => {
   };
 
   return (
-    <div className="profile-button" onClick={handleProfileClick}>
-      {user && user.avatar ? (
-        <Link to="/perfil">
-          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
-        </Link>
+    <div className="profile-button">
+      {token ? (
+        user && user.avatar ? (
+          <Link to="/perfil">
+            <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
+            <p>@{user.username}</p>
+          </Link>
+        ) : (
+          // Si el usuario no tiene avatar, muestra una imagen por defecto
+          <Link to="/perfil">
+            <img
+              src={`${UPLOADS_DIR}/DefaultAvatar.png`}
+              alt="Avatar por defecto"
+            />
+          </Link>
+        )
       ) : (
         <Link to="/perfil">
           <img src={`${UPLOADS_DIR}/DefaultAvatar.png`} alt="Avatar por defecto" />
