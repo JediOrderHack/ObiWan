@@ -72,7 +72,7 @@ function EntryLikes({ entryId, likesCount, updateLikesCount }) {
 
   return (
     <div>
-      <button onClick={handleLikeClick}>
+      <button className="patita" onClick={handleLikeClick}>
         <img className="patita" src={liked ? like : patita} alt="" />
       </button>
     </div>
