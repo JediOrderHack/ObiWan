@@ -1,9 +1,10 @@
 .edit-form-container {
   max-width: 375px; /* Tamaño original */
   margin: 0 auto;
+  margin-top: 120px;
   padding: 20px;
   text-align: center;
-  background-color: #f2f2f2;
+  background-color: #fff9c7;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -28,7 +29,7 @@ input {
 }
 
 .btn-guardar {
-  background-color: #007BFF;
+  background-color: #ffa9fa;
   color: #fff;
   padding: 10px 20px;
   border: none;

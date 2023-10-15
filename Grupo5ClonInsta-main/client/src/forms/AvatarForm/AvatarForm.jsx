@@ -63,12 +63,15 @@ return (
           onClick={handleAvatarUpload}
         ><img src={addButton} alt="" /></button>
       )}
+      <label className="label-input">
+        ELEGIR NUEVA FOTO
       <input
         className="avatar-input"
         type="file"
         accept="image/*"
         onChange={handleAvatarChange}
       />
+    </label>
     </div>
   </div>
 );

@@ -48,13 +48,16 @@ const PublicProfileCard = () => {
   return (
     <div className="entry-list-container">
       {userData && (
-        <div >
+        <div className="entry-list-container">
+          <div className="dynamo">
           <img
             key={`avatar`}
             src={`${UPLOADS_DIR}/${userData.user.avatar}`}
             alt={`avatar`}
           />
-          <div>@{userData.user.username}</div>
+          </div>
+          <div className="dynamo">@{userData.user.username}</div>
+          
           {userData.user.entries.map((entry, index) => (
             <div className="entry-container" key={`entry_${entry.id}_${index}`}>
               <div className="prfl">

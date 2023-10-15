@@ -12,6 +12,7 @@ Este proyecto consiste en crear una API que simule el funcionamiento de una apli
 ## Instalar en Client
 
 1. Instalar las dependencias mediante el comando `npm install` o `npm i`.
+2. Instalar npm i react-icons --save y npm i react-responsive-carousel
 2. Guardar el archivo `.env.local.example` como `.env.local` y cubrir los datos necesarios.
 4. Ejecutar `npm run dev` para lanzar el servidor.
 

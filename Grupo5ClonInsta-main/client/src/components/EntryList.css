@@ -4,11 +4,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 100px; 
+  margin: 69px; 
 }
 
 .search-input {
-  
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -73,4 +72,17 @@
   align-items: center; /* Centra verticalmente */
   height: 100vh; /* Ajusta la altura al 100% de la ventana del navegador */
 }
+
+.dynamo {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+.dynamo img{
+border-radius: 10%;
+border: 4px solid #ffa9fa;
+  
+}
+
 

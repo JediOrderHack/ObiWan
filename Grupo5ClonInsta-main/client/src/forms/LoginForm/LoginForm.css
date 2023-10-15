@@ -37,14 +37,13 @@ input[type="password"] {
   border-radius: 5px;
 }
 
-button {
+.buttona {
   background-color: #ffa9fa;
   color: #fff;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  width: 100%; /* Ocupa el ancho completo */
 }
 
 .forget_btn-lgn {
