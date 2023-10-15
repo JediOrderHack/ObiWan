@@ -4,7 +4,8 @@ const { VITE_API_URL } = import.meta.env;
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Asegúrate de tener axios instalado en tu proyecto
 import { getToken } from "../../utils/getToken";
-import './Profile.css'
+import './AvatarForm.css'
+import addButton from '../../assets/add-icon.png'
 
 
 const AvatarEditor = () => {
@@ -36,9 +37,9 @@ const AvatarEditor = () => {
         },
       });
 
-      // Actualizar el avatar del usuario en el frontend si es necesario
-      // ...
-      
+      // Refrescar la página después de actualizar el avatar
+      window.location.reload();
+
       // Limpiar el estado después de subir la imagen
       setAvatar(null);
       setPreviewUrl(null);
@@ -48,21 +49,30 @@ const AvatarEditor = () => {
     }
   };
 
-  return (
-    <div className="app">
-      <h2 className="title">Editar Avatar</h2>
-      
-          <div className="edit_profile_container">
-            <div className="avatar">
-      {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
-      </div>
-      <p>Editar foto de perfil</p>
-      {avatar && <button onClick={handleAvatarUpload}></button>}
+ return (
+   <div className="">
+     <h2 className="title">Editar Avatar</h2>
+     <div className="edit_profile_container">
+       <div className="avatar">
+         {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
+       </div>
+       <p className="edit-avatar-label">Editar foto de perfil</p>
+       {avatar && (
+         <button
+           className="edit-avatar-button"
+           onClick={handleAvatarUpload}
+         ><img src={addButton} alt="" /></button>
+       )}
+       <input
+         className="avatar-input"
+         type="file"
+         accept="image/*"
+         onChange={handleAvatarChange}
+       />
+     </div>
+   </div>
+ );
 
-      <input type="file" accept="image/*" onChange={handleAvatarChange} />
-    </div>
-  </div>
-  );
 };
 
 export default AvatarEditor;
