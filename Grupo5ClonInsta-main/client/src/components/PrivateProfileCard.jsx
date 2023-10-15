@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken } from "../utils/getToken.js";
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
-import LogOut from "./LogOut.jsx"; // Importa LogOut
+import { useNavigate } from "react-router-dom";
+import LogOut from "./LogOut.jsx";
 import AvatarEditor from "../forms/AvatarForm/AvatarForm.jsx";
 const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PrivateProfileCard = () => {
   const [user, setUser] = useState(null);
   const token = getToken();
-  const navigate = useNavigate(); // Inicializa la función navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -24,7 +24,6 @@ const PrivateProfileCard = () => {
       })
       .catch((error) => {
         console.error("Error al obtener el perfil privado:", error);
-        // Si hay un error, redirige al usuario a la página de inicio de sesión.
         navigate("/login");
       });
   }, [navigate, token]);
@@ -34,7 +33,7 @@ const PrivateProfileCard = () => {
   };
 
   return (
-    <div className="private-profile-card">
+    <div className="private-profile-card" style={{ marginTop: "80px", textAlign: "center" }}>
       {user ? (
         <div>
           <h2>Perfil Privado de {user.username}</h2>
@@ -43,9 +42,9 @@ const PrivateProfileCard = () => {
           <br />
           <AvatarEditor />
           <button onClick={goToAvatarEditor}></button>
-          
+          <div>
             <LogOut />
-          
+          </div>
         </div>
       ) : (
         <p>Cargando perfil privado...</p>

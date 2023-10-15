@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import logo from "../assets/logo-2.png"
+import "../forms/Auth.css"
 const UpdatePassword = () => {
   const [recoveryPassCode, setRecoveryPassCode] = useState("");
   const [newPass, setNewPass] = useState("");
@@ -37,25 +38,39 @@ const UpdatePassword = () => {
   };
 
   return (
-    <div>
-      <h2>Escribe tu nueva Meowseña</h2>
-      <label>Escribe el PIN recibido en tu email</label>
-      <input
-        type="text"
-        placeholder="Código de recuperación"
-        value={recoveryPassCode}
-        onChange={handleRecoveryPassCodeChange}
-      />
-      <label>Nueva Meowtraseña</label>
-      <input
-        type="password"
+  
+     <div className="app">
+   
+       <div className="auth_container">
+         <h2 className="title title-2">Escribe tu nueva meowseña:</h2>
+
+         <div className="auth_box">
+           <div className="input_box input_box-2">
+             <p>Escribe el PIN recibido en tu email</p>
+             <input type="text" 
+              placeholder="Código de recuperación"
+              value={recoveryPassCode}
+              onChange={handleRecoveryPassCodeChange}
+             />
+           </div>
+           <div className="input_box input_box-2">
+             <p>Nueva meowtraseña</p>
+             <input  
+             type="password"
         placeholder="Nueva contraseña"
         value={newPass}
-        onChange={handleNewPassChange}
-      />
-      <button onClick={handleUpdatePassword}>MeOw</button>
-      <p>{message}</p>
-    </div>
+        onChange={handleNewPassChange} 
+             
+             />
+           </div>
+         </div>
+
+         <button onClick={handleUpdatePassword}>
+           <img src={logo} alt="" />
+         </button>
+         <p>{message}</p>
+       </div>
+   </div>
   );
 };
 
