@@ -28,7 +28,7 @@ const PublicProfileCard = () => {
   }, [userId]);
 
   return (
-    <div>
+    <div className="container">
       {userData && (
         <div>
           <Profile
