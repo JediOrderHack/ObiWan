@@ -9,6 +9,10 @@ import PublicProfileButton from "./PublicProfileButton";
 
 
 const UPLOADS_DIR = "http://localhost:3000/uploads";
+const imageStyles = {
+  maxWidth: "80%",
+  maxHeight: "60vh",
+};
 
 const PublicProfileCard = () => {
   const { userId } = useParams();
@@ -44,7 +48,7 @@ const PublicProfileCard = () => {
   return (
     <div className="entry-list-container">
       {userData && (
-        <div>
+        <div >
           <img
             key={`avatar`}
             src={`${UPLOADS_DIR}/${userData.user.avatar}`}
@@ -57,22 +61,22 @@ const PublicProfileCard = () => {
             <PublicProfileButton userId={entry.userId} />
             </div>
               <div>
-                <Carousel>
-                {entry.photos &&
-                  entry.photos.map((photo, photoIndex) => (
-                    <img
-                      key={`photo_${entry.id}_${photoIndex}`}
-                      src={`${UPLOADS_DIR}/${photo.photoName}`}
-                      alt={`Foto ${photoIndex + 1}`}
-                      className="entry-photo"
-
-                    />
-                  ))}
-                  </Carousel>
+            <Carousel showThumbs={false} showStatus={false}>
+              {entry.photos.map((photo, photoIndex) => (
+                <div key={`photo_${entry.id}_${photoIndex}`}>
+                  <img
+                    src={`${UPLOADS_DIR}/${photo.photoName}`}
+                    alt={`Foto ${photoIndex + 1}`}
+                    style={imageStyles}
+                    className="entry-photo"
+                  />
+                </div>
+              ))}
+            </Carousel>
               </div>
-              <div>Descripción: {entry.description}</div>
+          <div className="profile-link">Descripción: {entry.description}</div>
+          <div className="profile-link">Likes:{entry.likesCount}</div>
 
-              <div>Likes: {entry.likesCount}</div>
               <EntryLikes
                 entryId={entry.id}
                 likesCount={entry.likesCount}

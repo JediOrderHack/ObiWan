@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { getToken } from "../utils/getToken";
 import './EntryList.css'
 
-const IMAGES_URL = "http://localhost:3000/uploads";
+const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const imageStyles = {
   maxWidth: "80%",
@@ -72,7 +72,7 @@ function EntryList() {
     });
   };
 
-  return (
+ return (
     <div className="entry-list-container">
       <input
         type="text"
@@ -87,21 +87,22 @@ function EntryList() {
             <PublicProfileButton userId={entry.userId} />
           </div>
           <div className="profile-link">@{entry.username}</div>
-          <Carousel>
-            {entry.photos &&
-              entry.photos.map((photo, photoIndex) => (
+          {entry.photos && entry.photos.length > 0 && (
+            <Carousel showThumbs={false} showStatus={false}>
+              {entry.photos.map((photo, photoIndex) => (
                 <div key={`photo_${entry.id}_${photoIndex}`}>
                   <img
-                    src={`${IMAGES_URL}/${photo.photoName}`}
+                    src={`${UPLOADS_DIR}/${photo.photoName}`}
                     alt={`Foto ${photoIndex + 1}`}
                     style={imageStyles}
                     className="entry-photo"
                   />
                 </div>
               ))}
-          </Carousel>
-          <div>Descripción: {entry.description}</div>
-          <div>{entry.likesCount}</div>
+            </Carousel>
+          )}
+          <div className="profile-link">Descripción: {entry.description}</div>
+          <div className="profile-link">Likes:{entry.likesCount}</div>
           <EntryLikes
             entryId={entry.id}
             likesCount={entry.likesCount}

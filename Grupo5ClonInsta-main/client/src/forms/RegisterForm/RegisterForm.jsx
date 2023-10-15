@@ -9,8 +9,9 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false); // Nuevo estado para rastrear el registro exitoso
   const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Nuevo estado para manejar el mensaje de error
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +27,8 @@ function RegisterForm() {
         setSuccessMessage(
           "Revisa tu correo y entra en el enlace para activar tu cuenta."
         );
-        setErrorMessage(""); // Limpia el mensaje de error si hubo uno previamente
+        setErrorMessage("");
+        setIsRegistered(true); // Cambia el estado a true cuando se registra con éxito
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -42,37 +44,43 @@ function RegisterForm() {
       <div className="auth_container">
         <h2 className="title">Regístrate</h2>
 
-        <div className="auth_box">
-          <div className="input_box">
-            <p>Usuario</p>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+        {isRegistered ? (
+          <div className="success-message">{successMessage}</div>
+        ) : (
+          <div className="auth_box">
+            <div className="input_box">
+              <p>Usuario</p>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="input_box">
+              <p>Contraseña</p>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="input_box">
+              <p>Email</p>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errorMessage && <div className="error-message">{errorMessage}</div>}
+            </div>
           </div>
-          <div className="input_box">
-            <p>Contraseña</p>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="input_box">
-            <p>Email</p>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Muestra el mensaje de error */}
-          </div>
-        </div>
+        )}
 
-        <button onClick={handleSubmit}>
-          Deja tu huella en <img src={logo} alt="" />
-        </button>
+        {!isRegistered && (
+          <button onClick={handleSubmit}>
+            Deja tu huella en <img src={logo} alt="" />
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom"; // Importa PropTypes
+import { Link } from "react-router-dom";
 
 function EditButton({ entryId }) {
   return (
@@ -11,7 +11,7 @@ function EditButton({ entryId }) {
 }
 
 EditButton.propTypes = {
-  entryId: PropTypes.number.isRequired, // Define la validación de tipos
+  entryId: PropTypes.number.isRequired, 
 };
 
 export default EditButton;
