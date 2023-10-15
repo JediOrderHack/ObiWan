@@ -30,7 +30,7 @@ function EntryList() {
         const headers = token;
         console.log(token)
           ? {
-              Authorization: `Bearer ${token}`,
+              Authorization: token,
             }
           : {};
 
