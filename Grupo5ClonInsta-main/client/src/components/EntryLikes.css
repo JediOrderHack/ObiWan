@@ -1,0 +1,23 @@
+.patita {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative; /* Asegura que el posicionamiento sea relativo al contenedor .patita */
+}
+
+.patita img {
+  position: absolute; /* Permite superponer la imagen */
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+   /* Ajusta el tamaño de la imagen para llenar el contenedor */
+  z-index: 1; /* Asegura que la imagen esté por encima del fondo */
+}
+
+
+
+
+
+

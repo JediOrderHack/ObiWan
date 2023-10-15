@@ -1,0 +1,59 @@
+.lgn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.auth_container-lgn {
+  background-color: #fff9c7;
+  width: 90%; /* Ajusta el ancho al 90% del ancho de pantalla */
+  max-width: 375px; /* Establece el máximo ancho a 375px */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.title-lgn {
+  font-size: 24px;
+}
+
+.auth_box-lgn {
+  margin-top: 20px;
+}
+
+.input_box-lgn {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #ffa9fa;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%; /* Ocupa el ancho completo */
+}
+
+.forget_btn-lgn {
+  text-decoration: none;
+  color: white;
+  display: block;
+  margin-top: 10px;
+}
+
+.forget_btn-lgn:hover {
+  text-decoration: underline;
+}

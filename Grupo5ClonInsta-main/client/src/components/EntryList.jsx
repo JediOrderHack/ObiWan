@@ -72,7 +72,7 @@ function EntryList() {
     });
   };
 
- return (
+return (
     <div className="entry-list-container">
       <input
         type="text"
