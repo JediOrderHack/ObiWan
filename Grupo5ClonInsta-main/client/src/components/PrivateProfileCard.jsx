@@ -42,7 +42,7 @@ const PrivateProfileCard = () => {
           <img className="avtr" src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
           <br />
           <AvatarEditor />
-          <button onClick={goToAvatarEditor}></button>
+          
           <div>
             <LogOut />
           </div>

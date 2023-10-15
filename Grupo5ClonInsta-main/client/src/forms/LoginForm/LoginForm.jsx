@@ -5,7 +5,9 @@ import { TOKEN_LOCAL_STORAGE_KEY } from '../../utils/constants';
 import "../Auth.css"
 import { NavLink } from 'react-router-dom';
 import logo from "../../assets/logo-2.png"
+import './LoginForm.css'
 const { VITE_API_URL } = import.meta.env;
+
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -36,12 +38,12 @@ function LoginForm() {
   }
 
   return (
-    <div className='app'>
-      <div className="auth_container">
-        <h2 className="title">LOGIN</h2>
+    <div className="lgn">
+      <div className="auth_container-lgn">
+        <h2 className="title-lgn">LOGIN</h2>
 
-        <div className="auth_box">
-          <div className="input_box">
+        <div className="auth_box-lgn">
+          <div className="input_box-lgn">
             <p>EMAIL</p>
             <input
               type="text"
@@ -49,14 +51,14 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="input_box">
+          <div className="input_box-lgn">
             <p>Contraseña</p>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {error && <p style={{ color: 'red', fontSize: "2rem" }}>{error}</p>}
+            {error && <p style={{ color: "red", fontSize: "2rem" }}>{error}</p>}
           </div>
         </div>
         <button onClick={handleSubmit}>
@@ -64,7 +66,7 @@ function LoginForm() {
         </button>
 
         <NavLink to="/forgot-password">
-          <button className="forget_btn">¿Has olvidado tu Meowseña?</button>
+          <button className="forget_btn-lgn">¿Has olvidado tu Meowseña?</button>
         </NavLink>
       </div>
     </div>

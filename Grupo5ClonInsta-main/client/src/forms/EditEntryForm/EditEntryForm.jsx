@@ -63,7 +63,7 @@ function EditEntryForm() {
   return (
     <div className="edit-form-container">
       <h2 className="edit-form-top">Editar Descripción de la Entrada</h2>
-      <label>Nueva Descripción:</label>
+      <label className="lbl-newdesc">Nueva Descripción:</label>
       <input
         type="text"
         value={description}
@@ -71,7 +71,7 @@ function EditEntryForm() {
       />
       {/* Utiliza <Link> para redirigir al usuario a la página de inicio */}
       <Link to="/home">
-        <button onClick={handleUpdateDescription}>Guardar Cambios</button>
+        <button className="btn-guardar" onClick={handleUpdateDescription}>Guardar Cambios</button>
       </Link>
     </div>
   );
