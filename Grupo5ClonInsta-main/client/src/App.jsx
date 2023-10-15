@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { BrowserRouter, NavLink } from 'react-router-dom';
+
+
 
 import "./App.css";
 
 import {Route, Routes } from 'react-router-dom';
 
-import PrivateRoutes from './components/PrivateRoutes.jsx';
+
 
 // USERS:
-import Home from './pages/Home/Home.jsx';
+
 import RegisterForm from './forms/RegisterForm/RegisterForm.jsx'
 import LoginForm from './forms/LoginForm/LoginForm.jsx';
 import RecoverPassword from './components/RecoverPassword.jsx';
@@ -20,11 +20,11 @@ import ValidateForm from './forms/ValidateForm/ValidateForm.jsx';
 import EntryList from './components/EntryList.jsx';
 import LogOut from './components/LogOut.jsx';
 import PrivateProfileCard from './components/PrivateProfileCard.jsx';
-import ProfileButton from './components/ProfileButton/ProfileButton.jsx';
+
 import PublicProfileCard from './components/PublicProfileCard.jsx';
 import EditEntryForm from './forms/EditEntryForm/EditEntryForm.jsx';
 import AvatarEditor from './forms/AvatarForm/AvatarForm.jsx';
-import PublicProfileButton from './components/PublicProfileButton.jsx';
+
 import NavBar from './components/NavBar/NavBar.jsx';
 
 

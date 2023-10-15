@@ -4,6 +4,8 @@ const { VITE_API_URL } = import.meta.env;
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Asegúrate de tener axios instalado en tu proyecto
 import { getToken } from "../../utils/getToken";
+import './Profile.css'
+
 
 const AvatarEditor = () => {
   const token= getToken()
@@ -47,12 +49,19 @@ const AvatarEditor = () => {
   };
 
   return (
-    <div>
-      <h2>Editar Avatar</h2>
+    <div className="app">
+      <h2 className="title">Editar Avatar</h2>
+      
+          <div className="edit_profile_container">
+            <div className="avatar">
       {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
+      </div>
+      <p>Editar foto de perfil</p>
+      {avatar && <button onClick={handleAvatarUpload}><FaPlus /></button>}
+
       <input type="file" accept="image/*" onChange={handleAvatarChange} />
-      {avatar && <button onClick={handleAvatarUpload}>Guardar Avatar</button>}
     </div>
+  </div>
   );
 };
 

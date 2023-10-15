@@ -35,15 +35,17 @@ const PrivateProfileCard = () => {
 
   return (
     <div className="private-profile-card">
-      {user ? 
-      (
+      {user ? (
         <div>
           <h2>Perfil Privado de {user.username}</h2>
           <p>Email: {user.email}</p>
-          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" /><br/>
-          <AvatarEditor/>
+          <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
+          <br />
+          <AvatarEditor />
           <button onClick={goToAvatarEditor}></button>
-          <button><LogOut/></button>
+          
+            <LogOut />
+          
         </div>
       ) : (
         <p>Cargando perfil privado...</p>
@@ -53,4 +55,3 @@ const PrivateProfileCard = () => {
 };
 
 export default PrivateProfileCard;
-

@@ -33,15 +33,15 @@ function NavBar() {
       </div>
       <div className="auth_btns">
         <div className="profile-button-container">
-          <NavLink to="/perfil"><ProfileButton/></NavLink>
+          <ProfileButton/>
         </div>
-        {isLoggedIn ? null : (
+        {isLoggedIn ? null : ( 
           <div className="auth-buttons">
             <NavLink to="/login">Login</NavLink>
-            <span> | </span>
+            
             <NavLink to="/register">Register</NavLink>
           </div>
-        )}
+         )} 
       </div>
     </div>
   );

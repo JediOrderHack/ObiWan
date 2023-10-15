@@ -1,50 +1,69 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-const { VITE_API_URL } = import.meta.env;
-import { getToken } from '../utils/getToken';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getToken } from "../utils/getToken";
+import patita from "../assets/thumb-icon.png"
+import './EntryLikes.css'
+function EntryLikes({ entryId, likesCount, updateLikesCount }) {
+  const token = getToken();
+  const [liked, setLiked] = useState(false);
 
-function EntryLikes({ entryId, userId, likedByMe }) {
-  console.log(likedByMe)
-  const [liked, setLiked] = useState(likedByMe);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/entries/${entryId}/likes`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
 
-  const handleLike = async () => {
+        // El endpoint checkEntryLikeController devuelve un valor booleano
+        setLiked(response.data.hasLiked);
+      } catch (error) {
+        console.error("Error al obtener el estado del like:", error);
+      }
+    };
+
+    fetchData();
+  }, [entryId, token]);
+
+  const handleLikeClick = async () => {
     try {
-      const token = getToken(); // Obtén el token de autorización (depende de tu implementación)
-      const response = await axios.post(`${VITE_API_URL}/entries/${entryId}/likes`, null, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.data.status === 'ok') {
+      if (!liked) {
+        // Envía una solicitud POST para dar like.
+        await axios.post(
+          `http://localhost:3000/entries/${entryId}/likes`,
+          null,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setLiked(true);
-      }
-    } catch (error) {
-      console.error('Error al dar me gusta', error);
-    }
-  };
-
-  const handleUnlike = async () => {
-    try {
-      const token = getToken();
-      const response = await axios.delete(`${VITE_API_URL}/entries/${entryId}/likes`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (response.data.status === 'ok') {
+        updateLikesCount(entryId, likesCount + 1); // Incrementa el contador
+      } else {
+        // Envía una solicitud DELETE para eliminar el like.
+        await axios.delete(`http://localhost:3000/entries/${entryId}/likes`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLiked(false);
+        updateLikesCount(entryId, likesCount - 1); // Decrementa el contador
       }
     } catch (error) {
-      console.error('Error al quitar el me gusta', error);
+      console.error("Error al gestionar el like:", error);
     }
   };
 
   return (
     <div>
-      <button onClick={liked ? handleUnlike : handleLike}>
-        {liked ? 'Quitar Me Gusta' : 'Me Gusta'}
+      <button onClick={handleLikeClick}>
+        <img className="patita" src={patita} alt="" />
+        {/* {liked ? "Dislike" : "Like"} */}
       </button>
     </div>
   );
