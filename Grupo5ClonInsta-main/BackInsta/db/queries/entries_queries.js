@@ -91,6 +91,7 @@ async function selectEntryByIdQuery({ entryId, userId }) {
   let connection;
 
   try {
+    console.log("Query de búsqueda - entryId:", entryId, "userId:", userId);
     connection = await getPool();
 
     const [entries] = await connection.query(
@@ -114,7 +115,10 @@ async function selectEntryByIdQuery({ entryId, userId }) {
       [userId, userId, entryId]
     );
 
+    console.log("Resultados de la primera consulta:", entries);
+
     if (entries.length < 1) {
+      console.log("Entrada no encontrada");
       generateError("Entrada no encontrada", 404);
     }
 
@@ -123,6 +127,8 @@ async function selectEntryByIdQuery({ entryId, userId }) {
       `SELECT id, photoName FROM photos WHERE entryId = ?`,
       [entries[0].id]
     );
+
+    console.log("Fotos de la entrada:", photos);
 
     // Agregamos a la entrada las fotos y los comentarios.
     entries[0].photos = photos;
@@ -138,6 +144,7 @@ async function selectEntryByIdQuery({ entryId, userId }) {
     if (connection) connection.release();
   }
 }
+
 
 /**
  * #################################
@@ -206,10 +213,10 @@ async function insertLikeQuery({ entryId, userId }) {
     }
 
     // Agregamos el like.
-    await connection.query(
-      "INSERT INTO likes (postId, userId) VALUES (?, ?)",
-      [entryId, userId]
-    );
+    await connection.query("INSERT INTO likes (postId, userId) VALUES (?, ?)", [
+      entryId,
+      userId,
+    ]);
   } finally {
     if (connection) connection.release();
   }
@@ -246,6 +253,26 @@ async function deleteLikeQuery({ entryId, userId }) {
   }
 }
 
+
+// Define la consulta para verificar si un usuario ha dado "like" a una entrada específica.
+async function checkEntryLikeQuery(userId, entryId) {
+  const connection = await getPool();
+
+  try {
+    const [result] = await connection.query(
+      "SELECT id FROM likes WHERE userId = ? AND postId = ?",
+      [userId, entryId]
+    );
+
+    // Devuelve un valor booleano indicando si el usuario ha dado "like" a la entrada.
+    return result.length > 0;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
+
+
 export {
   insertEntryQuery,
   selectAllEntriesQuery,
@@ -254,4 +281,5 @@ export {
   insertPhotoQuery,
   insertLikeQuery,
   deleteLikeQuery,
+  checkEntryLikeQuery
 };

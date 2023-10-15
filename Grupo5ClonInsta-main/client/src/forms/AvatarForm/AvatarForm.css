@@ -1,0 +1,79 @@
+.avtr-frm {
+  width: 375px;
+  height: 667px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-size: 24px;
+  margin: 16px 0;
+}
+
+.edit_profile_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avtrfrmimg {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.avtrfrmimg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.edit-avatar-label {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.edit-avatar-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50px;
+  max-height: 50px;
+  background-color: #ffa9fa;
+  border:none;
+  border-radius: 50%;
+}
+.edit-avatar-button img{
+  max-width: 50px;
+  max-height: 50px;
+  
+}
+
+
+.avatar-input {
+display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50px;
+  max-height: 50px;
+  background-color: #ffa9fa;
+  border:none;
+  border-radius: 50%;
+  display: none;
+}
+
+
+.label-input {
+display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffa9fa;
+  border-radius: 4%;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  border: 4px solid black;
+}

@@ -1,0 +1,78 @@
+/* NewEntryForm.css */
+
+.new-entry-form {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff9c7;
+
+}
+
+.file-input-container {
+  margin-bottom: 20px;
+}
+
+.file-label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-button {
+  background-color: #ffa9fa;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.file-upload-button:hover {
+  background-color: #2980b9;
+}
+
+.image-preview {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.description-container {
+  margin-bottom: 20px;
+}
+
+.description-label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.description-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.upload-button {
+  background-color: #ffa9fa;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background-color: #2980b9;
+}
+
+/* Add additional styling as needed */

@@ -2,6 +2,7 @@ import { getToken } from "../utils/getToken";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import './PublicProfileButton.css'
 const UPLOADS_DIR = "http://localhost:3000/uploads";
 
 const PublicProfileButton = ({ userId }) => {
@@ -33,7 +34,6 @@ const PublicProfileButton = ({ userId }) => {
           <img src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
         </Link>
       ) : (
-        // Si el usuario no tiene avatar, muestra una imagen por defecto
         <Link to={`/perfil-publico/${userId}`}>
           <img
             src={`${UPLOADS_DIR}/DefaultAvatar.png`}

@@ -15,6 +15,7 @@ import {
   editEntryController,
   addLikeController,
   removeLikeController,
+  checkEntryLikeController
 } from "../controllers/entry_controller.js";
 
 // Crear una entrada.
@@ -33,11 +34,18 @@ router.get("/:id", authUserOptionalController, getEntryController);
 
 // Editar una entrada.
 router.put(
-  "/:id",
+  "/:entryId",
   authUserController,
   userExistsController,
-  editEntryController
+  (req, res, next) => {
+    // Agregar un console.log para ver la información en esta etapa.
+    console.log("Información en la ruta /:entryId:", req.params, req.user, req.body);
+
+    // Luego, llama a la función editEntryController.
+    editEntryController(req, res, next);
+  }
 );
+
 
 // Dar like.
 router.post(
@@ -54,5 +62,12 @@ router.delete(
   userExistsController,
   removeLikeController
 );
+
+// saber si le he dado like.
+router.get(
+  "/:entryId/likes",
+  authUserController,
+  checkEntryLikeController
+)
 
 export default router;

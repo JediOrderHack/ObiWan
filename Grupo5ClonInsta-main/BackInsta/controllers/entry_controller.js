@@ -7,6 +7,7 @@ import {
   insertPhotoQuery,
   selectEntryByIdQuery,
   selectAllEntriesQuery,
+  checkEntryLikeQuery
 } from "../db/queries/entries_queries.js";
 
 // Importamos la función que guarda una foto en disco.
@@ -150,14 +151,18 @@ async function editEntryController(req, res, next) {
     const { description } = req.body;
 
     // Obtenemos el id de la entrada que queremos editar.
-    const { id: entryId } = req.params;
+    const { entryId } = req.params;
 
     // Obtenemos el id del usuario que editará la entrada.
     const { id: userId } = req.user;
 
-    // Validamos los datos que envía el usuari con Joi.
-    await validateSchema(editEntrySchema, req.body);
-
+    try {
+      await validateSchema(editEntrySchema, req.body);
+    } catch (err) {
+      // Maneja el error de validación, por ejemplo, respondiendo con un error 400.
+      res.status(400).send("Los datos de la solicitud no son válidos.");
+      return; // Termina la ejecución del controlador.
+    }
     // Obtenemos los datos de la entrada que queremos editar.
     const entry = await selectEntryByIdQuery({ entryId, userId });
 
@@ -174,7 +179,11 @@ async function editEntryController(req, res, next) {
       message: "Entrada actualizada",
     });
   } catch (err) {
-    next(err);
+    if (err.message === "Entrada no encontrada") {
+      res.status(404).send("Entrada no encontrada");
+    } else {
+      next(err); // Maneja otros errores
+    }
   }
 }
 
@@ -217,6 +226,28 @@ async function removeLikeController(req, res, next) {
   }
 }
 
+
+// Define el controlador para verificar si un usuario ha dado "like" a una entrada específica.
+async function checkEntryLikeController(req, res, next) {
+  try {
+    // Asegúrate de obtener el ID de usuario de manera adecuada. Por ejemplo, desde req.user.
+    const userId = req.user.id;
+
+    // Asegúrate de obtener el ID de entrada desde los parámetros de la solicitud.
+    const entryId = req.params.entryId;
+
+    // Utiliza la consulta para verificar si el usuario ha dado "like" a la entrada.
+    const hasLiked = await checkEntryLikeQuery(userId, entryId);
+
+    // Devuelve un valor booleano que indica si el usuario ha dado "like" a la entrada.
+    res.send({ hasLiked });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
 export {
   createEntryController,
   listEntriesController,
@@ -224,4 +255,5 @@ export {
   editEntryController,
   addLikeController,
   removeLikeController,
+  checkEntryLikeController
 };

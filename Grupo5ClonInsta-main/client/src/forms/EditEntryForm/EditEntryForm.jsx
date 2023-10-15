@@ -1,87 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom"; // Importa 'navigate' de '@reach/router'.
+import "./EditEntryForm.css";
+import { getToken } from "../../utils/getToken";
 
-const EditEntryForm = ({ entry, onEdit }) => {
-  const [description, setDescription] = useState(entry.description);
-  const [photos, setPhotos] = useState([...entry.photos]);
+function EditEntryForm() {
+  const { entryId } = useParams();
+  const token = getToken();
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    // Obtén la descripción actual de la entrada desde el servidor.
+    const fetchEntryDescription = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/entries/${entryId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        const entryDetails = response.data.data.entry;
+        console.log(response.data.data.entry);
+
+        setDescription(entryDetails.description);
+      } catch (error) {
+        console.error("Error al obtener la descripción de la entrada:", error);
+      }
+    };
+
+    fetchEntryDescription();
+  }, [entryId]);
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
-  const handleFileChange = (e) => {
-    const newPhotos = Array.from (e.target.files);
-    setPhotos([...photos, ...newPhotos]);
-  };
-
-  const handleRemoveImage = (index) => {
-    const newPhotos = [...photos];
-    newPhotos.splice(index, 1);
-    setPhotos(newPhotos);
-  };
-
-  const handleEdit = async () => {
+  const handleUpdateDescription = async () => {
     try {
-      // Create a FormData object to send the images
-      const formData = new FormData();
-      formData.append("description", description);
-      photos.forEach((photo) => {
-        formData.append("images", photo);
-      });
+      // Envía una solicitud al servidor para actualizar la descripción de la entrada.
+      await axios.put(
+        `http://localhost:3000/entries/${entryId}`,
+        {
+          description: description,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(token);
 
-      // Send a PUT request to the edit entry endpoint
-      const response = await fetch(`http://localhost:3000/entries/${entry.id}`, {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (response.ok) {
-        // Entry updated successfully, you can handle the response here
-        const updatedEntry = await response.json();
-        onEdit(updatedEntry); // Update the state or perform any necessary actions
-      } else {
-        // Handle the error response if needed
-      }
+      // Utiliza 'Navigate' para redirigir al usuario a la lista de entradas después de la actualización.
+     return <Link to="/home" />; // Cambio a Navigate dentro del JSX
     } catch (error) {
-      // Handle any network or other errors
-      console.error(error);
+      console.error("Error al actualizar la descripción de la entrada:", error);
     }
   };
 
   return (
-    <div>
-      <h2>Editar Entrada</h2>
-      <div>
-        <label>Imagen:</label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleFileChange}
-        />
-      </div>
-      {photos.map((photo, index) => (
-        <div key={index}>
-          <img
-            src={URL.createObjectURL(photo)}
-            alt={`Image ${index}`}
-            width="100"
-            height="100"
-          />
-          <button onClick={() => handleRemoveImage(index)}>Borrar</button>
-        </div>
-      ))}
-      <div>
-        <label>Descripción:</label>
-        <textarea
-          rows="4"
-          cols="50"
-          value={description}
-          onChange={handleDescriptionChange}
-        />
-      </div>
-      <button onClick={handleEdit}>Guardar Cambios</button>
+    <div className="edit-form-container">
+      <h2 className="edit-form-top">Editar Descripción de la Entrada</h2>
+      <label className="lbl-newdesc">Nueva Descripción:</label>
+      <input
+        type="text"
+        value={description}
+        onChange={handleDescriptionChange}
+      />
+      {/* Utiliza <Link> para redirigir al usuario a la página de inicio */}
+      <Link to="/home">
+        <button className="btn-guardar" onClick={handleUpdateDescription}>Guardar Cambios</button>
+      </Link>
     </div>
   );
-};
+}
 
 export default EditEntryForm;

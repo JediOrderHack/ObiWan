@@ -7,15 +7,22 @@
   background: linear-gradient(90deg, #fff7ad, #ffa9fa);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px 10px 20px;
+  justify-content: space-evenly;
+  padding: 10px 10px; /* Ajusta el padding para pantallas pequeñas */
   z-index: 100;
-  height: 110px;
+  height: 80px; /* Ajusta la altura para pantallas pequeñas */
 }
 
 .navigation_left {
+  padding-left: 30px;
   display: flex;
   align-items: center;
+}
+
+.navigation_left img {
+  max-width: 55px; /* Ajusta el tamaño de las imágenes de los botones para pantallas pequeñas */
+  max-height: 55px; /* Ajusta el tamaño de las imágenes de los botones para pantallas pequeñas */
+   /* Agrega margen entre las imágenes de los botones */
 }
 
 .center-logo {
@@ -23,39 +30,68 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+  padding-right: 20px;
+  margin-right: -20px;
+  
 }
 
 .center-logo img {
-  max-width: 200px;
-  max-height: 80px;
+  max-width: 150px; /* Ajusta el tamaño del logo para pantallas pequeñas */
+  max-height: 60px; /* Ajusta el tamaño del logo para pantallas pequeñas */
 }
 
 .auth_btns {
   display: flex;
-  flex-direction: column; /* Apila los elementos verticalmente */
-  align-items: flex-end; /* Alinea los elementos a la derecha */
-  margin-right: 25px;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 10px; /* Ajusta el margen derecho para pantallas pequeñas */
 }
 
-.profile-button-container, .auth-buttons {
-  margin: 10px 0; /* Agrega margen vertical entre los elementos */
+
+
+.profile-button-container {
+  display: flex;
+  justify-content: center; /* Centra en el eje horizontal */
+  min-height: 60px;
+  min-width: 60px;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding-right: 20px;
+  
 }
 
 .profile-button-container img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; /* Hace que la imagen sea redonda */
   overflow: hidden;
-  border: 3px solid white;
+  border: 3px solid white; /* Añade un borde blanco */
+  margin-bottom: -11px
 }
 
 .auth-buttons {
+  
+  margin: -10px;
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px; /* Reduce el tamaño de fuente para pantallas pequeñas */
+  padding-right: 40px;
+  margin-left: -60px;
 }
 
 .auth-buttons a {
   text-decoration: none;
-  margin: 0 10px; /* Añade margen horizontal entre los enlaces para separarlos */
+  margin: 0 5px;
+  background: #ffa9fa; /* Color de fondo igual al color de la barra de navegación */
+  padding: 5px 10px; /* Ajusta el relleno para que los botones tengan un aspecto adecuado */
+  border-radius: 5px; /* Añade bordes redondeados a los botones */
+  color: white; /* Color del texto en los botones */
+  font-size: 12px; /* Reduce el tamaño de fuente para pantallas pequeñas */
+  margin-bottom: -20px;
+  margin-top: 18px;
+}
+
+.auth-buttons a:hover {
+  background-color: #fff7ad; /* Cambia el color de fondo al pasar el ratón por encima */
 }

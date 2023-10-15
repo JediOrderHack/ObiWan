@@ -1,0 +1,88 @@
+/* EntryList.css */
+
+.entry-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 69px; 
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.entry-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
+  width: 80%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 3%;
+  background: #fff9c7;
+  
+}
+.prfl{
+  display: flex;
+  align-items: flex-start;
+  margin-left: -30px;
+}
+.profile-link {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.entry-photo {
+  margin: 10px 0;
+  max-width: 600px;
+  max-height: auto;
+  border-radius: 3%;
+  border: 2px;
+  border-color: #ffa9fa;
+}
+
+
+
+.edit-button {
+  background-color: #ffa9fa;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+
+
+.public-profile-button {
+  margin: 10px 0;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 100vh; /* Ajusta la altura al 100% de la ventana del navegador */
+}
+
+.dynamo {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+.dynamo img{
+border-radius: 10%;
+border: 4px solid #ffa9fa;
+  
+}
+
+

@@ -1,0 +1,45 @@
+.edit-form-container {
+  max-width: 375px; /* Tamaño original */
+  margin: 0 auto;
+  margin-top: 120px;
+  padding: 20px;
+  text-align: center;
+  background-color: #fff9c7;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-form-top {
+  font-size: 24px;
+}
+
+.lbl-newdesc {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-guardar {
+  background-color: #ffa9fa;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Media queries para pantallas más grandes */
+@media (min-width: 768px) {
+  .edit-form-container {
+    max-width: 600px; /* Ajusta según tus necesidades */
+  }
+}
