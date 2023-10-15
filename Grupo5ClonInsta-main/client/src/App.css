@@ -50,3 +50,9 @@ footer {
   font-size: 25px;
   font-weight: 700;
 }
+.container {
+  width: 80%;
+  padding: 10% 10%;
+  margin: 0 auto;
+  display:grid ;
+}

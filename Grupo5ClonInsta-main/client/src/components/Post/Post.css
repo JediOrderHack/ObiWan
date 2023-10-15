@@ -53,6 +53,7 @@
   width: 100%;
   background: linear-gradient(90deg, #fff7ad, #ffa9fa);
   padding: 10px 20px;
+  position: relative;
 }
 
 .post_container .post_bottom .post_bottom_top {

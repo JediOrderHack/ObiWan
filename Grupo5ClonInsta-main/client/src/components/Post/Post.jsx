@@ -41,18 +41,18 @@ const Post = (props) => {
         </div>
 
         <div className="post_img">
-          <Carousel>
+         
             {photos &&
               photos.map((photo, photoIndex) => (
                 <div key={`photo_${entryId}_${photoIndex}`}>
                   <img
                     src={getImageUrl(photo.photoName)}
                     alt={`Foto ${photoIndex + 1}`}
-                    style={imageStyles}
+                   
                   />
                 </div>
               ))}
-          </Carousel>
+        
         </div>
       </div>
 

@@ -50,7 +50,7 @@ function EntryList() {
   }, [search]);
 
   return (
-    <div>
+    <div className="container">
       <input
         type="text"
         placeholder="Buscar entradas"
@@ -67,7 +67,6 @@ function EntryList() {
             photos={entry.photos}
             userId={entry.userId}
             username={entry.username}
-
             >   
           </Post> 
           
