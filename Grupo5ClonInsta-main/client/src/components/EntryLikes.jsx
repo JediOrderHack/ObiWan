@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../utils/getToken";
-
+import patita from "../assets/thumb-icon.png"
+import './EntryLikes.css'
 function EntryLikes({ entryId, likesCount, updateLikesCount }) {
   const token = getToken();
   const [liked, setLiked] = useState(false);
@@ -61,7 +62,8 @@ function EntryLikes({ entryId, likesCount, updateLikesCount }) {
   return (
     <div>
       <button onClick={handleLikeClick}>
-        {liked ? "Dislike" : "Like"}
+        <img className="patita" src={patita} alt="" />
+        {/* {liked ? "Dislike" : "Like"} */}
       </button>
     </div>
   );

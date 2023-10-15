@@ -1,55 +1,69 @@
+/* EntryList.css */
+
 .entry-list-container {
-  /* Estilos para el contenedor principal */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 20px;
-  padding: 10px;
-  background-color: #f2f2f2;
 }
 
-.entry-list-container .search-input {
-  /* Estilos para la entrada de búsqueda */
-  border: 1px solid #cccccc;
-  padding: 5px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.entry-list-container .entry-container {
-  /* Estilos para cada entrada */
-  background-color: white;
+.search-input {
+  
+  width: 100%;
   padding: 10px;
   margin-bottom: 20px;
 }
 
-.entry-list-container .entry-container .profile-link {
-  /* Estilos para el enlace del nombre de usuario */
+.entry-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
+  width: 80%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  
+  background: #fff9c7;
+}
+.prfl{
+  display: flex;
+  align-items: flex-start;
+  margin-left: -30px;
+}
+.profile-link {
   font-weight: bold;
+  margin: 10px 0;
 }
 
-.entry-list-container .entry-container .entry-photo {
-  /* Estilos para las fotos de la entrada */
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
+.entry-photo {
+  margin: 10px 0;
+  max-width: 600px;
+  max-height: auto;
 }
 
-.entry-list-container .entry-container .edit-button {
-  /* Estilos para el botón de editar entrada */
+
+
+.edit-button {
+  background-color: #ffa9fa;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+
+
+/* Style for the PublicProfileButton component */
+/* You can create a separate CSS file for it if needed */
+
+.public-profile-button {
+  margin: 10px 0;
   background-color: #007bff;
-  color: white;
-  padding: 5px 10px;
+  color: #fff;
+  padding: 10px;
   border: none;
   cursor: pointer;
 }
 
-.entry-list-container .entry-container .edit-button:hover {
-  background-color: #0069d9;
-}
-
-.entry-list-container .entry-container .edit-button a {
-  color: white;
-  text-decoration: none;
-}
-
-.entry-list-container .entry-container .edit-button a:hover {
-  text-decoration: underline;
-}
+/* Add more styles as needed */

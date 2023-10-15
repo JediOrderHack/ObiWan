@@ -1,0 +1,16 @@
+.profile-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+.usrnm {
+  font-size: 14px; /* Ajusta el tamaño de fuente del username */
+  margin-top: 5px; /* Añade margen superior para separar el avatar del username */
+  align-items: center;
+}
+
+.avatar-noLoged{
+    margin-bottom: 20px;
+}
+  

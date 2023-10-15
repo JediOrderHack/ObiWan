@@ -5,7 +5,7 @@
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: #fff9c7;
   padding-top: 125px; /* Añadido padding en la parte superior */
 }
 
@@ -24,7 +24,7 @@
 }
 
 .file-upload-button {
-  background-color: #3498db;
+  background-color: #ffa9fa;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -59,7 +59,7 @@
 }
 
 .upload-button {
-  background-color: #3498db;
+  background-color: #ffa9fa;
   color: #fff;
   border: none;
   padding: 10px 20px;

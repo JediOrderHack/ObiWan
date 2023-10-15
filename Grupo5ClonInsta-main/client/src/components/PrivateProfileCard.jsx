@@ -43,9 +43,9 @@ const PrivateProfileCard = () => {
           <br />
           <AvatarEditor />
           <button onClick={goToAvatarEditor}></button>
-          <button>
+          
             <LogOut />
-          </button>
+          
         </div>
       ) : (
         <p>Cargando perfil privado...</p>
