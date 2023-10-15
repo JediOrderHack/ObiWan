@@ -5,6 +5,8 @@ import { Carousel } from "react-responsive-carousel";
 import UserAvatar from "./UserAvatar";
 import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
+
+import Post from "./Post/Post";
 import { Link, useParams } from "react-router-dom";
 import { getToken } from "../utils/getToken";
 
@@ -47,9 +49,10 @@ function EntryList() {
           Array.isArray(response.data.data.entries)
         ) {
           setEntries(response.data.data.entries.reverse());
+          console.log(response.data.data.entries)
         } else {
           console.error(
-            "La respuesta del servidor no contiene un array de entradas:",
+            "Las respuesta del servidor no contiene un array de entradas:",
             response.data
           );
         }
@@ -65,7 +68,7 @@ function EntryList() {
   console.log(userFromToken)
 
   return (
-    <div>
+    <div className="container">
       <input
         type="text"
         placeholder="Buscar entradas"
@@ -74,27 +77,18 @@ function EntryList() {
       />
       {entries.map((entry, index) => (
         <div key={`entry_${entry.id}_${index}`}>
-          <PublicProfileButton userId={entry.userId} />
-          <div>Nombre de Usuario: {entry.username}</div>
-          <Carousel>
-            {entry.photos &&
-              entry.photos.map((photo, photoIndex) => (
-                <div key={`photo_${entry.id}_${photoIndex}`}>
-                  <img
-                    src={`${IMAGES_URL}/${photo.photoName}`}
-                    alt={`Foto ${photoIndex + 1}`}
-                    style={imageStyles}
-                  />
-                </div>
-              ))}
-          </Carousel>
-          <div>Descripción: {entry.description}</div>
-          <div>Likes: {entry.likesCount}</div>
-          <EntryLikes
+          <Post
+            avatar={entry.avatar}
+            description={entry.description}
             entryId={entry.id}
-            userId={entry.userId}
             likedByMe={entry.likedByMe}
-          />
+
+            photos={entry.photos}
+            userId={entry.userId}
+            username={entry.username}
+            >   
+          </Post> 
+          
           {entry.userId === userFromToken?.id && (
             <Link to={`/editEntry/${entry.id}`}>
               <button>Editar Entrada</button>

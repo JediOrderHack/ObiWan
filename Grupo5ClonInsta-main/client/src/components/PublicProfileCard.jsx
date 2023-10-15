@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserAvatar from "./UserAvatar";
 import { useParams } from "react-router-dom";
+import Profile from "./Profile/Profile";
 
 const UPLOADS_DIR = "http://localhost:3000/uploads";
 
@@ -27,31 +28,15 @@ const PublicProfileCard = () => {
   }, [userId]);
 
   return (
-    <div>
+    <div className="container">
       {userData && (
         <div>
-          <img
-            key={`avatar`}
-            src={`${UPLOADS_DIR}/${userData.user.avatar}`}
-            alt={`avatar`}
-          />
-          <div>Nombre de Usuario: {userData.user.username}</div>
-          {userData.user.entries.map((entry, index) => (
-            <div key={`entry_${entry.id}_${index}`}>
-              <div>Descripción: {entry.description}</div>
-              <div>
-                Fotos Subidas:
-                {entry.photos &&
-                  entry.photos.map((photo, photoIndex) => (
-                    <img
-                      key={`photo_${entry.id}_${photoIndex}`}
-                      src={`${UPLOADS_DIR}/${photo.photoName}`}
-                      alt={`Foto ${photoIndex + 1}`}
-                    />
-                  ))}
-              </div>
-            </div>
-          ))}
+          <Profile
+            avatar ={userData.user.avatar}
+            username ={userData.user.username}
+            entries={userData.user.entries}
+           >
+          </Profile>         
         </div>
       )}
     </div>
