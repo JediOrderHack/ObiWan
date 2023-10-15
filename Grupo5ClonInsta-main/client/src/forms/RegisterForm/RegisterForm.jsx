@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./RegisterForm.css";
-
+import "../Auth.css";
+import { NavLink } from 'react-router-dom';
 const BASE_URL = "http://localhost:3000/users";
+import logo from "../../assets/logo-2.png";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Nuevo estado para manejar el mensaje de error
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,53 +26,53 @@ function RegisterForm() {
         setSuccessMessage(
           "Revisa tu correo y entra en el enlace para activar tu cuenta."
         );
-      } else {
-        console.error("Error en la solicitud de registro:", response.data);
+        setErrorMessage(""); // Limpia el mensaje de error si hubo uno previamente
       }
     } catch (error) {
-      console.error("Error al registrar:", error);
+      if (error.response && error.response.status === 409) {
+        setErrorMessage("Usuario o email ya registrados.");
+      } else {
+        setErrorMessage("Error al registrar. Por favor, inténtalo de nuevo más tarde.");
+      }
     }
   };
 
   return (
-    <div className="post_container">
-      <div className="post_top">
-        {successMessage ? (
-          <div className="success-message">{successMessage}</div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Username:</label>
-              <br></br>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email:</label>
-              <br></br>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Password:</label>
-              <br></br>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit">Registrarse</button>
-            </div>
-          </form>
-        )}
+    <div className="app">
+      <div className="auth_container">
+        <h2 className="title">Regístrate</h2>
+
+        <div className="auth_box">
+          <div className="input_box">
+            <p>Usuario</p>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="input_box">
+            <p>Contraseña</p>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="input_box">
+            <p>Email</p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Muestra el mensaje de error */}
+          </div>
+        </div>
+
+        <button onClick={handleSubmit}>
+          Deja tu huella en <img src={logo} alt="" />
+        </button>
       </div>
     </div>
   );

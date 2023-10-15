@@ -22,7 +22,7 @@ const ProfileButton = () => {
         console.log(response.data.data.user);
       })
       .catch((error) => {
-        console.error("Error al obtener el perfil privado:", error);
+        console.error("Usuario no registrado");
       });
   }, []);
 

@@ -57,7 +57,7 @@ const AvatarEditor = () => {
       {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
       </div>
       <p>Editar foto de perfil</p>
-      {avatar && <button onClick={handleAvatarUpload}><FaPlus /></button>}
+      {avatar && <button onClick={handleAvatarUpload}></button>}
 
       <input type="file" accept="image/*" onChange={handleAvatarChange} />
     </div>

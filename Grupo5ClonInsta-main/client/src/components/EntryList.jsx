@@ -4,12 +4,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getToken } from "../utils/getToken";
 import './EntryList.css'
-import Patita from '../assets/thumb-icon.png'  
-
-
 
 const IMAGES_URL = "http://localhost:3000/uploads";
 

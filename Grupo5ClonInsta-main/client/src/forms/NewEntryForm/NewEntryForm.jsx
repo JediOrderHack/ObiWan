@@ -3,6 +3,7 @@ import axios from "axios";
 import { getToken } from "../../utils/getToken";
 import { useNavigate } from "react-router-dom";
 import './NewEntryForm.css'
+
 const { VITE_API_URL } = import.meta.env;
 
 const NewEntryForm = () => {
@@ -71,7 +72,7 @@ const NewEntryForm = () => {
         <input
           className="file-input"
           type="file"
-          accept="image/*"
+          accept="image/jpg"
           multiple
           onChange={handleFileChange}
           ref={inputRef}
@@ -90,7 +91,7 @@ const NewEntryForm = () => {
           key={index}
           src={preview}
           alt={`Preview ${index + 1}`}
-          className="image-preview"
+          style={{ maxWidth: "100px", maxHeight: "100px" }}
         />
       ))}
       <div className="description-container">
@@ -109,6 +110,5 @@ const NewEntryForm = () => {
     </div>
   );
 };
-
 
 export default NewEntryForm;

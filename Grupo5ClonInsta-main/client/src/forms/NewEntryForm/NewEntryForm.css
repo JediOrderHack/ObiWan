@@ -1,12 +1,17 @@
 /* NewEntryForm.css */
 
 .new-entry-form {
-  margin: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 300px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff9c7;
-  padding-top: 125px; /* Añadido padding en la parte superior */
+
 }
 
 .file-input-container {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link} from "react-router-dom"; // Importa 'navigate' de '@reach/router'.
+import { useParams, Link } from "react-router-dom"; // Importa 'navigate' de '@reach/router'.
 import "./EditEntryForm.css";
 import { getToken } from "../../utils/getToken";
 
@@ -8,7 +8,6 @@ function EditEntryForm() {
   const { entryId } = useParams();
   const token = getToken();
   const [description, setDescription] = useState("");
- 
 
   useEffect(() => {
     // Obtén la descripción actual de la entrada desde el servidor.
@@ -79,5 +78,3 @@ function EditEntryForm() {
 }
 
 export default EditEntryForm;
-
-
