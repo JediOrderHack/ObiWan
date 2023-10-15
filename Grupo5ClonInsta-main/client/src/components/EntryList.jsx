@@ -6,7 +6,7 @@ import PublicProfileButton from "./PublicProfileButton";
 import EntryLikes from "./EntryLikes";
 import { Link, useParams } from "react-router-dom";
 import { getToken } from "../utils/getToken";
-
+import './EntryList.css'
 
 
 const IMAGES_URL = "http://localhost:3000/uploads";
@@ -74,45 +74,46 @@ function EntryList() {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Buscar entradas"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      {entries.map((entry, index) => (
-        <div key={`entry_${entry.id}_${index}`}>
-          <PublicProfileButton userId={entry.userId} />
-          <div>Nombre de Usuario: {entry.username}</div>
-          <Carousel>
-            {entry.photos &&
-              entry.photos.map((photo, photoIndex) => (
-                <div key={`photo_${entry.id}_${photoIndex}`}>
-                  <img
-                    src={`${IMAGES_URL}/${photo.photoName}`}
-                    alt={`Foto ${photoIndex + 1}`}
-                    style={imageStyles}
-                  />
-                </div>
-              ))}
-          </Carousel>
-          <div>Descripción: {entry.description}</div>
-          <div>Likes: {entry.likesCount}</div>
-          <EntryLikes
-            entryId={entry.id}
-            likesCount={entry.likesCount}
-            updateLikesCount={updateLikesCount}
-          />
-          {entry.userId === userFromToken?.id && (
-            <Link to={`/editEntry/${entry.id}`}>
-              <button>Editar Entrada</button>
-            </Link>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
+  <div className="entry-list-container">
+    <input
+      type="text"
+      placeholder="Buscar entradas"
+      className="search-input"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+    {entries.map((entry, index) => (
+      <div key={`entry_${entry.id}_${index}`} className="entry-container">
+        <PublicProfileButton userId={entry.userId} />
+        <div className="profile-link">@{entry.username}</div>
+        <Carousel>
+          {entry.photos &&
+            entry.photos.map((photo, photoIndex) => (
+              <div key={`photo_${entry.id}_${photoIndex}`}>
+                <img
+                  src={`${IMAGES_URL}/${photo.photoName}`}
+                  alt={`Foto ${photoIndex + 1}`}
+                  style={imageStyles}
+                  className="entry-photo"
+                />
+              </div>
+            ))}
+        </Carousel>
+        <div>Descripción: {entry.description}</div>
+        <div>Likes: {entry.likesCount}</div>
+        <EntryLikes
+          entryId={entry.id}
+          likesCount={entry.likesCount}
+          updateLikesCount={updateLikesCount}
+        />
+        {entry.userId === userFromToken?.id && (
+          <Link to={`/editEntry/${entry.id}`}>
+            <button className="edit-button">Editar Entrada</button>
+          </Link>
+        )}
+      </div>
+    ))}
+  </div>
+);
+        }
 export default EntryList;

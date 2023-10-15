@@ -1,0 +1,55 @@
+.entry-list-container {
+  /* Estilos para el contenedor principal */
+  margin: 20px;
+  padding: 10px;
+  background-color: #f2f2f2;
+}
+
+.entry-list-container .search-input {
+  /* Estilos para la entrada de búsqueda */
+  border: 1px solid #cccccc;
+  padding: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.entry-list-container .entry-container {
+  /* Estilos para cada entrada */
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.entry-list-container .entry-container .profile-link {
+  /* Estilos para el enlace del nombre de usuario */
+  font-weight: bold;
+}
+
+.entry-list-container .entry-container .entry-photo {
+  /* Estilos para las fotos de la entrada */
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.entry-list-container .entry-container .edit-button {
+  /* Estilos para el botón de editar entrada */
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.entry-list-container .entry-container .edit-button:hover {
+  background-color: #0069d9;
+}
+
+.entry-list-container .entry-container .edit-button a {
+  color: white;
+  text-decoration: none;
+}
+
+.entry-list-container .entry-container .edit-button a:hover {
+  text-decoration: underline;
+}
