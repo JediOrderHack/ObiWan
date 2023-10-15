@@ -150,14 +150,18 @@ async function editEntryController(req, res, next) {
     const { description } = req.body;
 
     // Obtenemos el id de la entrada que queremos editar.
-    const { id: entryId } = req.params;
+    const { entryId } = req.params;
 
     // Obtenemos el id del usuario que editará la entrada.
     const { id: userId } = req.user;
 
-    // Validamos los datos que envía el usuari con Joi.
-    await validateSchema(editEntrySchema, req.body);
-
+    try {
+      await validateSchema(editEntrySchema, req.body);
+    } catch (err) {
+      // Maneja el error de validación, por ejemplo, respondiendo con un error 400.
+      res.status(400).send("Los datos de la solicitud no son válidos.");
+      return; // Termina la ejecución del controlador.
+    }
     // Obtenemos los datos de la entrada que queremos editar.
     const entry = await selectEntryByIdQuery({ entryId, userId });
 
@@ -174,7 +178,11 @@ async function editEntryController(req, res, next) {
       message: "Entrada actualizada",
     });
   } catch (err) {
-    next(err);
+    if (err.message === "Entrada no encontrada") {
+      res.status(404).send("Entrada no encontrada");
+    } else {
+      next(err); // Maneja otros errores
+    }
   }
 }
 
