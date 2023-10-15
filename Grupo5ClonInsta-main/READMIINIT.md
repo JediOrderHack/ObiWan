@@ -1,12 +1,18 @@
 # Simple Meow API
 
-Este ejercicio consiste en crear una API que simule el funcionamiento de una aplicación similar a Instagram oriendata a subida de contenido de gatos.
+Este proyecto consiste en crear una API que simule el funcionamiento de una aplicación similar a Instagram oriendata a subida de contenido de gatos.
 
-## Instalar
+## Instalar en Backend
 
 1. Instalar las dependencias mediante el comando `npm install` o `npm i`.
 2. Guardar el archivo `.env.example` como `.env` y cubrir los datos necesarios.
 3. Ejecutar `npm run initDb` para crear las tablas necesarias en la base de datos anteriormente creada(En caso de no estar creada, crear base de datos).
+4. Ejecutar `npm run dev` para lanzar el servidor.
+
+## Instalar en Client
+
+1. Instalar las dependencias mediante el comando `npm install` o `npm i`.
+2. Guardar el archivo `.env.local.example` como `.env.local` y cubrir los datos necesarios.
 4. Ejecutar `npm run dev` para lanzar el servidor.
 
 ## ENTIDADES
@@ -60,25 +66,6 @@ Este ejercicio consiste en crear una API que simule el funcionamiento de una apl
 |modifiedAt | DATETIME | Fecha y hora de modificación de la foto.              |
 
 
-## Comments
-| Campo     | Tipo     | Descripción                                           |
-| --------- | -------- | --------------------------------------------          |
-| id        | INT      | Identificador único del comentario.                   |
-| entryId   | INT      | Identificador de la entrada que recibió el comentario |
-| userId    | INT      | Identificador del usuario que hizo la entrada         |
-|commentText| TEXT     | Comentario introducido                                |
-| createdAt | DATETIME | Fecha y hora de creación de la subida de la foto.     |
-
-
-## Videos
-| Campo     | Tipo     | Descripción                                           |
-| --------- | -------- | --------------------------------------------          |
-| id        | INT      | Identificador único del video.                        |
-| entryId   | INT      | Identificador de la entrada que recibió el video      |
-| userId    | INT      | Identificador del usuario que hizo la entrada         |
-| videoName | VARCHAR  | Nombre con el que se guarda el video.                 |
-| createdAt | DATETIME | Fecha y hora de creación de la subida del video.      |
-|modifiedAt | DATETIME | Fecha y hora de modificación  del video.              |
 
 
 ## ENDPOINTS:
@@ -86,7 +73,7 @@ Este ejercicio consiste en crear una API que simule el funcionamiento de una apl
 ### Usuarios:
 
 -   POST `/users` - Registro de usuario.
--   POST `/users/validate/:idvalidate` - Validación de usuario.
+-   PUT `/users/validate/:idvalidate` - Validación de usuario.
 -   POST `/users/login` - Login de usuario (devuelve token).
 -   GET `/users` - Devuelve información del usuario de todos los usuarios.
 -   GET `/users/:id` - Devuelve información del usuario concreto segun ID.
@@ -104,7 +91,6 @@ Este ejercicio consiste en crear una API que simule el funcionamiento de una apl
 -   GET `/entries` - Lista todas las entradas.
 -   GET `/entries/:entryid` - Muestra la entrada buscada por su id.
 -   GET `/entries/description?description=<descripción>` - Muestra la entrada buscada por palabras en su descripción.
--   POST `/entries/:entryid/likes/add` - Añade un like a una entrada.
--   DELETE `/entries/:entryid/likes/remove` - Deshace un like de una entrada.
--   POST `/entries/:entryid/comments`  - Añade un comentario a una entrada.
--   DELETE `/entries/:entryid/comments/:commentid` - Borra un comentario a una entrada.
+-   POST `/entries/:entryid/likes` - Añade un like a una entrada.
+-   DELETE `/entries/:entryid/likes` - Deshace un like de una entrada.
+-   GET `/entries/:entryid/likes` - Permite saber si le he dado like a la entrada.

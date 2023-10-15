@@ -3,7 +3,6 @@ import axios from "axios";
 import { getToken } from "../utils/getToken";
 import patita from "../assets/thumb-icon.png";
 import like from "../assets/like.png";
-import './EntryLikes.css';
 
 function EntryLikes({ entryId, likesCount, updateLikesCount }) {
   const token = getToken();
