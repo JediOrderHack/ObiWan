@@ -1,30 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../utils/constants';
 
 function LogOut() {
   const navigate = useNavigate();
+  const [logoutMessage, setLogoutMessage] = useState('');
 
   const handleLogout = () => {
     localStorage.removeItem(TOKEN_LOCAL_STORAGE_KEY);
-    navigate('/login');
-    window.location.reload();
+    setLogoutMessage('¡Sesión cerrada correctamente!');
+    setTimeout(() => {
+      setLogoutMessage('');
+      navigate('/login');
+      window.location.reload();
+    }, 1500);
   };
 
   const buttonStyle = {
-    backgroundColor: '#ffa9fa', 
-    padding: '10px 20px', 
-    border: 'none',
+    backgroundColor: '#ffa9fa',
+    padding: '10px 20px',
+    border: '4px black solid',
     borderRadius: '15px',
-    fontSize: '30px', 
-    color: '#fff',
+    fontSize: '30px',
+    color: 'black',
     cursor: 'pointer',
   };
 
-
   return (
     <div>
-      <button onClick={handleLogout} style={buttonStyle} onMouseOver={() => Object.assign(buttonStyle)}>
+      {logoutMessage && (
+        <div style={{ color: 'green', fontSize: '2rem', textAlign: 'center' }}>
+          {logoutMessage}
+        </div>
+      )}
+      <button onClick={handleLogout} style={buttonStyle}>
         Cerrar Sesión
       </button>
     </div>
@@ -32,4 +41,3 @@ function LogOut() {
 }
 
 export default LogOut;
-

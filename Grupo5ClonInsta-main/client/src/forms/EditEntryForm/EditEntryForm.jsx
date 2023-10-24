@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom"; // Importa 'navigate' de '@reach/router'.
+import { useParams, Link, useNavigate } from "react-router-dom";
 import "./EditEntryForm.css";
 import { getToken } from "../../utils/getToken";
 
@@ -8,9 +8,10 @@ function EditEntryForm() {
   const { entryId } = useParams();
   const token = getToken();
   const [description, setDescription] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Obtén la descripción actual de la entrada desde el servidor.
     const fetchEntryDescription = async () => {
       try {
         const response = await axios.get(
@@ -22,7 +23,6 @@ function EditEntryForm() {
           }
         );
         const entryDetails = response.data.data.entry;
-        console.log(response.data.data.entry);
 
         setDescription(entryDetails.description);
       } catch (error) {
@@ -31,7 +31,7 @@ function EditEntryForm() {
     };
 
     fetchEntryDescription();
-  }, [entryId]);
+  }, [entryId, token]);
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -39,7 +39,6 @@ function EditEntryForm() {
 
   const handleUpdateDescription = async () => {
     try {
-      // Envía una solicitud al servidor para actualizar la descripción de la entrada.
       await axios.put(
         `http://localhost:3000/entries/${entryId}`,
         {
@@ -51,12 +50,16 @@ function EditEntryForm() {
           },
         }
       );
-      console.log(token);
 
-      // Utiliza 'Navigate' para redirigir al usuario a la lista de entradas después de la actualización.
-     return <Link to="/home" />; // Cambio a Navigate dentro del JSX
+      setMessage("¡Entrada actualizada correctamente!¡Te llevo a ver tooodas las entradas!");
+
+      setTimeout(() => {
+        // Redirige al usuario a la página de inicio (/home) después de 4 segundos
+        navigate("/home");
+      }, 4000);
     } catch (error) {
       console.error("Error al actualizar la descripción de la entrada:", error);
+      setMessage("Error al actualizar la entrada");
     }
   };
 
@@ -69,10 +72,12 @@ function EditEntryForm() {
         value={description}
         onChange={handleDescriptionChange}
       />
-      {/* Utiliza <Link> para redirigir al usuario a la página de inicio */}
-      <Link to="/home">
-        <button className="btn-guardar" onClick={handleUpdateDescription}>Guardar Cambios</button>
-      </Link>
+      <p style={{ color: message.includes("correctamente") ? "green" : "red" }}>
+        {message}
+      </p>
+      <button className="btn-guardar" onClick={handleUpdateDescription}>
+        Guardar Cambios
+      </button>
     </div>
   );
 }

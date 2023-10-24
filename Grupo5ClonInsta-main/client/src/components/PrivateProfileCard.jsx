@@ -39,6 +39,7 @@ const PrivateProfileCard = () => {
         <div>
           <h2>@{user.username}</h2>
           <p>{user.email}</p>
+          <p className="title">AVATAR ACTUAL</p>
           <img className="avtr" src={`${UPLOADS_DIR}/${user.avatar}`} alt="Avatar" />
           <br />
           <AvatarEditor />

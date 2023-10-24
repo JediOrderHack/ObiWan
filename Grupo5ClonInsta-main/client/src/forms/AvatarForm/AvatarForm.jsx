@@ -1,17 +1,16 @@
+import React, { useState } from "react";
+import axios from "axios";
+import { getToken } from "../../utils/getToken";
+import './AvatarForm.css';
+import addButton from '../../assets/add-icon.png'
 
 const { VITE_API_URL } = import.meta.env;
 
-import React, { useState, useEffect } from "react";
-import axios from "axios"; // Asegúrate de tener axios instalado en tu proyecto
-import { getToken } from "../../utils/getToken";
-import './AvatarForm.css'
-import addButton from '../../assets/add-icon.png'
-
-
 const AvatarEditor = () => {
-  const token= getToken()
+  const token = getToken();
   const [avatar, setAvatar] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [updateMessage, setUpdateMessage] = useState(''); // Nuevo estado para el mensaje
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
@@ -37,8 +36,16 @@ const AvatarEditor = () => {
         },
       });
 
-      // Refrescar la página después de actualizar el avatar
-      window.location.reload();
+      setUpdateMessage('Avatar actualizado correctamente');
+
+      // Limpia el mensaje después de 3 segundos
+      setTimeout(() => {
+        setUpdateMessage('');
+        // Realiza la recarga después de que el mensaje se haya limpiado
+        setTimeout(() => {
+          window.location.reload();
+        }, 1);
+      }, 2000);
 
       // Limpiar el estado después de subir la imagen
       setAvatar(null);
@@ -49,34 +56,36 @@ const AvatarEditor = () => {
     }
   };
 
-return (
-  <div className="">
-    <h2 className="title">Editar Avatar</h2>
-    <div className="edit_profile_container">
-      <div className="avatar">
-        {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
+  return (
+    <div className="">
+      <h2 className="title">Editar Avatar</h2>
+      <div className="edit_profile_container">
+        <div className="avatar">
+          {previewUrl && <img src={previewUrl} alt="Avatar Preview" />}
+        </div>
+        {updateMessage && (
+          <div className="update-message">
+            {updateMessage}
+          </div>
+        )}
+        {avatar && (
+          <button
+            className="edit-avatar-button"
+            onClick={handleAvatarUpload}
+          ><img src={addButton} alt="" /></button>
+        )}
+        <label className="label-input">
+          ELEGIR NUEVA FOTO
+          <input
+            className="avatar-input"
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+          />
+        </label>
       </div>
-      <p className="edit-avatar-label">Editar foto de perfil</p>
-      {avatar && (
-        <button
-          className="edit-avatar-button"
-          onClick={handleAvatarUpload}
-        ><img src={addButton} alt="" /></button>
-      )}
-      <label className="label-input">
-        ELEGIR NUEVA FOTO
-      <input
-        className="avatar-input"
-        type="file"
-        accept="image/*"
-        onChange={handleAvatarChange}
-      />
-    </label>
     </div>
-  </div>
-);
-
+  );
 };
 
 export default AvatarEditor;
-

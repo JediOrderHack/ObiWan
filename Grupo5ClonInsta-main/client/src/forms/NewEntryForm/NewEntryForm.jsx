@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../utils/getToken";
 import { useNavigate } from "react-router-dom";
-import './NewEntryForm.css'
+import "./NewEntryForm.css";
 
 const { VITE_API_URL } = import.meta.env;
 
@@ -10,6 +10,7 @@ const NewEntryForm = () => {
   const [files, setFiles] = useState([]);
   const [description, setDescription] = useState("");
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -29,7 +30,23 @@ const NewEntryForm = () => {
     setDescription(e.target.value);
   };
 
+  const removeImage = (index) => {
+    const updatedFiles = [...files];
+    const updatedPreviews = [...imagePreviews];
+
+    updatedFiles.splice(index, 1);
+    updatedPreviews.splice(index, 1);
+
+    setFiles(updatedFiles);
+    setImagePreviews(updatedPreviews);
+  };
+
   const handleUpload = async () => {
+    if (files.length === 0) {
+      alert("Debes seleccionar al menos una imagen antes de subir la entrada.");
+      return;
+    }
+
     try {
       const formData = new FormData();
       files.forEach((file, index) => {
@@ -50,9 +67,10 @@ const NewEntryForm = () => {
         const responseData = response.data;
 
         if (responseData.status === "ok") {
-          console.log("Entrada creada con éxito");
-          const entryData = responseData.data.entry;
-          navigate(`/home`);
+          setSuccessMessage("¡Entrada publicada con éxito! ¡Te llevo a verla, dame un momento!");
+          setTimeout(() => {
+            navigate(`/home`);
+          }, 3000);
         } else {
           console.error("Error al crear la entrada:", responseData.data);
         }
@@ -68,7 +86,7 @@ const NewEntryForm = () => {
     <div className="new-entry-form">
       <h2>Nueva Entrada</h2>
       <div className="file-input-container">
-        <label className="file-label">Imagen:</label>
+        <label className="file-label">Selecciona tus imágenes, ¡puedes subir hasta tres!:</label>
         <input
           className="file-input"
           type="file"
@@ -76,6 +94,7 @@ const NewEntryForm = () => {
           multiple
           onChange={handleFileChange}
           ref={inputRef}
+          required
         />
         <button
           className="file-upload-button"
@@ -86,14 +105,25 @@ const NewEntryForm = () => {
           Examinar
         </button>
       </div>
-      {imagePreviews.map((preview, index) => (
-        <img
-          key={index}
-          src={preview}
-          alt={`Preview ${index + 1}`}
-          style={{ maxWidth: "100px", maxHeight: "100px" }}
-        />
-      ))}
+      <div className="image-preview-container">
+        {imagePreviews.map((preview, index) => (
+          <div key={index} className="image-preview">
+            <div className="image-preview-wrapper">
+              <img
+                src={preview}
+                alt={`Preview ${index + 1}`}
+                style={{ maxWidth: "100px", maxHeight: "100px" }}
+              />
+              <button
+                onClick={() => removeImage(index)}
+                className="remove-button"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="description-container">
         <label className="description-label">Descripción:</label>
         <textarea
@@ -104,6 +134,9 @@ const NewEntryForm = () => {
           onChange={handleDescriptionChange}
         />
       </div>
+      {successMessage && (
+        <p className="success-message">{successMessage}</p>
+      )}
       <button className="upload-button" onClick={handleUpload}>
         Crear Entrada
       </button>

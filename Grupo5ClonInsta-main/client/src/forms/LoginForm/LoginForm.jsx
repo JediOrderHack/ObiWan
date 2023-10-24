@@ -2,16 +2,17 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../utils/constants';
-import "../Auth.css"
+import "../Auth.css";
 import { NavLink } from 'react-router-dom';
-import logo from "../../assets/logo-2.png"
-const { VITE_API_URL } = import.meta.env;
+import logo from "../../assets/logo-2.png";
 
+const { VITE_API_URL } = import.meta.env;
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -25,14 +26,23 @@ function LoginForm() {
 
       if (response.status === 200) {
         localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, response.data.data.token);
-        console.log("Login exitoso");
-        navigate("/home");
-        window.location.reload();
+        setSuccessMessage('Login exitoso');
+        setTimeout(() => {
+          setSuccessMessage(null);
+          navigate("/home");
+          window.location.reload();
+        }, 2000);
       } else {
-        setError('Usuario o contraseña incorrectos');
+        setError('Error en la solicitud de Login');
       }
     } catch (err) {
-      setError('Error en la solicitud de Login');
+      if (err.response && err.response.status === 401) {
+        setError('Usuario o contraseña incorrectos');
+      } else if (err.response && err.response.status === 404) {
+        setError('Email aún no registrado');
+      } else {
+        setError('Error en la solicitud de Login');
+      }
     }
   }
 
@@ -58,6 +68,7 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {error && <p style={{ color: 'red', fontSize: "2rem" }}>{error}</p>}
+            {successMessage && <p style={{ color: 'green', fontSize: "2rem" }}>{successMessage}</p>}
           </div>
         </div>
         <button onClick={handleSubmit}>

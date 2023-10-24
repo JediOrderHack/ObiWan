@@ -85,4 +85,11 @@ border: 4px solid #ffa9fa;
   
 }
 
+.no-results-message {
+  font-size: 1.5rem;
+  color: #ff6347; /* Rojo */
+  margin: 1rem 0;
+  text-align: center;
+}
+
 

@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../Auth.css";
-import { NavLink } from 'react-router-dom';
-const BASE_URL = "http://localhost:3000/users";
 import logo from "../../assets/logo-2.png";
+
+const BASE_URL = "http://localhost:3000/users";
+
+const successMessageStyle = {
+  color: "green",
+  fontSize: "1.5rem",
+  marginTop: "1rem",
+};
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false); // Nuevo estado para rastrear el registro exitoso
   const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Nuevo estado para manejar el mensaje de error
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,17 +28,18 @@ function RegisterForm() {
       });
 
       if (response.status === 200) {
-        console.log("Registro exitoso");
+        setErrorMessage(""); // Limpia el mensaje de error
         setSuccessMessage(
-          "Revisa tu correo y entra en el enlace para activar tu cuenta."
+          "Usuario creado con éxito!! Revisa tu correo y entra en el enlace que te hemos enviado para activar tu cuenta en MEOW!"
         );
-        setErrorMessage(""); // Limpia el mensaje de error si hubo uno previamente
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setErrorMessage("Usuario o email ya registrados.");
+        setErrorMessage(error.response.data.message);
+        setSuccessMessage(""); // Limpia el mensaje de éxito si hay un error
       } else {
         setErrorMessage("Error al registrar. Por favor, inténtalo de nuevo más tarde.");
+        setSuccessMessage(""); // Limpia el mensaje de éxito si hay un error
       }
     }
   };
@@ -67,7 +73,14 @@ function RegisterForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Muestra el mensaje de error */}
+            {errorMessage && (
+              <div style={{ color: "red", fontSize: "1.5rem", marginTop: "1rem" }}>
+                {errorMessage}
+              </div>
+            )}
+            {successMessage && (
+              <div style={successMessageStyle}>{successMessage}</div>
+            )}
           </div>
         </div>
 
